@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSGOTriggerbot
+﻿namespace CsGoApplicationAimbot
 {
-    class CSGOOffsets
+    class CsgoOffsets
     {
         public class Misc
         {
@@ -22,10 +16,10 @@ namespace CSGOTriggerbot
         public class ClientState
         {
             public static int Base = 0x00;
-            public static int m_dwInGame = 0xE8;
-            public static int m_dwViewAngles = 0x00;
-            public static int m_dwMapname = 0x26c;
-            public static int m_dwMapDirectory = 0x168;
+            public static int MDwInGame = 0xE8;
+            public static int MDwViewAngles = 0x00;
+            public static int MDwMapname = 0x26c;
+            public static int MDwMapDirectory = 0x168;
         }
         public class GameResources
         {
@@ -40,48 +34,48 @@ namespace CSGOTriggerbot
         }
         public class NetVars
         {
-            public class C_BaseEntity
+            public class CBaseEntity
             {
-                public static int m_iHealth = 0x00;
-                public static int m_iID = 0x00;
-                public static int m_iTeamNum = 0x00;
-                public static int m_vecOrigin = 0x134;
-                public static int m_angRotation = 0x128;
-                public static int m_bSpotted = 0x935;
-                public static int m_bSpottedByMask = 0x978;
-                public static int m_hOwnerEntity = 0x148;
-                public static int m_bDormant = 0xE9;
+                public static int MIHealth = 0x00;
+                public static int M_IId = 0x00;
+                public static int MITeamNum = 0x00;
+                public static int MVecOrigin = 0x134;
+                public static int MAngRotation = 0x128;
+                public static int MBSpotted = 0x935;
+                public static int MBSpottedByMask = 0x978;
+                public static int MHOwnerEntity = 0x148;
+                public static int MBDormant = 0xE9;
             }
 
-            public class C_CSPlayer
+            public class CCsPlayer
             {
-                public static int m_lifeState = 0x25B;
-                public static int m_hBoneMatrix = 0x00;
-                public static int m_hActiveWeapon = 0x12C0;   // m_hActiveWeapon
-                public static int m_iFlags = 0x100;
-                public static int m_hObserverTarget = 0x173C;
-                public static int m_iObserverMode = 0x1728;
-                public static int m_vecVelocity = 0x110;
+                public static int MLifeState = 0x25B;
+                public static int MHBoneMatrix = 0x00;
+                public static int MHActiveWeapon = 0x12C0;   // m_hActiveWeapon
+                public static int MIFlags = 0x100;
+                public static int MHObserverTarget = 0x173C;
+                public static int MIObserverMode = 0x1728;
+                public static int MVecVelocity = 0x110;
             }
 
             public class LocalPlayer
             {
-                public static int m_vecViewOffset = 0x104;
-                public static int m_vecPunch = 0x13E8;
-                public static int m_iShotsFired = 0x1d6C;
-                public static int m_iCrosshairIdx = 0x2410;
+                public static int MVecViewOffset = 0x104;
+                public static int MVecPunch = 0x13E8;
+                public static int MIShotsFired = 0x1d6C;
+                public static int MICrosshairIdx = 0x2410;
             }
 
             public class Weapon
             {
-                public static int m_iItemDefinitionIndex = 0x131C;
-                public static int m_iState = 0x15B4;
-                public static int m_iClip1 = 0x15c0;
-                public static int m_flNextPrimaryAttack = 0x159C;
-                public static int m_iWeaponID = 0x1690;   // Search for weaponid
-                public static int m_bCanReload = 0x15F9;
-                public static int m_iWeaponTableIndex = 0x162C;
-                public static int m_fAccuracyPenalty = 0x1670;
+                public static int MIItemDefinitionIndex = 0x131C;
+                public static int MIState = 0x15B4;
+                public static int MIClip1 = 0x15c0;
+                public static int MFlNextPrimaryAttack = 0x159C;
+                public static int MIWeaponId = 0x1690;   // Search for weaponid
+                public static int MBCanReload = 0x15F9;
+                public static int MIWeaponTableIndex = 0x162C;
+                public static int MFAccuracyPenalty = 0x1670;
             }
         }
     }

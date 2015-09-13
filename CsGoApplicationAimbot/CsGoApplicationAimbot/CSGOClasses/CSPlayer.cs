@@ -1,75 +1,72 @@
-﻿using CSGOTriggerbot.CSGOClasses.Fields;
-using ExternalUtilsCSharp.MathObjects;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CsGoApplicationAimbot.CSGOClasses.Fields;
+using ExternalUtilsCSharp.MathObjects;
 
-namespace CSGOTriggerbot.CSGOClasses
+namespace CsGoApplicationAimbot.CSGOClasses
 {
-    public class CSPlayer : BaseEntity
+    public class CsPlayer : BaseEntity
     {
         #region VARIABLES
-        private uint iWeaponIndex;
+        private uint _iWeaponIndex;
         #endregion
 
         #region FIELDS
-        public int m_hBoneMatrix
+        public int MHBoneMatrix
         {
             get { return this.ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix"); }
         }
-        public int m_iFlags
+        public int MIFlags
         {
             get { return this.ReadFieldProxy<int>("CSPlayer.m_iFlags"); }
         }
-        public uint m_hActiveWeapon
+        public uint MHActiveWeapon
         {
             get { return this.ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon"); }
         }
-        public Vector3 m_vecVelocity
+        public Vector3 MVecVelocity
         {
             get { return this.ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity"); }
         }
-        public int m_hObserverTarget
+        public int MHObserverTarget
         {
             get { return this.ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF; }
         }
-        public int m_iObserverMode
+        public int MIObserverMode
         {
             get { return this.ReadFieldProxy<int>("CSPlayer.m_iObserverMode"); }
         }
-        public uint m_iWeaponIndex
+        public uint MIWeaponIndex
         {
             get
             {
-                if (iWeaponIndex == 0)
+                if (_iWeaponIndex == 0)
                 {
-                    if (this.m_hActiveWeapon != 0xFFFFFFFF)
-                    iWeaponIndex = this.m_hActiveWeapon & 0xFFF;
+                    if (this.MHActiveWeapon != 0xFFFFFFFF)
+                    _iWeaponIndex = this.MHActiveWeapon & 0xFFF;
                 }
-                return iWeaponIndex;
+                return _iWeaponIndex;
             }
         }
         public Skeleton Bones { get; private set; }
         #endregion
 
         #region CONSTRUCTORS
-        public CSPlayer(int address) : base(address)
+        public CsPlayer(int address) : base(address)
         {
-            iWeaponIndex = 0;
-            this.Bones = new Skeleton(this.m_hBoneMatrix);
+            _iWeaponIndex = 0;
+            this.Bones = new Skeleton(this.MHBoneMatrix);
         }
-        public CSPlayer(BaseEntity baseEntity)
+        public CsPlayer(BaseEntity baseEntity)
             : base(baseEntity)
         {
-            iWeaponIndex = 0;
-            this.Bones = new Skeleton(this.m_hBoneMatrix);
+            _iWeaponIndex = 0;
+            this.Bones = new Skeleton(this.MHBoneMatrix);
         }
-        public CSPlayer(CSPlayer copyFrom) : base(copyFrom)
+        public CsPlayer(CsPlayer copyFrom) : base(copyFrom)
         {
             this.CopyFieldsFrom(copyFrom);
-            iWeaponIndex = 0;
+            _iWeaponIndex = 0;
             this.Bones = copyFrom.Bones;
         }
         #endregion
@@ -78,27 +75,27 @@ namespace CSGOTriggerbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            this.AddField<int>("CSPlayer.m_hBoneMatrix", CSGOOffsets.NetVars.C_CSPlayer.m_hBoneMatrix);
-            this.AddField<uint>("CSPlayer.m_hActiveWeapon", CSGOOffsets.NetVars.C_CSPlayer.m_hActiveWeapon);
-            this.AddField<int>("CSPlayer.m_iFlags", CSGOOffsets.NetVars.C_CSPlayer.m_iFlags);
-            this.AddField<int>("CSPlayer.m_hObserverTarget", CSGOOffsets.NetVars.C_CSPlayer.m_hObserverTarget);
-            this.AddField<int>("CSPlayer.m_iObserverMode", CSGOOffsets.NetVars.C_CSPlayer.m_iObserverMode);
-            this.AddField<Vector3>("CSPlayer.m_vecVelocity", CSGOOffsets.NetVars.C_CSPlayer.m_vecVelocity);
+            this.AddField<int>("CSPlayer.m_hBoneMatrix", CsgoOffsets.NetVars.CCsPlayer.MHBoneMatrix);
+            this.AddField<uint>("CSPlayer.m_hActiveWeapon", CsgoOffsets.NetVars.CCsPlayer.MHActiveWeapon);
+            this.AddField<int>("CSPlayer.m_iFlags", CsgoOffsets.NetVars.CCsPlayer.MIFlags);
+            this.AddField<int>("CSPlayer.m_hObserverTarget", CsgoOffsets.NetVars.CCsPlayer.MHObserverTarget);
+            this.AddField<int>("CSPlayer.m_iObserverMode", CsgoOffsets.NetVars.CCsPlayer.MIObserverMode);
+            this.AddField<Vector3>("CSPlayer.m_vecVelocity", CsgoOffsets.NetVars.CCsPlayer.MVecVelocity);
         }
         public override bool IsValid()
         {
-            return base.IsValid() && (this.m_iTeamNum == 2 ||this.m_iTeamNum == 3);
+            return base.IsValid() && (this.MITeamNum == 2 ||this.MITeamNum == 3);
         }
         public override string ToString()
         {
-            return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", this.m_iHealth, Convert.ToString(this.m_iFlags, 2).PadLeft(32, '0'), base.ToString(), this.m_iTeamNum);
+            return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", this.MIHealth, Convert.ToString(this.MIFlags, 2).PadLeft(32, '0'), base.ToString(), this.MITeamNum);
         }
         public Weapon GetActiveWeapon()
         {
-            if (this.m_hActiveWeapon == 0xFFFFFFFF)
+            if (this.MHActiveWeapon == 0xFFFFFFFF)
                 return null;
 
-            uint handle = this.m_hActiveWeapon & 0xFFF;
+            uint handle = this.MHActiveWeapon & 0xFFF;
             if (WithOverlay.Framework.Weapons.Count(x=>x.Item1 == handle - 1) > 0)
             {
                 return WithOverlay.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;

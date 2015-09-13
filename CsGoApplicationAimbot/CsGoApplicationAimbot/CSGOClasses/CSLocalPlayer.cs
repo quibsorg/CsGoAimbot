@@ -1,57 +1,52 @@
 ﻿using ExternalUtilsCSharp.MathObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CSGOTriggerbot.CSGOClasses
+namespace CsGoApplicationAimbot.CSGOClasses
 {
-    public class CSLocalPlayer : CSPlayer
+    public class CsLocalPlayer : CsPlayer
     {
         #region FIELDS
-        public Vector3 m_vecViewOffset
+        public Vector3 MVecViewOffset
         {
             get { return this.ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecViewOffset"); }
         }
-        public Vector3 m_vecPunch
+        public Vector3 MVecPunch
         {
             get { return this.ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecPunch"); }
         }
-        public int m_iShotsFired
+        public int MIShotsFired
         {
             get { return this.ReadFieldProxy<int>("CSLocalPlayer.m_iShotsFired"); }
         }
-        public int m_iCrosshairIdx
+        public int MICrosshairIdx
         {
             get { return this.ReadFieldProxy<int>("CSLocalPlayer.m_iCrosshairIdx"); }
         }
         #endregion
 
         #region CONSTRUCTORS
-        public CSLocalPlayer(int address)
+        public CsLocalPlayer(int address)
             : base(address)
         {
-            this.AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CSGOOffsets.NetVars.LocalPlayer.m_vecViewOffset);
-            this.AddField<Vector3>("CSLocalPlayer.m_vecPunch", CSGOOffsets.NetVars.LocalPlayer.m_vecPunch);
-            this.AddField<int>("CSLocalPlayer.m_iShotsFired", CSGOOffsets.NetVars.LocalPlayer.m_iShotsFired);
-            this.AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CSGOOffsets.NetVars.LocalPlayer.m_iCrosshairIdx);
+            this.AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CsgoOffsets.NetVars.LocalPlayer.MVecViewOffset);
+            this.AddField<Vector3>("CSLocalPlayer.m_vecPunch", CsgoOffsets.NetVars.LocalPlayer.MVecPunch);
+            this.AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.MIShotsFired);
+            this.AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.MICrosshairIdx);
         }
-        public CSLocalPlayer(CSPlayer player)
+        public CsLocalPlayer(CsPlayer player)
             : base(player)
         {
             this.CopyFieldsFrom(player);
-            this.AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CSGOOffsets.NetVars.LocalPlayer.m_vecViewOffset);
-            this.AddField<Vector3>("CSLocalPlayer.m_vecPunch", CSGOOffsets.NetVars.LocalPlayer.m_vecPunch);
-            this.AddField<int>("CSLocalPlayer.m_iShotsFired", CSGOOffsets.NetVars.LocalPlayer.m_iShotsFired);
-            this.AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CSGOOffsets.NetVars.LocalPlayer.m_iCrosshairIdx);
+            this.AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CsgoOffsets.NetVars.LocalPlayer.MVecViewOffset);
+            this.AddField<Vector3>("CSLocalPlayer.m_vecPunch", CsgoOffsets.NetVars.LocalPlayer.MVecPunch);
+            this.AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.MIShotsFired);
+            this.AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.MICrosshairIdx);
         }
         #endregion
 
         #region METHODS
         public override string ToString()
         {
-            return string.Format("[CSLocalPlayer m_iCrosshairIdx={1}, m_iShotsFired={2}, m_vecPunch={0}]\n{3}", this.m_vecPunch, this.m_iCrosshairIdx, this.m_iShotsFired, base.ToString());
+            return string.Format("[CSLocalPlayer m_iCrosshairIdx={1}, m_iShotsFired={2}, m_vecPunch={0}]\n{3}", this.MVecPunch, this.MICrosshairIdx, this.MIShotsFired, base.ToString());
         }
         #endregion
     }

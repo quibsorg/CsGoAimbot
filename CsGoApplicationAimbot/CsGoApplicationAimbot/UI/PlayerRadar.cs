@@ -1,15 +1,10 @@
-﻿using CSGOTriggerbot.CSGO.Enums;
-using CSGOTriggerbot.CSGOClasses;
-using ExternalUtilsCSharp.SharpDXRenderer;
+﻿using System.Linq;
+using CsGoApplicationAimbot.CSGO.Enums;
+using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp.SharpDXRenderer.Controls;
 using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CSGOTriggerbot.UI
+namespace CsGoApplicationAimbot.UI
 {
     public class PlayerRadar : SharpDXRadar
     {
@@ -26,7 +21,7 @@ namespace CSGOTriggerbot.UI
             this.Width = WithOverlay.ConfigUtils.GetValue<float>("radarWidth");
             this.Height = WithOverlay.ConfigUtils.GetValue<float>("radarHeight");
 
-            if(fw.LocalPlayer.m_iTeamNum == (int)Team.Terrorists)
+            if(fw.LocalPlayer.MITeamNum == (int)Team.Terrorists)
             {
                 this.AlliesColor = Color.Red;
                 this.EnemiesColor = Color.LightBlue;
@@ -38,19 +33,19 @@ namespace CSGOTriggerbot.UI
             }
 
             this.RotationDegrees = fw.ViewAngles.Y + 90;
-            this.CenterCoordinate = new SharpDX.Vector2(fw.LocalPlayer.m_vecOrigin.X, fw.LocalPlayer.m_vecOrigin.Y);
+            this.CenterCoordinate = new SharpDX.Vector2(fw.LocalPlayer.MVecOrigin.X, fw.LocalPlayer.MVecOrigin.Y);
 
             if (WithOverlay.ConfigUtils.GetValue<bool>("radarEnemies"))
             {
-                var enemies = fw.Players.Where(x => x.Item2.IsValid() && x.Item2.m_iHealth > 0 && x.Item2.m_iTeamNum != fw.LocalPlayer.m_iTeamNum);
-                this.Enemies = enemies.Select(x => new Vector2(x.Item2.m_vecOrigin.X, x.Item2.m_vecOrigin.Y)).ToArray();
+                var enemies = fw.Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth > 0 && x.Item2.MITeamNum != fw.LocalPlayer.MITeamNum);
+                this.Enemies = enemies.Select(x => new Vector2(x.Item2.MVecOrigin.X, x.Item2.MVecOrigin.Y)).ToArray();
             }
             else { this.Enemies = null; }
 
             if (WithOverlay.ConfigUtils.GetValue<bool>("radarAllies"))
             {
-                var allies = fw.Players.Where(x => x.Item2.IsValid() && x.Item2.m_iHealth > 0 && x.Item2.m_iTeamNum == fw.LocalPlayer.m_iTeamNum);
-                this.Allies = allies.Select(x => new Vector2(x.Item2.m_vecOrigin.X, x.Item2.m_vecOrigin.Y)).ToArray();
+                var allies = fw.Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth > 0 && x.Item2.MITeamNum == fw.LocalPlayer.MITeamNum);
+                this.Allies = allies.Select(x => new Vector2(x.Item2.MVecOrigin.X, x.Item2.MVecOrigin.Y)).ToArray();
             }
             else { this.Allies = null; }
         }

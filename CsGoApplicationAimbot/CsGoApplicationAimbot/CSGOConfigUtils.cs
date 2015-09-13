@@ -1,13 +1,12 @@
-﻿using ExternalUtilsCSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using ExternalUtilsCSharp;
 
-namespace CSGOTriggerbot
+namespace CsGoApplicationAimbot
 {
-    public class CSGOConfigUtils : ConfigUtils
+    public class CsgoConfigUtils : ConfigUtils
     {
         #region PROPERTIES
         public List<string> UIntegerSettings { get; set; }
@@ -18,7 +17,7 @@ namespace CSGOTriggerbot
         #endregion
 
         #region CONSTRUCTOR
-        public CSGOConfigUtils() : base()
+        public CsgoConfigUtils() : base()
         {
             this.IntegerSettings = new List<string>();
             this.UIntegerSettings = new List<string>();

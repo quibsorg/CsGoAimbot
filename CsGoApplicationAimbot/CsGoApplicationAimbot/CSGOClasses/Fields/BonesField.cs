@@ -1,11 +1,7 @@
-﻿using ExternalUtilsCSharp.MathObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using ExternalUtilsCSharp.MathObjects;
 
-namespace CSGOTriggerbot.CSGOClasses.Fields
+namespace CsGoApplicationAimbot.CSGOClasses.Fields
 {
     public class BonesField : Field<Vector3>
     {

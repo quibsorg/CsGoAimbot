@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSGOTriggerbot.CSGOClasses
+﻿namespace CsGoApplicationAimbot.CSGOClasses
 {
     public class Weapon : BaseEntity
     {
@@ -12,35 +6,35 @@ namespace CSGOTriggerbot.CSGOClasses
         #endregion
 
         #region FIELDS
-        public int m_iItemDefinitionIndex
+        public int MIItemDefinitionIndex
         {
             get { return this.ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex"); }
         }
-        public int m_iState
+        public int MIState
         {
             get { return this.ReadFieldProxy<int>("Weapon.m_iState"); }
         }
-        public int m_iClip1
+        public int MIClip1
         {
             get { return this.ReadFieldProxy<int>("Weapon.m_iClip1"); }
         }
-        public float m_flNextPrimaryAttack
+        public float MFlNextPrimaryAttack
         {
             get { return this.ReadFieldProxy<float>("Weapon.m_flNextPrimaryAttack"); }
         }
-        public int m_bCanReload
+        public int MBCanReload
         {
             get { return this.ReadFieldProxy<int>("Weapon.m_bCanReload"); }
         }
-        public int m_iWeaponTableIndex
+        public int MIWeaponTableIndex
         {
             get { return this.ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex"); }
         }
-        public float m_fAccuracyPenalty
+        public float MFAccuracyPenalty
         {
             get { return this.ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty"); }
         }
-        public int m_iWeaponID
+        public int MIWeaponId
         {
             get { return this.ReadFieldProxy<int>("Weapon.m_iWeaponID"); }
         }
@@ -65,22 +59,22 @@ namespace CSGOTriggerbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            this.AddField<int>("Weapon.m_iItemDefinitionIndex", CSGOOffsets.NetVars.Weapon.m_iItemDefinitionIndex);
-            this.AddField<int>("Weapon.m_iState", CSGOOffsets.NetVars.Weapon.m_iState);
-            this.AddField<int>("Weapon.m_iClip1", CSGOOffsets.NetVars.Weapon.m_iClip1);
-            this.AddField<float>("Weapon.m_flNextPrimaryAttack", CSGOOffsets.NetVars.Weapon.m_flNextPrimaryAttack);
-            this.AddField<int>("Weapon.m_bCanReload", CSGOOffsets.NetVars.Weapon.m_bCanReload);
-            this.AddField<int>("Weapon.m_iWeaponTableIndex", CSGOOffsets.NetVars.Weapon.m_iWeaponTableIndex);
-            this.AddField<float>("Weapon.m_fAccuracyPenalty", CSGOOffsets.NetVars.Weapon.m_fAccuracyPenalty);
-            this.AddField<int>("Weapon.m_iWeaponID", CSGOOffsets.NetVars.Weapon.m_iWeaponID);
+            this.AddField<int>("Weapon.m_iItemDefinitionIndex", CsgoOffsets.NetVars.Weapon.MIItemDefinitionIndex);
+            this.AddField<int>("Weapon.m_iState", CsgoOffsets.NetVars.Weapon.MIState);
+            this.AddField<int>("Weapon.m_iClip1", CsgoOffsets.NetVars.Weapon.MIClip1);
+            this.AddField<float>("Weapon.m_flNextPrimaryAttack", CsgoOffsets.NetVars.Weapon.MFlNextPrimaryAttack);
+            this.AddField<int>("Weapon.m_bCanReload", CsgoOffsets.NetVars.Weapon.MBCanReload);
+            this.AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.MIWeaponTableIndex);
+            this.AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.MFAccuracyPenalty);
+            this.AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.MIWeaponId);
         }
         public override bool IsValid()
         {
-            return base.IsValid() && this.m_iWeaponID > 0 && this.m_iItemDefinitionIndex > 0;
+            return base.IsValid() && this.MIWeaponId > 0 && this.MIItemDefinitionIndex > 0;
         }
         public bool IsCarried()
         {
-            return this.m_hOwnerEntity != 0;
+            return this.MHOwnerEntity != 0;
         }
         #endregion
     }

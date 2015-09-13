@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CSGOTriggerbot.CSGOClasses.Fields
+namespace CsGoApplicationAimbot.CSGOClasses.Fields
 {
     public class Field<T> where T : struct
     {

@@ -1,34 +1,32 @@
-﻿using ExternalUtilsCSharp;
-using ExternalUtilsCSharp.MathObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using ExternalUtilsCSharp;
+using ExternalUtilsCSharp.MathObjects;
 
-namespace CSGOTriggerbot.CSGOClasses
+namespace CsGoApplicationAimbot.CSGOClasses
 {
     public class Framework
     {
         #region VARIABLES
         private int
-            dwEntityList,
-            dwViewMatrix,
-            dwLocalPlayer,
-            dwClientState,
-            clientDllBase,
-            engineDllBase,
-            dwIGameResources;
-        private bool mouseEnabled;
-        private string mapName;
+            _dwEntityList,
+            _dwViewMatrix,
+            _dwLocalPlayer,
+            _dwClientState,
+            _clientDllBase,
+            _engineDllBase,
+            _dwIGameResources;
+        private bool _mouseEnabled;
+        private string _mapName;
         #endregion
         #region PROPERTIES
-        public CSLocalPlayer LocalPlayer { get; private set; }
+        public CsLocalPlayer LocalPlayer { get; private set; }
         public BaseEntity Target { get; private set; }
-        public Tuple<int, CSPlayer>[] Players { get; private set; }
+        public Tuple<int, CsPlayer>[] Players { get; private set; }
         public Tuple<int, BaseEntity>[] Entities { get; private set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
         public Matrix ViewMatrix { get; private set; }
@@ -44,12 +42,12 @@ namespace CSGOTriggerbot.CSGOClasses
         public SignOnState State { get; set; }
         public bool MouseEnabled
         {
-            get { return mouseEnabled; }
+            get { return _mouseEnabled; }
             set
             {
-                if (value != mouseEnabled)
+                if (value != _mouseEnabled)
                 {
-                    mouseEnabled = value;                    
+                    _mouseEnabled = value;                    
                     //WinAPI.SetCursorPos(WithOverlay.SHDXOverlay.Location.X + WithOverlay.SHDXOverlay.Width / 2, WithOverlay.SHDXOverlay.Location.Y + WithOverlay.SHDXOverlay.Height / 2);
                     //WithOverlay.MemUtils.Write<byte>((IntPtr)(clientDllBase + CSGOOffsets.Misc.MouseEnable), value ? (byte)1 : (byte)0);
                 }
@@ -57,7 +55,7 @@ namespace CSGOTriggerbot.CSGOClasses
         }
         public bool AimbotActive { get; set; }
         public bool TriggerbotActive { get; set; }
-        private bool RCSHandled { get; set; }
+        private bool RcsHandled { get; set; }
         private int LastShotsFired { get; set; }
         private int LastClip { get; set; }
         private Vector3 LastPunch { get; set; }
@@ -73,13 +71,13 @@ namespace CSGOTriggerbot.CSGOClasses
         #region CONSTRUCTOR
         public Framework(ProcessModule clientDll, ProcessModule engineDll)
         {
-            CSGOScanner.ScanOffsets(WithOverlay.MemUtils, clientDll, engineDll);
-            clientDllBase = (int)clientDll.BaseAddress;
-            engineDllBase = (int)engineDll.BaseAddress;
-            dwEntityList = clientDllBase + CSGOOffsets.Misc.EntityList;
-            dwViewMatrix = clientDllBase + CSGOOffsets.Misc.ViewMatrix;
-            dwClientState = WithOverlay.MemUtils.Read<int>((IntPtr)(engineDllBase + CSGOOffsets.ClientState.Base));
-            mouseEnabled = true;
+            CsgoScanner.ScanOffsets(WithOverlay.MemUtils, clientDll, engineDll);
+            _clientDllBase = (int)clientDll.BaseAddress;
+            _engineDllBase = (int)engineDll.BaseAddress;
+            _dwEntityList = _clientDllBase + CsgoOffsets.Misc.EntityList;
+            _dwViewMatrix = _clientDllBase + CsgoOffsets.Misc.ViewMatrix;
+            _dwClientState = WithOverlay.MemUtils.Read<int>((IntPtr)(_engineDllBase + CsgoOffsets.ClientState.Base));
+            _mouseEnabled = true;
             AimbotActive = false;
             TriggerbotActive = false;
         }
@@ -88,25 +86,25 @@ namespace CSGOTriggerbot.CSGOClasses
         #region METHODS
         public void Update()
         {
-            List<Tuple<int, CSPlayer>> players = new List<Tuple<int, CSPlayer>>();
+            List<Tuple<int, CsPlayer>> players = new List<Tuple<int, CsPlayer>>();
             List<Tuple<int, BaseEntity>> entities = new List<Tuple<int, BaseEntity>>();
             List<Tuple<int, Weapon>> weapons = new List<Tuple<int, Weapon>>();
 
-            dwLocalPlayer = WithOverlay.MemUtils.Read<int>((IntPtr)(clientDllBase + CSGOOffsets.Misc.LocalPlayer));
-            dwIGameResources = WithOverlay.MemUtils.Read<int>((IntPtr)(clientDllBase + CSGOOffsets.GameResources.Base));
+            _dwLocalPlayer = WithOverlay.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
+            _dwIGameResources = WithOverlay.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
 
-            State = (SignOnState)WithOverlay.MemUtils.Read<int>((IntPtr)(dwClientState + CSGOOffsets.ClientState.m_dwInGame));
-            if (State != SignOnState.SIGNONSTATE_FULL)
+            State = (SignOnState)WithOverlay.MemUtils.Read<int>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwInGame));
+            if (State != SignOnState.SignonstateFull)
                 return;
 
-            ViewMatrix = WithOverlay.MemUtils.ReadMatrix((IntPtr)dwViewMatrix, 4, 4);
-            ViewAngles = WithOverlay.MemUtils.Read<Vector3>((IntPtr)(dwClientState + CSGOOffsets.ClientState.m_dwViewAngles));
+            ViewMatrix = WithOverlay.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
+            ViewAngles = WithOverlay.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
             NewViewAngles = ViewAngles;
-            RCSHandled = false;
+            RcsHandled = false;
 
             #region Read entities
             byte[] data = new byte[16 * 8192];
-            WithOverlay.MemUtils.Read((IntPtr)(dwEntityList), out data, data.Length);
+            WithOverlay.MemUtils.Read((IntPtr)(_dwEntityList), out data, data.Length);
 
             for (int i = 0; i < data.Length / 16; i++)
             {
@@ -117,7 +115,7 @@ namespace CSGOTriggerbot.CSGOClasses
                     if (!ent.IsValid())
                         continue;
                     if (ent.IsPlayer())
-                        players.Add(new Tuple<int, CSPlayer>(i, new CSPlayer(ent)));
+                        players.Add(new Tuple<int, CsPlayer>(i, new CsPlayer(ent)));
                     else if (ent.IsWeapon())
                         weapons.Add(new Tuple<int, Weapon>(i, new Weapon(ent)));
                     else
@@ -131,9 +129,9 @@ namespace CSGOTriggerbot.CSGOClasses
             #endregion
 
             #region LocalPlayer and Target
-            if (players.Exists(x => x.Item2.Address == dwLocalPlayer))
+            if (players.Exists(x => x.Item2.Address == _dwLocalPlayer))
             {
-                LocalPlayer = new CSLocalPlayer(players.First(x => x.Item2.Address == dwLocalPlayer).Item2);
+                LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
             }
             else
@@ -144,10 +142,10 @@ namespace CSGOTriggerbot.CSGOClasses
 
             if (LocalPlayer != null)
             {
-                if (entities.Exists(x => x.Item1 == LocalPlayer.m_iCrosshairIdx - 1))
-                    Target = entities.First(x => x.Item1 == LocalPlayer.m_iCrosshairIdx - 1).Item2;
-                if (players.Exists(x => x.Item1 == LocalPlayer.m_iCrosshairIdx - 1))
-                    Target = players.First(x => x.Item1 == LocalPlayer.m_iCrosshairIdx - 1).Item2;
+                if (entities.Exists(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1))
+                    Target = entities.First(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1).Item2;
+                if (players.Exists(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1))
+                    Target = players.First(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1).Item2;
                 else
                     Target = null;
             }
@@ -157,22 +155,22 @@ namespace CSGOTriggerbot.CSGOClasses
                 return;
 
             #region IGameResources
-            if (dwIGameResources != 0)
+            if (_dwIGameResources != 0)
             {
-                Kills = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Kills), 65);
-                Deaths = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Deaths), 65);
-                Armor = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Armor), 65);
-                Assists = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Assists), 65);
-                Score = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Score), 65);
+                Kills = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills), 65);
+                Deaths = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
+                Armor = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor), 65);
+                Assists = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
+                Score = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score), 65);
 
                 byte[] clantagsData = new byte[16 * 65];
-                WithOverlay.MemUtils.Read((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Clantag), out clantagsData, clantagsData.Length);
+                WithOverlay.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData, clantagsData.Length);
                 string[] clantags = new string[65];
                 for (int i = 0; i < 65; i++)
                     clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
                 Clantags = clantags;
 
-                int[] namePtrs = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(dwIGameResources + CSGOOffsets.GameResources.Names), 65);
+                int[] namePtrs = WithOverlay.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
                 string[] names = new string[65];
                 for (int i = 0; i < 65; i++)
                     try
@@ -202,7 +200,7 @@ namespace CSGOTriggerbot.CSGOClasses
             #endregion
 
             #region RCS
-            DoRCS();
+            DoRcs();
             #endregion
 
             #region Set view angles
@@ -245,9 +243,9 @@ namespace CSGOTriggerbot.CSGOClasses
                         }
                         else
                         {
-                            if (LocalPlayerWeapon.m_iClip1 != LastClip)
+                            if (LocalPlayerWeapon.MIClip1 != LastClip)
                             {
-                                TriggerBurstFired += Math.Abs(LocalPlayerWeapon.m_iClip1 - LastClip);
+                                TriggerBurstFired += Math.Abs(LocalPlayerWeapon.MIClip1 - LastClip);
                             }
                             else
                             {
@@ -265,46 +263,46 @@ namespace CSGOTriggerbot.CSGOClasses
 
             #endregion
             if (LocalPlayerWeapon != null)
-                LastClip = LocalPlayerWeapon.m_iClip1;
+                LastClip = LocalPlayerWeapon.MIClip1;
             else
                 LastClip = 0;
-            LastShotsFired = LocalPlayer.m_iShotsFired;
-            LastPunch = LocalPlayer.m_vecPunch;
+            LastShotsFired = LocalPlayer.MIShotsFired;
+            LastPunch = LocalPlayer.MVecPunch;
         }
 
         public void SetViewAngles(Vector3 viewAngles, bool clamp = true)
         {
             if (clamp)
                 viewAngles = MathUtils.ClampAngle(viewAngles);
-            WithOverlay.MemUtils.Write<Vector3>((IntPtr)(dwClientState + CSGOOffsets.ClientState.m_dwViewAngles), viewAngles);
+            WithOverlay.MemUtils.Write<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
         }
 
         public bool IsPlaying()
         {
-            return State == SignOnState.SIGNONSTATE_FULL && LocalPlayer != null;
+            return State == SignOnState.SignonstateFull && LocalPlayer != null;
         }
 
         public void DoAimbot()
         {
             if (LocalPlayer == null)
                 return;
-            var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.m_iHealth != 0 && x.Item2.m_iDormant != 1);
+            var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth != 0 && x.Item2.MIDormant != 1);
             if (WithOverlay.ConfigUtils.GetValue<bool>("aimFilterSpotted"))
                 valid = valid.Where(x => x.Item2.SeenBy(LocalPlayer));
             if (WithOverlay.ConfigUtils.GetValue<bool>("aimFilterSpottedBy"))
                 valid = valid.Where(x => LocalPlayer.SeenBy(x.Item2));
             if (WithOverlay.ConfigUtils.GetValue<bool>("aimFilterEnemies"))
-                valid = valid.Where(x => x.Item2.m_iTeamNum != LocalPlayer.m_iTeamNum);
+                valid = valid.Where(x => x.Item2.MITeamNum != LocalPlayer.MITeamNum);
             if (WithOverlay.ConfigUtils.GetValue<bool>("aimFilterAllies"))
-                valid = valid.Where(x => x.Item2.m_iTeamNum == LocalPlayer.m_iTeamNum);
+                valid = valid.Where(x => x.Item2.MITeamNum == LocalPlayer.MITeamNum);
 
-            valid = valid.OrderBy(x => (x.Item2.m_vecOrigin - LocalPlayer.m_vecOrigin).Length());
+            valid = valid.OrderBy(x => (x.Item2.MVecOrigin - LocalPlayer.MVecOrigin).Length());
             Vector3 closest = Vector3.Zero;
             float closestFov = float.MaxValue;
-            foreach (Tuple<int, CSPlayer> tpl in valid)
+            foreach (Tuple<int, CsPlayer> tpl in valid)
             {
-                CSPlayer plr = tpl.Item2;
-                Vector3 newAngles = MathUtils.CalcAngle(LocalPlayer.m_vecOrigin + LocalPlayer.m_vecViewOffset, plr.Bones.GetBoneByIndex(WithOverlay.ConfigUtils.GetValue<int>("aimBone"))) - NewViewAngles;
+                CsPlayer plr = tpl.Item2;
+                Vector3 newAngles = MathUtils.CalcAngle(LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset, plr.Bones.GetBoneByIndex(WithOverlay.ConfigUtils.GetValue<int>("aimBone"))) - NewViewAngles;
                 newAngles = MathUtils.ClampAngle(newAngles);
                 float fov = newAngles.Length() % 360f;
                 if (fov < closestFov && fov < WithOverlay.ConfigUtils.GetValue<float>("aimFov"))
@@ -315,7 +313,7 @@ namespace CSGOTriggerbot.CSGOClasses
             }
             if (closest != Vector3.Zero)
             {
-                DoRCS(true);
+                DoRcs(true);
                 if (WithOverlay.ConfigUtils.GetValue<bool>("aimSmoothEnabled"))
                     NewViewAngles = MathUtils.SmoothAngle(NewViewAngles, NewViewAngles + closest, WithOverlay.ConfigUtils.GetValue<float>("aimSmoothValue"));
                 else
@@ -324,24 +322,24 @@ namespace CSGOTriggerbot.CSGOClasses
             }
         }
 
-        public void DoRCS(bool aimbot = false)
+        public void DoRcs(bool aimbot = false)
         {
             if (WithOverlay.ConfigUtils.GetValue<bool>("rcsEnabled"))
             {
                 if (LocalPlayerWeapon != null)
                 {
-                    if (!RCSHandled && (LocalPlayerWeapon.m_iClip1 != LastClip || LocalPlayer.m_iShotsFired > 0 || WithOverlay.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON)))
+                    if (!RcsHandled && (LocalPlayerWeapon.MIClip1 != LastClip || LocalPlayer.MIShotsFired > 0 || WithOverlay.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON)))
                     {
                         if (aimbot)
                         {
-                            NewViewAngles -= LocalPlayer.m_vecPunch * (2f / 100f * WithOverlay.ConfigUtils.GetValue<float>("rcsForce"));
+                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * WithOverlay.ConfigUtils.GetValue<float>("rcsForce"));
                         }
                         else
                         {
-                            Vector3 punch = LocalPlayer.m_vecPunch - LastPunch;
+                            Vector3 punch = LocalPlayer.MVecPunch - LastPunch;
                             NewViewAngles -= punch * (2f / 100f * WithOverlay.ConfigUtils.GetValue<float>("rcsForce"));
                         }
-                        RCSHandled = true;
+                        RcsHandled = true;
                     }
                 }
             }
@@ -351,11 +349,11 @@ namespace CSGOTriggerbot.CSGOClasses
         {
             if (LocalPlayer != null && !TriggerShooting)
             {
-                if (Players.Count(x => x.Item2.m_iID == LocalPlayer.m_iCrosshairIdx) > 0)
+                if (Players.Count(x => x.Item2.M_IId == LocalPlayer.MICrosshairIdx) > 0)
                 {
-                    CSPlayer player = Players.First(x=>x.Item2.m_iID == LocalPlayer.m_iCrosshairIdx).Item2;
-                    if ((WithOverlay.ConfigUtils.GetValue<bool>("triggerFilterEnemies") && player.m_iTeamNum != LocalPlayer.m_iTeamNum) ||
-                        (WithOverlay.ConfigUtils.GetValue<bool>("triggerFilterAllies") && player.m_iTeamNum == LocalPlayer.m_iTeamNum))
+                    CsPlayer player = Players.First(x=>x.Item2.M_IId == LocalPlayer.MICrosshairIdx).Item2;
+                    if ((WithOverlay.ConfigUtils.GetValue<bool>("triggerFilterEnemies") && player.MITeamNum != LocalPlayer.MITeamNum) ||
+                        (WithOverlay.ConfigUtils.GetValue<bool>("triggerFilterAllies") && player.MITeamNum == LocalPlayer.MITeamNum))
                     {
                         if (!TriggerOnTarget)
                         {
