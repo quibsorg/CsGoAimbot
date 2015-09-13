@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGO.Enums;
 using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
@@ -128,15 +129,50 @@ namespace CsGoApplicationAimbot
         #region METHODS
         public static void Main(string[] args)
         {
-            System.Windows.Forms.Application.EnableVisualStyles();
-            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-
             PrintSuccess("Smurf bot");
             KeyUtils = new KeyUtils();
             ConfigUtils = new CsgoConfigUtils();
+            
+            //Creates the setting file
+            AddAndApplySettings();
 
-            //Aim
-            ConfigUtils.BooleanSettings.AddRange(new[] 
+            PrintInfo("> Waiting for CSGO to start up...");
+            while (!ProcUtils.ProcessIsRunning(GameProcess))
+                Thread.Sleep(250);
+
+            ProcUtils = new ProcUtils(GameProcess, WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite | WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
+            MemUtils = new MemUtils
+            {
+                Handle = ProcUtils.Handle
+            };
+
+            PrintInfo("> Waiting for CSGOs window to show up...");
+            while ((_hWnd = WinAPI.FindWindowByCaption(_hWnd, GameTitle)) == IntPtr.Zero)
+                Thread.Sleep(250);
+
+            ProcessModule clientDll, engineDll;
+            PrintInfo("> Waiting for CSGO to load client.dll...");
+            while ((clientDll = ProcUtils.GetModuleByName(@"bin\client.dll")) == null)
+                Thread.Sleep(250);
+            PrintInfo("> Waiting for CSGO to load engine.dll...");
+            while ((engineDll = ProcUtils.GetModuleByName(@"engine.dll")) == null)
+                Thread.Sleep(250);
+
+            Framework = new Framework(clientDll, engineDll);
+
+            PrintInfo("> Initializing overlay");
+            using (ShdxOverlay = new SharpDXOverlay())
+            {
+                ShdxOverlay.Attach(_hWnd);
+                ShdxOverlay.TickEvent += overlay_TickEvent;
+            }
+            Application.Run();
+            ConfigUtils.SaveSettingsToFile("Config.cfg");
+        }
+
+        private static void AddAndApplySettings()
+        {
+            ConfigUtils.BooleanSettings.AddRange(new[]
             {
                 "Aim Enabled",
                 "Aim Hold",
@@ -147,7 +183,7 @@ namespace CsGoApplicationAimbot
                 "Aim Allies",
             });
             ConfigUtils.KeySettings.Add("Aim Key");
-            ConfigUtils.FloatSettings.AddRange(new[] 
+            ConfigUtils.FloatSettings.AddRange(new[]
             {
                 "Aim Fov",
                 "Aim Smooth Value"
@@ -178,148 +214,50 @@ namespace CsGoApplicationAimbot
                 "Trigger Delay Shots",
                 "Trigger Burst Shots"
             });
-
             ConfigUtils.FillDefaultValues();
 
             if (!File.Exists("Config.cfg"))
-                ConfigUtils.SaveSettingsToFile("Config.cfg");
-            ConfigUtils.ReadSettingsFromFile("Config.cfg");
-
-            PrintInfo("> Waiting for CSGO to start up...");
-            while (!ProcUtils.ProcessIsRunning(GameProcess))
-                Thread.Sleep(250);
-
-            ProcUtils = new ProcUtils(GameProcess, WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite | WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
-            MemUtils = new MemUtils();
-            MemUtils.Handle = ProcUtils.Handle;
-
-            PrintInfo("> Waiting for CSGOs window to show up...");
-            while ((_hWnd = WinAPI.FindWindowByCaption(_hWnd, GameTitle)) == IntPtr.Zero)
-                Thread.Sleep(250);
-
-            ProcessModule clientDll, engineDll;
-            PrintInfo("> Waiting for CSGO to load client.dll...");
-            while ((clientDll = ProcUtils.GetModuleByName(@"bin\client.dll")) == null)
-                Thread.Sleep(250);
-            PrintInfo("> Waiting for CSGO to load engine.dll...");
-            while ((engineDll = ProcUtils.GetModuleByName(@"engine.dll")) == null)
-                Thread.Sleep(250);
-
-            Framework = new Framework(clientDll, engineDll);
-
-            PrintInfo("> Initializing overlay");
-            using (ShdxOverlay = new SharpDXOverlay())
             {
-                ShdxOverlay.Attach(_hWnd);
-                ShdxOverlay.TickEvent += overlay_TickEvent;
-                InitializeComponents();
-                SharpDXRenderer renderer = ShdxOverlay.Renderer;
-                TextFormat smallFont = renderer.CreateFont("smallFont", "Century Gothic", 10f);
-                TextFormat largeFont = renderer.CreateFont("largeFont", "Century Gothic", 14f);
-                TextFormat heavyFont = renderer.CreateFont("heavyFont", "Century Gothic", 14f, FontStyle.Normal, FontWeight.Heavy);
-
-                _windowMenu.Font = smallFont;
-                _windowMenu.Caption.Font = largeFont;
-                _windowGraphs.Font = smallFont;
-                _windowGraphs.Caption.Font = largeFont;
-                _windowSpectators.Font = smallFont;
-                _windowSpectators.Caption.Font = largeFont;
-                _windowBots.Font = smallFont;
-                _windowBots.Caption.Font = largeFont;
-                _graphMemRead.Font = smallFont;
-                _graphMemWrite.Font = smallFont;
-
-                _windowMenu.ApplySettings(ConfigUtils);
-
-                ShdxOverlay.ChildControls.Add(_ctrlCrosshair);
-                ShdxOverlay.ChildControls.Add(_windowMenu);
-                ShdxOverlay.ChildControls.Add(_windowGraphs);
-                ShdxOverlay.ChildControls.Add(_windowSpectators);
-                ShdxOverlay.ChildControls.Add(_windowBots);
-                ShdxOverlay.ChildControls.Add(_cursor);
-                PrintInfo("> Running overlay");
-                System.Windows.Forms.Application.Run();
+                ConfigUtils.SaveSettingsToFile("Config.cfg");
             }
-            ConfigUtils.SaveSettingsToFile("Config.cfg");
+            ConfigUtils.ReadSettingsFromFile("Config.cfg");
         }
 
         private static void overlay_TickEvent(object sender, SharpDXOverlay.DeltaEventArgs e)
         {
             _seconds += e.SecondsElapsed;
-            //Update logic
             KeyUtils.Update();
             Framework.Update();
             ShdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
 
-            //Process input
-            if (KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.DELETE))
-                ShdxOverlay.Kill();
-            if (KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.INSERT))
-                Framework.MouseEnabled = !Framework.MouseEnabled;
-            if (KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.HOME))
-                _windowMenu.Visible = !_windowMenu.Visible;
-
-            //Update UI
-            _cursor.Visible = !Framework.MouseEnabled;
-
-            if (_seconds >= 1)
-            {
-                _seconds = 0;
-                _graphMemRead.AddValue(MemUtils.BytesRead);
-                _graphMemWrite.AddValue(MemUtils.BytesWritten);
-            }
-
-            _ctrlCrosshair.X = ShdxOverlay.Width / 2f;
-            _ctrlCrosshair.Y = ShdxOverlay.Height / 2f;
-
-
-            _labelAimbot.Text = string.Format("Aimbot: {0}", Framework.AimbotActive ? "ON" : "OFF");
-            _labelAimbot.ForeColor = Framework.AimbotActive ? SharpDX.Color.Green : _windowBots.Caption.ForeColor;
-            _labelTriggerbot.Text = string.Format("Triggerbot: {0}", Framework.TriggerbotActive ? "ON" : "OFF");
-            _labelTriggerbot.ForeColor = Framework.TriggerbotActive ? SharpDX.Color.Green : _windowBots.Caption.ForeColor;
-
-            if (_ctrlCrosshair.PrimaryColor.ToRgba() != _colorControlCrosshairPrimary.SDXColor.ToRgba())
-                _ctrlCrosshair.PrimaryColor = _colorControlCrosshairPrimary.SDXColor;
-            if (_ctrlCrosshair.SecondaryColor.ToRgba() != _colorControlCrosshairSecondary.SDXColor.ToRgba())
-                _ctrlCrosshair.SecondaryColor = _colorControlCrosshairSecondary.SDXColor;
-
-            if (Framework.LocalPlayer != null)
-            {
-                Weapon wpn = Framework.LocalPlayer.GetActiveWeapon();
-                if (wpn != null)
-                    _ctrlCrosshair.Spread = wpn.MFAccuracyPenalty * 10000;
-                else
-                    _ctrlCrosshair.Spread = 1f;
-            }
-            else { _ctrlCrosshair.Spread = 1f; }
-            if (Framework.IsPlaying())
-            {
-                #region Spectators
-                if (Framework.LocalPlayer != null)
-                {
-                    var spectators = Framework.Players.Where(x => x.Item2.MHObserverTarget == Framework.LocalPlayer.M_IId && x.Item2.MIHealth == 0 && x.Item2.MIDormant != 1);
-                    StringBuilder builder = new StringBuilder();
-                    foreach (Tuple<int, CsPlayer> spec in spectators)
-                    {
-                        CsPlayer player = spec.Item2;
-                        builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.M_IId], (SpectatorView)player.MIObserverMode, builder.Length > 0 ? "\n" : "");
-                    }
-                    if (builder.Length > 0)
-                        _labelSpectators.Text = builder.ToString();
-                    else
-                        _labelSpectators.Text = "<none>";
-                }
-                else
-                {
-                    _labelSpectators.Text = "<none>";
-                }
-                #endregion
-            }
-            else
-            {
-                _labelSpectators.Text = "<none>";
-                //ctrlRadar.Visible = false;
-            }
+            //TODO PRINT OUT TO CONSOLE
+            //if (Framework.IsPlaying())
+            //{
+            //    #region Spectators
+            //    if (Framework.LocalPlayer != null)
+            //    {
+            //        var spectators = Framework.Players.Where(x => x.Item2.MHObserverTarget == Framework.LocalPlayer.M_IId && x.Item2.MIHealth == 0 && x.Item2.MIDormant != 1);
+            //        StringBuilder builder = new StringBuilder();
+            //        foreach (Tuple<int, CsPlayer> spec in spectators)
+            //        {
+            //            CsPlayer player = spec.Item2;
+            //            builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.M_IId], (SpectatorView)player.MIObserverMode, builder.Length > 0 ? "\n" : "");
+            //        }
+            //        if (builder.Length > 0)
+            //            _labelSpectators.Text = builder.ToString();
+            //        else
+            //            _labelSpectators.Text = "<none>";
+            //    }
+            //    else
+            //    {
+            //        _labelSpectators.Text = "<none>";
+            //    }
+            //    #endregion
+            //}
+            //else
+            //{
+            //    _labelSpectators.Text = "<none>";
+            //}
         }
 
         private static void InitializeComponents()
