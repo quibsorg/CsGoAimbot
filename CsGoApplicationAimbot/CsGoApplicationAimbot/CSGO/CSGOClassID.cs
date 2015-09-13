@@ -91,12 +91,10 @@
         WeaponP90X = 221,
         WeaponScar20X = 223,
         WeaponXm1014X = 234,
-        WeaponM249X = 209,
+        WeaponM249X = 209
     }
 
     public enum Pistol
     {
-        
     }
-
 }

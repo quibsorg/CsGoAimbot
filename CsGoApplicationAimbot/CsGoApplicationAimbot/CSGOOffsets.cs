@@ -1,6 +1,6 @@
 ﻿namespace CsGoApplicationAimbot
 {
-    class CsgoOffsets
+    internal class CsgoOffsets
     {
         public class Misc
         {
@@ -13,6 +13,7 @@
             public static int ViewMatrix = 0x00;
             public static int MouseEnable = 0xA7A4C0;
         }
+
         public class ClientState
         {
             public static int Base = 0x00;
@@ -21,6 +22,7 @@
             public static int MDwMapname = 0x26c;
             public static int MDwMapDirectory = 0x168;
         }
+
         public class GameResources
         {
             public static int Base = 0x04A38E2C;
@@ -32,6 +34,7 @@
             public static int Score = 0x192C;
             public static int Clantag = 0x4110;
         }
+
         public class NetVars
         {
             public class CBaseEntity
@@ -51,7 +54,7 @@
             {
                 public static int MLifeState = 0x25B;
                 public static int MhBoneMatrix = 0x00;
-                public static int MhActiveWeapon = 0x12C0;   // m_hActiveWeapon
+                public static int MhActiveWeapon = 0x12C0; // m_hActiveWeapon
                 public static int MiFlags = 0x100;
                 public static int MhObserverTarget = 0x173C;
                 public static int MiObserverMode = 0x1728;
@@ -72,7 +75,7 @@
                 public static int MiState = 0x15B4;
                 public static int MiClip1 = 0x15c0;
                 public static int MFlNextPrimaryAttack = 0x159C;
-                public static int MiWeaponId = 0x1690;   // Search for weaponid
+                public static int MiWeaponId = 0x1690; // Search for weaponid
                 public static int MbCanReload = 0x15F9;
                 public static int MiWeaponTableIndex = 0x162C;
                 public static int MfAccuracyPenalty = 0x1670;

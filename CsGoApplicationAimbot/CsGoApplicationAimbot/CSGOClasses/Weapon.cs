@@ -3,6 +3,7 @@
     public class Weapon : BaseEntity
     {
         #region FIELDS
+
         public int MiItemDefinitionIndex => ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex");
         public int MiState => ReadFieldProxy<int>("Weapon.m_iState");
         public int MiClip1 => ReadFieldProxy<int>("Weapon.m_iClip1");
@@ -15,21 +16,26 @@
         #endregion
 
         #region CONSTRUCTORS
+
         public Weapon(int address) : base(address)
         {
         }
+
         public Weapon(BaseEntity baseEntity)
             : base(baseEntity)
         {
         }
-        public Weapon(Weapon other) 
+
+        public Weapon(Weapon other)
             : base(other)
         {
             CopyFieldsFrom(other);
         }
+
         #endregion
 
         #region METHODS
+
         protected override void SetupFields()
         {
             base.SetupFields();
@@ -42,14 +48,17 @@
             AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.MfAccuracyPenalty);
             AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.MiWeaponId);
         }
+
         public override bool IsValid()
         {
             return base.IsValid() && MiWeaponId > 0 && MiItemDefinitionIndex > 0;
         }
+
         public bool IsCarried()
         {
             return MhOwnerEntity != 0;
         }
+
         #endregion
     }
 }

@@ -8,16 +8,9 @@ namespace CsGoApplicationAimbot
 {
     public class CsgoConfigUtils : ConfigUtils
     {
-        #region PROPERTIES
-        public List<string> UIntegerSettings { get; set; }
-        public List<string> IntegerSettings { get; set; }
-        public List<string> FloatSettings { get; set; }
-        public List<string> KeySettings { get; set; }
-        public List<string> BooleanSettings { get; set; }
-        #endregion
-
         #region CONSTRUCTOR
-        public CsgoConfigUtils() : base()
+
+        public CsgoConfigUtils()
         {
             IntegerSettings = new List<string>();
             UIntegerSettings = new List<string>();
@@ -25,41 +18,56 @@ namespace CsGoApplicationAimbot
             KeySettings = new List<string>();
             BooleanSettings = new List<string>();
         }
+
+        #endregion
+
+        #region PROPERTIES
+
+        public List<string> UIntegerSettings { get; set; }
+        public List<string> IntegerSettings { get; set; }
+        public List<string> FloatSettings { get; set; }
+        public List<string> KeySettings { get; set; }
+        public List<string> BooleanSettings { get; set; }
+
         #endregion
 
         #region METHODS
+
         public void FillDefaultValues()
         {
-            foreach (string integerV in IntegerSettings)
+            foreach (var integerV in IntegerSettings)
                 SetValue(integerV, 0);
-            foreach (string uintegerV in UIntegerSettings)
+            foreach (var uintegerV in UIntegerSettings)
                 SetValue(uintegerV, 0);
-            foreach (string floatV in FloatSettings)
+            foreach (var floatV in FloatSettings)
                 SetValue(floatV, 0f);
-            foreach (string keyV in KeySettings)
+            foreach (var keyV in KeySettings)
                 SetValue(keyV, WinAPI.VirtualKeyShort.LBUTTON);
-            foreach (string booleanV in BooleanSettings)
+            foreach (var booleanV in BooleanSettings)
                 SetValue(booleanV, false);
         }
+
         public override void ReadSettings(byte[] data)
         {
-            string text = Encoding.Unicode.GetString(data);
+            var text = Encoding.Unicode.GetString(data);
 
             //Split text into lines
-            string[] lines = text.Contains("\r\n") ? text.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries) : text.Split("\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Contains("\r\n")
+                ? text.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                : text.Split("\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 //Trim current line
-                string tmpLine = line.Trim();
+                var tmpLine = line.Trim();
                 //Skip invalid ones
                 if (tmpLine.StartsWith("#")) // comment
                     continue;
-                else if (!tmpLine.Contains("=")) // it's no key-value pair!
+                if (!tmpLine.Contains("=")) // it's no key-value pair!
                     continue;
 
                 //Trim both parts of the key-value pair
-                string[] parts = tmpLine.Split('=');
+                var parts = tmpLine.Split('=');
                 parts[0] = parts[0].Trim();
                 parts[1] = parts[1].Trim();
                 if (string.IsNullOrEmpty(parts[0]) || string.IsNullOrEmpty(parts[1]))
@@ -87,7 +95,7 @@ namespace CsGoApplicationAimbot
                 else
                     Program.PrintError("Unknown settings-field \"{0}\" (value: \"{1}\")", name, value);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Program.PrintException(ex);
             }
@@ -95,10 +103,10 @@ namespace CsGoApplicationAimbot
 
         public override byte[] SaveSettings()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(@"#Smurf Bot 0.4");
             builder.AppendLine(@"#Made By Carlsson");
-            object[] keys = new object[GetKeys().Count];
+            var keys = new object[GetKeys().Count];
             GetKeys().CopyTo(keys, 0);
             var keysSorted = keys.OrderBy(x => x);
             foreach (string key in keysSorted)
@@ -107,6 +115,7 @@ namespace CsGoApplicationAimbot
             }
             return Encoding.Unicode.GetBytes(builder.ToString());
         }
+
         #endregion
     }
 }

@@ -4,7 +4,18 @@ namespace CsGoApplicationAimbot.CSGOClasses
 {
     public class CsLocalPlayer : CsPlayer
     {
+        #region METHODS
+
+        public override string ToString()
+        {
+            return string.Format("[CSLocalPlayer m_iCrosshairIdx={1}, m_iShotsFired={2}, m_vecPunch={0}]\n{3}",
+                MVecPunch, MiCrosshairIdx, MiShotsFired, base.ToString());
+        }
+
+        #endregion
+
         #region FIELDS
+
         public Vector3 MVecViewOffset => ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecViewOffset");
         public Vector3 MVecPunch => ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecPunch");
 
@@ -14,6 +25,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region CONSTRUCTORS
+
         public CsLocalPlayer(int address)
             : base(address)
         {
@@ -22,6 +34,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.MiShotsFired);
             AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.MiCrosshairIdx);
         }
+
         public CsLocalPlayer(CsPlayer player)
             : base(player)
         {
@@ -31,13 +44,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.MiShotsFired);
             AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.MiCrosshairIdx);
         }
-        #endregion
 
-        #region METHODS
-        public override string ToString()
-        {
-            return string.Format("[CSLocalPlayer m_iCrosshairIdx={1}, m_iShotsFired={2}, m_vecPunch={0}]\n{3}", MVecPunch, MiCrosshairIdx, MiShotsFired, base.ToString());
-        }
         #endregion
     }
 }

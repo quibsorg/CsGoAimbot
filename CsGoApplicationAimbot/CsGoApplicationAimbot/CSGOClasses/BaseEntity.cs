@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
-using CsGoApplicationAimbot.CSGO.Enums;
+using CsGoApplicationAimbot.CSGO;
 using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
@@ -9,11 +8,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
     public class BaseEntity : Entity
     {
         #region VARIABLES
+
         private uint _iClientClass, _iClassId;
         private string _szClassName;
+
         #endregion
 
         #region PROPERTIES
+
         public uint MiClientClass
         {
             get
@@ -24,6 +26,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             protected set { _iClientClass = value; }
         }
+
         public uint MiClassId
         {
             get
@@ -34,6 +37,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             protected set { _iClassId = value; }
         }
+
         public string MSzClassName
         {
             get
@@ -44,9 +48,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             protected set { _szClassName = value; }
         }
+
         #endregion
 
         #region FIELDS
+
         public int MiHealth => ReadFieldProxy<int>("CSPlayer.m_iHealth");
 
         public int MiVirtualTable => ReadFieldProxy<int>("Entity.m_iVirtualTable");
@@ -68,6 +74,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region CONSTRUCTOR
+
         public BaseEntity(int address)
             : base(address)
         {
@@ -75,6 +82,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             _iClientClass = 0;
             _szClassName = "<none>";
         }
+
         public BaseEntity(BaseEntity copyFrom)
             : base(copyFrom.Address)
         {
@@ -84,9 +92,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             _iClientClass = copyFrom.MiClientClass;
             _szClassName = copyFrom.MSzClassName;
         }
+
         #endregion
 
         #region METHODS
+
         protected override void SetupFields()
         {
             base.SetupFields();
@@ -101,164 +111,187 @@ namespace CsGoApplicationAimbot.CSGOClasses
             AddField<Vector3>("Entity.m_vecOrigin", CsgoOffsets.NetVars.CBaseEntity.MVecOrigin);
             AddField<Vector3>("Entity.m_angRotation", CsgoOffsets.NetVars.CBaseEntity.MAngRotation);
         }
+
         public override string ToString()
         {
-            return string.Format("[BaseEntity m_iID={0}, m_iClassID={3}, m_szClassName={4}, m_vecOrigin={1}]\n{2}", MIId, MVecOrigin, base.ToString(), MiClassId, MSzClassName);
+            return string.Format("[BaseEntity m_iID={0}, m_iClassID={3}, m_szClassName={4}, m_vecOrigin={1}]\n{2}", MIId,
+                MVecOrigin, base.ToString(), MiClassId, MSzClassName);
         }
+
         public virtual bool IsValid()
         {
-            return Address != 0 /* && this.m_iDormant != 1*/ && MIId > 0 && MiClassId > 0;
+            return Address != 0 /* && this.m_iDormant != 1*/&& MIId > 0 && MiClassId > 0;
         }
+
         public bool SeenBy(int entityIndex)
         {
             return (MbSpottedByMask & (0x1 << entityIndex)) != 0;
         }
+
         public bool SeenBy(BaseEntity ent)
         {
             return SeenBy(ent.MIId - 1);
         }
+
         protected uint GetClientClass()
         {
             try
             {
                 if (MiVirtualTable == 0)
                     return 0;
-                uint function = Program.MemUtils.Read<uint>((IntPtr)(MiVirtualTable + 2 * 0x04));
+                var function = Program.MemUtils.Read<uint>((IntPtr) (MiVirtualTable + 2*0x04));
                 if (function != 0xFFFFFFFF)
-                    return Program.MemUtils.Read<uint>((IntPtr)(function + 0x01));
-                else
-                    return 0;
+                    return Program.MemUtils.Read<uint>((IntPtr) (function + 0x01));
+                return 0;
             }
-            catch { return 0; }
+            catch
+            {
+                return 0;
+            }
         }
+
         protected uint GetClassId()
         {
             try
             {
-                uint clientClass = GetClientClass();
+                var clientClass = GetClientClass();
                 if (clientClass != 0)
-                    return Program.MemUtils.Read<uint>((IntPtr)((long)clientClass + 20));
+                    return Program.MemUtils.Read<uint>((IntPtr) ((long) clientClass + 20));
                 return clientClass;
             }
-            catch { return 0; }
+            catch
+            {
+                return 0;
+            }
         }
+
         protected string GetClassName()
         {
             try
             {
-                uint clientClass = GetClientClass();
+                var clientClass = GetClientClass();
                 if (clientClass != 0)
                 {
-                    int ptr = Program.MemUtils.Read<int>((IntPtr)(clientClass + 8));
-                    return Program.MemUtils.ReadString((IntPtr)(ptr), 32, Encoding.ASCII);
+                    var ptr = Program.MemUtils.Read<int>((IntPtr) (clientClass + 8));
+                    return Program.MemUtils.ReadString((IntPtr) (ptr), 32, Encoding.ASCII);
                 }
                 return "none";
             }
-            catch { return "none"; }
+            catch
+            {
+                return "none";
+            }
         }
+
         public bool IsPlayer()
         {
             return
-                MiClassId == (int)CSGO.ClassId.CsPlayer;
+                MiClassId == (int) ClassId.CsPlayer;
         }
+
         public bool IsWeapon()
         {
-            return 
-                MiClassId == (int)CSGO.ClassId.Ak47 ||
-                MiClassId == (int)CSGO.ClassId.DEagle ||
-                MiClassId == (int)CSGO.ClassId.Knife ||
-                MiClassId == (int)CSGO.ClassId.KnifeGg ||
-                MiClassId == (int)CSGO.ClassId.WeaponAug ||
-                MiClassId == (int)CSGO.ClassId.WeaponAwp ||
-                MiClassId == (int)CSGO.ClassId.WeaponBizon ||
-                MiClassId == (int)CSGO.ClassId.WeaponDualBerettas ||
-                MiClassId == (int)CSGO.ClassId.WeaponElite ||
-                MiClassId == (int)CSGO.ClassId.WeaponFiveSeven ||
-                MiClassId == (int)CSGO.ClassId.WeaponG3Sg1 ||
-                MiClassId == (int)CSGO.ClassId.WeaponG3Sg1X ||
-                MiClassId == (int)CSGO.ClassId.WeaponGalilAr ||
-                MiClassId == (int)CSGO.ClassId.WeaponGlock ||
-                MiClassId == (int)CSGO.ClassId.WeaponHkp2000 ||
-                MiClassId == (int)CSGO.ClassId.WeaponM249 ||
-                MiClassId == (int)CSGO.ClassId.WeaponM249X ||
-                MiClassId == (int)CSGO.ClassId.WeaponM4 ||
-                MiClassId == (int)CSGO.ClassId.WeaponM4A1 ||
-                MiClassId == (int)CSGO.ClassId.WeaponMag ||
-                MiClassId == (int)CSGO.ClassId.WeaponMag7 ||
-                MiClassId == (int)CSGO.ClassId.WeaponMp7 ||
-                MiClassId == (int)CSGO.ClassId.WeaponMp9 ||
-                MiClassId == (int)CSGO.ClassId.WeaponNegev ||
-                MiClassId == (int)CSGO.ClassId.WeaponNova ||
-                MiClassId == (int)CSGO.ClassId.WeaponNOVA ||
-                MiClassId == (int)CSGO.ClassId.WeaponP250 ||
-                MiClassId == (int)CSGO.ClassId.WeaponP90 ||
-                MiClassId == (int)CSGO.ClassId.WeaponP90X ||
-                MiClassId == (int)CSGO.ClassId.WeaponPpBizon ||
-                MiClassId == (int)CSGO.ClassId.WeaponScar20 ||
-                MiClassId == (int)CSGO.ClassId.WeaponScar20X ||
-                MiClassId == (int)CSGO.ClassId.WeaponSg556 ||
-                MiClassId == (int)CSGO.ClassId.WeaponSsg08 ||
-                MiClassId == (int)CSGO.ClassId.WeaponTaser ||
-                MiClassId == (int)CSGO.ClassId.WeaponTec9 ||
-                MiClassId == (int)CSGO.ClassId.WeaponTec9X ||
-                MiClassId == (int)CSGO.ClassId.WeaponUmp45 ||
-                MiClassId == (int)CSGO.ClassId.WeaponUmp45X ||
-                MiClassId == (int)CSGO.ClassId.WeaponXm1014 ||
-                MiClassId == (int)CSGO.ClassId.WeaponXm1014X ||
-                MiClassId == (int)CSGO.ClassId.DecoyGrenade ||
-                MiClassId == (int)CSGO.ClassId.HeGrenade ||
-                MiClassId == (int)CSGO.ClassId.IncendiaryGrenade ||
-                MiClassId == (int)CSGO.ClassId.MolotovGrenade ||
-                MiClassId == (int)CSGO.ClassId.SmokeGrenade ||
-                MiClassId == (int)CSGO.ClassId.Flashbang;
+            return
+                MiClassId == (int) ClassId.Ak47 ||
+                MiClassId == (int) ClassId.DEagle ||
+                MiClassId == (int) ClassId.Knife ||
+                MiClassId == (int) ClassId.KnifeGg ||
+                MiClassId == (int) ClassId.WeaponAug ||
+                MiClassId == (int) ClassId.WeaponAwp ||
+                MiClassId == (int) ClassId.WeaponBizon ||
+                MiClassId == (int) ClassId.WeaponDualBerettas ||
+                MiClassId == (int) ClassId.WeaponElite ||
+                MiClassId == (int) ClassId.WeaponFiveSeven ||
+                MiClassId == (int) ClassId.WeaponG3Sg1 ||
+                MiClassId == (int) ClassId.WeaponG3Sg1X ||
+                MiClassId == (int) ClassId.WeaponGalilAr ||
+                MiClassId == (int) ClassId.WeaponGlock ||
+                MiClassId == (int) ClassId.WeaponHkp2000 ||
+                MiClassId == (int) ClassId.WeaponM249 ||
+                MiClassId == (int) ClassId.WeaponM249X ||
+                MiClassId == (int) ClassId.WeaponM4 ||
+                MiClassId == (int) ClassId.WeaponM4A1 ||
+                MiClassId == (int) ClassId.WeaponMag ||
+                MiClassId == (int) ClassId.WeaponMag7 ||
+                MiClassId == (int) ClassId.WeaponMp7 ||
+                MiClassId == (int) ClassId.WeaponMp9 ||
+                MiClassId == (int) ClassId.WeaponNegev ||
+                MiClassId == (int) ClassId.WeaponNova ||
+                MiClassId == (int) ClassId.WeaponNOVA ||
+                MiClassId == (int) ClassId.WeaponP250 ||
+                MiClassId == (int) ClassId.WeaponP90 ||
+                MiClassId == (int) ClassId.WeaponP90X ||
+                MiClassId == (int) ClassId.WeaponPpBizon ||
+                MiClassId == (int) ClassId.WeaponScar20 ||
+                MiClassId == (int) ClassId.WeaponScar20X ||
+                MiClassId == (int) ClassId.WeaponSg556 ||
+                MiClassId == (int) ClassId.WeaponSsg08 ||
+                MiClassId == (int) ClassId.WeaponTaser ||
+                MiClassId == (int) ClassId.WeaponTec9 ||
+                MiClassId == (int) ClassId.WeaponTec9X ||
+                MiClassId == (int) ClassId.WeaponUmp45 ||
+                MiClassId == (int) ClassId.WeaponUmp45X ||
+                MiClassId == (int) ClassId.WeaponXm1014 ||
+                MiClassId == (int) ClassId.WeaponXm1014X ||
+                MiClassId == (int) ClassId.DecoyGrenade ||
+                MiClassId == (int) ClassId.HeGrenade ||
+                MiClassId == (int) ClassId.IncendiaryGrenade ||
+                MiClassId == (int) ClassId.MolotovGrenade ||
+                MiClassId == (int) ClassId.SmokeGrenade ||
+                MiClassId == (int) ClassId.Flashbang;
         }
+
         public bool IsPistol()
         {
             return
-                MiClassId == (int) CSGO.ClassId.DEagle ||
-                MiClassId == (int) CSGO.ClassId.WeaponDualBerettas ||
-                MiClassId == (int) CSGO.ClassId.WeaponElite ||
-                MiClassId == (int) CSGO.ClassId.WeaponFiveSeven ||
-                MiClassId == (int) CSGO.ClassId.WeaponGlock ||
-                MiClassId == (int) CSGO.ClassId.WeaponHkp2000 ||
-                MiClassId == (int) CSGO.ClassId.WeaponTaser ||
-                MiClassId == (int) CSGO.ClassId.WeaponTec9 ||
-                MiClassId == (int) CSGO.ClassId.WeaponTec9X;
+                MiClassId == (int) ClassId.DEagle ||
+                MiClassId == (int) ClassId.WeaponDualBerettas ||
+                MiClassId == (int) ClassId.WeaponElite ||
+                MiClassId == (int) ClassId.WeaponFiveSeven ||
+                MiClassId == (int) ClassId.WeaponGlock ||
+                MiClassId == (int) ClassId.WeaponHkp2000 ||
+                MiClassId == (int) ClassId.WeaponTaser ||
+                MiClassId == (int) ClassId.WeaponTec9 ||
+                MiClassId == (int) ClassId.WeaponTec9X;
         }
+
         public bool IsSniper()
         {
             return
-                MiClassId == (int) CSGO.ClassId.WeaponAwp ||
-                MiClassId == (int) CSGO.ClassId.WeaponG3Sg1 ||
-                MiClassId == (int) CSGO.ClassId.WeaponG3Sg1X ||
-                MiClassId == (int) CSGO.ClassId.WeaponScar20 ||
-                MiClassId == (int) CSGO.ClassId.WeaponScar20X ||
-                MiClassId == (int) CSGO.ClassId.WeaponSsg08;
+                MiClassId == (int) ClassId.WeaponAwp ||
+                MiClassId == (int) ClassId.WeaponG3Sg1 ||
+                MiClassId == (int) ClassId.WeaponG3Sg1X ||
+                MiClassId == (int) ClassId.WeaponScar20 ||
+                MiClassId == (int) ClassId.WeaponScar20X ||
+                MiClassId == (int) ClassId.WeaponSsg08;
         }
+
         public bool IsGrenade()
         {
             return
-                MiClassId == (int)CSGO.ClassId.DecoyGrenade ||
-                MiClassId == (int)CSGO.ClassId.HeGrenade ||
-                MiClassId == (int)CSGO.ClassId.IncendiaryGrenade ||
-                MiClassId == (int)CSGO.ClassId.MolotovGrenade ||
-                MiClassId == (int)CSGO.ClassId.SmokeGrenade ||
-                MiClassId == (int)CSGO.ClassId.Flashbang;
+                MiClassId == (int) ClassId.DecoyGrenade ||
+                MiClassId == (int) ClassId.HeGrenade ||
+                MiClassId == (int) ClassId.IncendiaryGrenade ||
+                MiClassId == (int) ClassId.MolotovGrenade ||
+                MiClassId == (int) ClassId.SmokeGrenade ||
+                MiClassId == (int) ClassId.Flashbang;
         }
+
         public bool IsSpecial()
         {
             return
-                MiClassId == (int) CSGO.ClassId.Knife ||
-                MiClassId == (int) CSGO.ClassId.KnifeGg;
+                MiClassId == (int) ClassId.Knife ||
+                MiClassId == (int) ClassId.KnifeGg;
         }
 
         public bool IsProp()
         {
             return
-                MiClassId == (int)CSGO.ClassId.DynamicProp ||
-                MiClassId == (int)CSGO.ClassId.PhysicsProp ||
-                MiClassId == (int)CSGO.ClassId.PhysicsPropMultiplayer;
+                MiClassId == (int) ClassId.DynamicProp ||
+                MiClassId == (int) ClassId.PhysicsProp ||
+                MiClassId == (int) ClassId.PhysicsPropMultiplayer;
         }
+
         #endregion
     }
 }
