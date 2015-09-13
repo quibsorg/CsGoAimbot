@@ -190,7 +190,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 /*else*/
                 if (Program.ConfigUtils.GetValue<bool>("Aim Hold"))
                 {
-                    AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("aimKey"));
+                    AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
                 }
                 if (AimbotActive)
                     DoAimbot();

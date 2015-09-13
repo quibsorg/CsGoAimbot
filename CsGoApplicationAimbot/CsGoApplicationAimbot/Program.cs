@@ -146,7 +146,7 @@ namespace CsGoApplicationAimbot
                 "Aim Enemies",
                 "Aim Allies",
             });
-            ConfigUtils.KeySettings.Add("aimKey");
+            ConfigUtils.KeySettings.Add("Aim Key");
             ConfigUtils.FloatSettings.AddRange(new[] 
             {
                 "Aim Fov",
