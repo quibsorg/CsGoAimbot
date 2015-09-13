@@ -12,15 +12,19 @@ namespace CsGoApplicationAimbot.CSGOClasses
     public class Framework
     {
         #region VARIABLES
+        private readonly int
+            _dwEntityList;
+        private readonly int
+            _dwViewMatrix;
         private int
-            _dwEntityList,
-            _dwViewMatrix,
-            _dwLocalPlayer,
-            _dwClientState,
-            _clientDllBase,
-            _engineDllBase,
+            _dwLocalPlayer;
+        private readonly int
+            _dwClientState;
+        private readonly int
+            _clientDllBase;
+        private int
             _dwIGameResources;
-        private bool _mouseEnabled;
+
         #endregion
         #region PROPERTIES
         public CsLocalPlayer LocalPlayer { get; private set; }
@@ -59,11 +63,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             CsgoScanner.ScanOffsets(Program.MemUtils, clientDll, engineDll);
             _clientDllBase = (int)clientDll.BaseAddress;
-            _engineDllBase = (int)engineDll.BaseAddress;
+            var engineDllBase = (int)engineDll.BaseAddress;
             _dwEntityList = _clientDllBase + CsgoOffsets.Misc.EntityList;
             _dwViewMatrix = _clientDllBase + CsgoOffsets.Misc.ViewMatrix;
-            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(_engineDllBase + CsgoOffsets.ClientState.Base));
-            _mouseEnabled = true;
+            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(engineDllBase + CsgoOffsets.ClientState.Base));
             AimbotActive = false;
             TriggerbotActive = false;
         }
