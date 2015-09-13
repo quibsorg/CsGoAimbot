@@ -52,23 +52,23 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region PROPERTIES
 
         public CsLocalPlayer LocalPlayer { get; private set; }
-        public BaseEntity Target { get; private set; }
+        private BaseEntity Target { get; set; }
         public Tuple<int, CsPlayer>[] Players { get; private set; }
-        public Tuple<int, BaseEntity>[] Entities { get; private set; }
+        private Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
-        public Matrix ViewMatrix { get; private set; }
-        public Vector3 ViewAngles { get; private set; }
-        public Vector3 NewViewAngles { get; private set; }
-        public int[] Kills { get; private set; }
-        public int[] Deaths { get; private set; }
-        public int[] Assists { get; private set; }
-        public int[] Armor { get; private set; }
-        public int[] Score { get; private set; }
-        public string[] Clantags { get; private set; }
+        private Matrix ViewMatrix { get; set; }
+        private Vector3 ViewAngles { get; set; }
+        private Vector3 NewViewAngles { get; set; }
+        private int[] Kills { get; set; }
+        private int[] Deaths { get; set; }
+        private int[] Assists { get; set; }
+        private int[] Armor { get; set; }
+        private int[] Score { get; set; }
+        private string[] Clantags { get; set; }
         public string[] Names { get; private set; }
-        public SignOnState State { get; set; }
-        public bool AimbotActive { get; set; }
-        public bool TriggerbotActive { get; set; }
+        private SignOnState State { get; set; }
+        private bool AimbotActive { get; set; }
+        private bool TriggerbotActive { get; set; }
         private bool RcsHandled { get; set; }
         private int LastShotsFired { get; set; }
         private int LastClip { get; set; }
@@ -113,18 +113,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
             for (var i = 0; i < data.Length/16; i++)
             {
                 var address = BitConverter.ToInt32(data, 16*i);
-                if (address != 0)
-                {
-                    var ent = new BaseEntity(address);
-                    if (!ent.IsValid())
-                        continue;
-                    if (ent.IsPlayer())
-                        players.Add(new Tuple<int, CsPlayer>(i, new CsPlayer(ent)));
-                    else if (ent.IsWeapon())
-                        weapons.Add(new Tuple<int, Weapon>(i, new Weapon(ent)));
-                    else
-                        entities.Add(new Tuple<int, BaseEntity>(i, ent));
-                }
+                if (address == 0) continue;
+                var ent = new BaseEntity(address);
+                if (!ent.IsValid())
+                    continue;
+                if (ent.IsPlayer())
+                    players.Add(new Tuple<int, CsPlayer>(i, new CsPlayer(ent)));
+                else if (ent.IsWeapon())
+                    weapons.Add(new Tuple<int, Weapon>(i, new Weapon(ent)));
+                else
+                    entities.Add(new Tuple<int, BaseEntity>(i, ent));
             }
 
             Players = players.ToArray();
@@ -304,9 +302,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             return State == SignOnState.SignonstateFull && LocalPlayer != null;
         }
 
-        public void ControlAim()
+        private void ControlAim()
         {
-            if (LocalPlayer == null)
+            if (LocalPlayer == null && LocalPlayerWeapon.IsPistol())
                 return;
             var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MiHealth != 0 && x.Item2.MiDormant != 1);
             if (Program.ConfigUtils.GetValue<bool>("Aim Spotted"))
@@ -329,22 +327,18 @@ namespace CsGoApplicationAimbot.CSGOClasses
                         plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("Aim Bone"))) - NewViewAngles;
                 newAngles = newAngles.ClampAngle();
                 var fov = newAngles.Length()%360f;
-                if (fov < closestFov && fov < Program.ConfigUtils.GetValue<float>("Aim Fov"))
-                {
-                    closestFov = fov;
-                    closest = newAngles;
-                }
+                if (!(fov < closestFov) || !(fov < Program.ConfigUtils.GetValue<float>("Aim Fov"))) continue;
+                closestFov = fov;
+                closest = newAngles;
             }
-            if (closest != Vector3.Zero)
-            {
-                ControlRecoil(true);
-                if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
-                    NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest,
-                        Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
-                else
-                    NewViewAngles += closest;
-                NewViewAngles = NewViewAngles;
-            }
+            if (closest == Vector3.Zero) return;
+            ControlRecoil(true);
+            if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
+                NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest,
+                    Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
+            else
+                NewViewAngles += closest;
+            NewViewAngles = NewViewAngles;
         }
 
         public void ControlRecoil(bool aimbot = false)
