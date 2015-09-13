@@ -39,17 +39,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public string[] Clantags { get; private set; }
         public string[] Names { get; private set; }
         public SignOnState State { get; set; }
-        public bool MouseEnabled
-        {
-            get { return _mouseEnabled; }
-            set
-            {
-                if (value != _mouseEnabled)
-                {
-                    _mouseEnabled = value;                    
-                }
-            }
-        }
         public bool AimbotActive { get; set; }
         public bool TriggerbotActive { get; set; }
         private bool RcsHandled { get; set; }
@@ -193,12 +182,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
                 }
                 if (AimbotActive)
-                    DoAimbot();
+                    ControlAim();
             }
             #endregion
 
             #region RCS
-            DoRcs();
+            ControlRecoil();
             #endregion
 
             #region Set view angles
@@ -219,7 +208,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     TriggerbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Trigger Key"));
                 }
                 if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
-                    DoTriggerbot();
+                    Triggerbot();
             }
             #endregion
             
@@ -280,7 +269,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             return State == SignOnState.SignonstateFull && LocalPlayer != null;
         }
 
-        public void DoAimbot()
+        public void ControlAim()
         {
             if (LocalPlayer == null)
                 return;
@@ -311,7 +300,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             if (closest != Vector3.Zero)
             {
-                DoRcs(true);
+                ControlRecoil(true);
                 if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
                     NewViewAngles = MathUtils.SmoothAngle(NewViewAngles, NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
                 else
@@ -320,22 +309,28 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
-        public void DoRcs(bool aimbot = false)
+        public void ControlRecoil(bool aimbot = false)
         {
             if (Program.ConfigUtils.GetValue<bool>("Rcs Enabled"))
             {
-                if (LocalPlayerWeapon != null)
+                float rcsForceMax = Program.ConfigUtils.GetValue<float>("Rcs Force Max");
+                float rcsForceMin = Program.ConfigUtils.GetValue<float>("Rcs Force Min");
+                int rcsStart = Program.ConfigUtils.GetValue<int>("Rcs Start");
+                Random random = new Random();
+                float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
+
+                if (LocalPlayerWeapon != null && LocalPlayerWeapon.MIClip1 > 0)
                 {
-                    if (!RcsHandled && (LocalPlayerWeapon.MIClip1 != LastClip || LocalPlayer.MIShotsFired > 0 || Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON)))
+                    if (!RcsHandled && LocalPlayer.MIShotsFired > rcsStart)
                     {
                         if (aimbot)
                         {
-                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * Program.ConfigUtils.GetValue<float>("Rcs Force"));
+                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * randomRcsForce);
                         }
                         else
                         {
                             Vector3 punch = LocalPlayer.MVecPunch - LastPunch;
-                            NewViewAngles -= punch * (2f / 100f * Program.ConfigUtils.GetValue<float>("Rcs Force"));
+                            NewViewAngles -= punch * (2f / 100f * randomRcsForce);
                         }
                         RcsHandled = true;
                     }
@@ -343,7 +338,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
-        public void DoTriggerbot()
+        public void Triggerbot()
         {
             if (LocalPlayer != null && !TriggerShooting)
             {

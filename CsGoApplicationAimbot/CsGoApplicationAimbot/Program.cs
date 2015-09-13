@@ -64,11 +64,10 @@ namespace CsGoApplicationAimbot
             Framework = new Framework(clientDll, engineDll);
 
             PrintInfo("> Initializing overlay");
-            using (ShdxOverlay = new SharpDXOverlay())
-            {
-                ShdxOverlay.Attach(_hWnd);
-                ShdxOverlay.TickEvent += overlay_TickEvent;
-            }
+            ShdxOverlay = new SharpDXOverlay();
+            ShdxOverlay.Attach(_hWnd);
+            ShdxOverlay.TickEvent += overlay_TickEvent;
+
             Application.Run();
             ConfigUtils.SaveSettingsToFile("Config.cfg");
         }
@@ -99,6 +98,7 @@ namespace CsGoApplicationAimbot
                 "Rcs Force Max",
                 "Rcs Force Min"
             });
+            ConfigUtils.IntegerSettings.Add("Rcs Start");
             //Trigger
             ConfigUtils.BooleanSettings.AddRange(new[]
             {
