@@ -3,6 +3,7 @@
     public enum ClassId
     {
         Ak47 = 1,
+        DEagle = 38,
         BaseAnimating = 2,
         BaseDoor = 10,
         BaseEntity = 11,
@@ -16,7 +17,6 @@
         CascadeLight = 29,
         Chicken = 30,
         ColorCorrection = 31,
-        DEagle = 38,
         DecoyGrenade = 39,
         DynamicProp = 42,
         EnvDetailController = 50,
@@ -92,6 +92,11 @@
         WeaponScar20X = 223,
         WeaponXm1014X = 234,
         WeaponM249X = 209,
+    }
+
+    public enum Pistol
+    {
+        
     }
 
 }

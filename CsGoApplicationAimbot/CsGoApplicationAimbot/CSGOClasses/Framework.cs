@@ -174,12 +174,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #region Aimbot
             if (Program.ConfigUtils.GetValue<bool>("Aim Enabled"))
             {
-                //if (Program.ConfigUtils.GetValue<bool>("Aim Toggle"))
-                //{
-                //    if (Program.KeyUtils.KeyWentUp(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("aimKey")))
-                //        AimbotActive = !AimbotActive;
-                //}
-                /*else*/
                 if (Program.ConfigUtils.GetValue<bool>("Aim Hold"))
                 {
                     AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
@@ -252,10 +246,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
 
             #endregion
-            if (LocalPlayerWeapon != null)
-                LastClip = LocalPlayerWeapon.MiClip1;
-            else
-                LastClip = 0;
+            LastClip = LocalPlayerWeapon?.MiClip1 ?? 0;
             LastShotsFired = LocalPlayer.MiShotsFired;
             LastPunch = LocalPlayer.MVecPunch;
         }
@@ -264,7 +255,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
+            Program.MemUtils.Write((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
         }
 
         public bool IsPlaying()

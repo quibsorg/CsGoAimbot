@@ -2,21 +2,14 @@
 {
     public class Weapon : BaseEntity
     {
-        #region VARIABLES
-        #endregion
-
         #region FIELDS
         public int MiItemDefinitionIndex => ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex");
         public int MiState => ReadFieldProxy<int>("Weapon.m_iState");
-
         public int MiClip1 => ReadFieldProxy<int>("Weapon.m_iClip1");
         public float MFlNextPrimaryAttack => ReadFieldProxy<float>("Weapon.m_flNextPrimaryAttack");
         public int MbCanReload => ReadFieldProxy<int>("Weapon.m_bCanReload");
-
         public int MiWeaponTableIndex => ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex");
-
         public float MfAccuracyPenalty => ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty");
-
         public int MiWeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
 
         #endregion
