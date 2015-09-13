@@ -325,7 +325,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     {
                         if (aimbot)
                         {
-                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * randomRcsForce);
+                            float aimbotForce = randomRcsForce/2;
+                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
                         }
                         else
                         {
