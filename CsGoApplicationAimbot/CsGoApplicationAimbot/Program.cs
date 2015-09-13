@@ -31,9 +31,6 @@ namespace CsGoApplicationAimbot
         public static ProcUtils ProcUtils;
         public static MemUtils MemUtils;
         public static CsgoConfigUtils ConfigUtils;
-        private static string _scrollText = "~~~ [CSGO] Zat's Multihack v3 ~~~ UC-exclusive ~~~ www.unknowncheats.me - Leading the game hacking scene since 2000 ";
-        private static int _scrollIndex = 0;
-        private static int _scrollLength = 32;
         #endregion
 
         #region CONTROLS
@@ -134,11 +131,7 @@ namespace CsGoApplicationAimbot
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
-            PrintSuccess("[>]=-- Zat's CSGO-ESP");
-            PrintEncolored("[www.unknowncheats.me - Leading the game hacking scene since 2000]", ConsoleColor.Cyan);
-            Thread scroller = new Thread(new ThreadStart(LoopScroll));
-            scroller.IsBackground = true;
-            scroller.Start();
+            PrintSuccess("Smurf bot");
             KeyUtils = new KeyUtils();
             ConfigUtils = new CsgoConfigUtils();
 
@@ -219,7 +212,6 @@ namespace CsGoApplicationAimbot
             {
                 ShdxOverlay.Attach(_hWnd);
                 ShdxOverlay.TickEvent += overlay_TickEvent;
-                ShdxOverlay.BeforeDrawingEvent += SHDXOverlay_BeforeDrawingEvent;
                 InitializeComponents();
                 SharpDXRenderer renderer = ShdxOverlay.Renderer;
                 TextFormat smallFont = renderer.CreateFont("smallFont", "Century Gothic", 10f);
@@ -249,23 +241,6 @@ namespace CsGoApplicationAimbot
                 System.Windows.Forms.Application.Run();
             }
             ConfigUtils.SaveSettingsToFile("Config.cfg");
-        }
-
-        private static void LoopScroll()
-        {
-            _scrollText += _scrollText;
-            while(true)
-            {
-                _scrollIndex++;
-                _scrollIndex %= (_scrollText.Length / 2);
-                Console.Title = string.Format("[ {0} ]", _scrollText.Substring(_scrollIndex, _scrollLength));
-                Thread.Sleep(150);
-            }
-        }
-
-        //TODO REMOVE
-        static void SHDXOverlay_BeforeDrawingEvent(object sender, ExternalUtilsCSharp.UI.Overlay<SharpDXRenderer, SharpDX.Color, SharpDX.Vector2, TextFormat>.OverlayEventArgs e)
-        {
         }
 
         private static void overlay_TickEvent(object sender, SharpDXOverlay.DeltaEventArgs e)
