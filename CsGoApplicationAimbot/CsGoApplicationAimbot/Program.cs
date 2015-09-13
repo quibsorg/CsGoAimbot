@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using CsGoApplicationAimbot.CSGO.Enums;
 using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.SharpDXRenderer;
@@ -131,35 +134,24 @@ namespace CsGoApplicationAimbot
             Framework.Update();
             ShdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
 
-            //TODO PRINT OUT TO CONSOLE
-            //if (Framework.IsPlaying())
-            //{
-            //    #region Spectators
-            //    if (Framework.LocalPlayer != null)
-            //    {
-            //        var spectators = Framework.Players.Where(x => x.Item2.MHObserverTarget == Framework.LocalPlayer.M_IId && x.Item2.MIHealth == 0 && x.Item2.MIDormant != 1);
-            //        StringBuilder builder = new StringBuilder();
-            //        foreach (Tuple<int, CsPlayer> spec in spectators)
-            //        {
-            //            CsPlayer player = spec.Item2;
-            //            builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.M_IId], (SpectatorView)player.MIObserverMode, builder.Length > 0 ? "\n" : "");
-            //        }
-            //        if (builder.Length > 0)
-            //            _labelSpectators.Text = builder.ToString();
-            //        else
-            //            _labelSpectators.Text = "<none>";
-            //    }
-            //    else
-            //    {
-            //        _labelSpectators.Text = "<none>";
-            //    }
-            //    #endregion
-            //}
-            //else
-            //{
-            //    _labelSpectators.Text = "<none>";
-            //}
+            #region Spectators
+            if (!Framework.IsPlaying()) return;
+            if (Framework.LocalPlayer == null) return;
+            var spectators =
+                Framework.Players.Where(x => x.Item2.MhObserverTarget == Framework.LocalPlayer.MIId && x.Item2.MiHealth == 0 && x.Item2.MiDormant != 1);
+            StringBuilder builder = new StringBuilder();
+            foreach (CsPlayer player in spectators.Select(spec => spec.Item2))
+            {
+                builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.MIId],
+                    (SpectatorView) player.MiObserverMode, builder.Length > 0 ? "\n" : "");
+            }
+            if (builder.Length > 0)
+            {
+                Console.WriteLine(builder.ToString());
+            }
+            #endregion
         }
+
         #endregion
 
         #region HELPERS

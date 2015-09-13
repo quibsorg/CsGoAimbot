@@ -313,7 +313,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 Random random = new Random();
                 float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
 
-                if (LocalPlayerWeapon != null && LocalPlayerWeapon.MiClip1 > 0)
+                if (LocalPlayerWeapon != null && LocalPlayerWeapon.MiClip1 > 0 && !LocalPlayerWeapon.IsPistol())
                 {
                     if (!RcsHandled && LocalPlayer.MiShotsFired > rcsStart)
                     {
@@ -335,7 +335,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public void Triggerbot()
         {
-            if (LocalPlayer != null && !TriggerShooting)
+            if (LocalPlayer != null && !TriggerShooting && !LocalPlayerWeapon.IsGrenade())
             {
                 if (Players.Count(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx) > 0)
                 {

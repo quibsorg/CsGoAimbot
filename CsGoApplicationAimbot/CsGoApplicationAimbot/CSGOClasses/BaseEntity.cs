@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
+using CsGoApplicationAimbot.CSGO.Enums;
 using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
@@ -161,7 +163,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         }
         public bool IsWeapon()
         {
-            return
+            return 
                 MiClassId == (int)CSGO.ClassId.Ak47 ||
                 MiClassId == (int)CSGO.ClassId.DEagle ||
                 MiClassId == (int)CSGO.ClassId.Knife ||
@@ -210,6 +212,46 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 MiClassId == (int)CSGO.ClassId.SmokeGrenade ||
                 MiClassId == (int)CSGO.ClassId.Flashbang;
         }
+        public bool IsPistol()
+        {
+            return
+                MiClassId == (int) CSGO.ClassId.DEagle ||
+                MiClassId == (int) CSGO.ClassId.WeaponDualBerettas ||
+                MiClassId == (int) CSGO.ClassId.WeaponElite ||
+                MiClassId == (int) CSGO.ClassId.WeaponFiveSeven ||
+                MiClassId == (int) CSGO.ClassId.WeaponGlock ||
+                MiClassId == (int) CSGO.ClassId.WeaponHkp2000 ||
+                MiClassId == (int) CSGO.ClassId.WeaponTaser ||
+                MiClassId == (int) CSGO.ClassId.WeaponTec9 ||
+                MiClassId == (int) CSGO.ClassId.WeaponTec9X;
+        }
+        public bool IsSniper()
+        {
+            return
+                MiClassId == (int) CSGO.ClassId.WeaponAwp ||
+                MiClassId == (int) CSGO.ClassId.WeaponG3Sg1 ||
+                MiClassId == (int) CSGO.ClassId.WeaponG3Sg1X ||
+                MiClassId == (int) CSGO.ClassId.WeaponScar20 ||
+                MiClassId == (int) CSGO.ClassId.WeaponScar20X ||
+                MiClassId == (int) CSGO.ClassId.WeaponSsg08;
+        }
+        public bool IsGrenade()
+        {
+            return
+                MiClassId == (int)CSGO.ClassId.DecoyGrenade ||
+                MiClassId == (int)CSGO.ClassId.HeGrenade ||
+                MiClassId == (int)CSGO.ClassId.IncendiaryGrenade ||
+                MiClassId == (int)CSGO.ClassId.MolotovGrenade ||
+                MiClassId == (int)CSGO.ClassId.SmokeGrenade ||
+                MiClassId == (int)CSGO.ClassId.Flashbang;
+        }
+        public bool IsSpecial()
+        {
+            return
+                MiClassId == (int) CSGO.ClassId.Knife ||
+                MiClassId == (int) CSGO.ClassId.KnifeGg;
+        }
+
         public bool IsProp()
         {
             return
