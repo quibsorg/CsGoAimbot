@@ -8,35 +8,35 @@
         #region FIELDS
         public int MIItemDefinitionIndex
         {
-            get { return this.ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex"); }
+            get { return ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex"); }
         }
         public int MIState
         {
-            get { return this.ReadFieldProxy<int>("Weapon.m_iState"); }
+            get { return ReadFieldProxy<int>("Weapon.m_iState"); }
         }
         public int MIClip1
         {
-            get { return this.ReadFieldProxy<int>("Weapon.m_iClip1"); }
+            get { return ReadFieldProxy<int>("Weapon.m_iClip1"); }
         }
         public float MFlNextPrimaryAttack
         {
-            get { return this.ReadFieldProxy<float>("Weapon.m_flNextPrimaryAttack"); }
+            get { return ReadFieldProxy<float>("Weapon.m_flNextPrimaryAttack"); }
         }
         public int MBCanReload
         {
-            get { return this.ReadFieldProxy<int>("Weapon.m_bCanReload"); }
+            get { return ReadFieldProxy<int>("Weapon.m_bCanReload"); }
         }
         public int MIWeaponTableIndex
         {
-            get { return this.ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex"); }
+            get { return ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex"); }
         }
         public float MFAccuracyPenalty
         {
-            get { return this.ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty"); }
+            get { return ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty"); }
         }
         public int MIWeaponId
         {
-            get { return this.ReadFieldProxy<int>("Weapon.m_iWeaponID"); }
+            get { return ReadFieldProxy<int>("Weapon.m_iWeaponID"); }
         }
         #endregion
 
@@ -51,7 +51,7 @@
         public Weapon(Weapon other) 
             : base(other)
         {
-            this.CopyFieldsFrom(other);
+            CopyFieldsFrom(other);
         }
         #endregion
 
@@ -59,22 +59,22 @@
         protected override void SetupFields()
         {
             base.SetupFields();
-            this.AddField<int>("Weapon.m_iItemDefinitionIndex", CsgoOffsets.NetVars.Weapon.MIItemDefinitionIndex);
-            this.AddField<int>("Weapon.m_iState", CsgoOffsets.NetVars.Weapon.MIState);
-            this.AddField<int>("Weapon.m_iClip1", CsgoOffsets.NetVars.Weapon.MIClip1);
-            this.AddField<float>("Weapon.m_flNextPrimaryAttack", CsgoOffsets.NetVars.Weapon.MFlNextPrimaryAttack);
-            this.AddField<int>("Weapon.m_bCanReload", CsgoOffsets.NetVars.Weapon.MBCanReload);
-            this.AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.MIWeaponTableIndex);
-            this.AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.MFAccuracyPenalty);
-            this.AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.MIWeaponId);
+            AddField<int>("Weapon.m_iItemDefinitionIndex", CsgoOffsets.NetVars.Weapon.MIItemDefinitionIndex);
+            AddField<int>("Weapon.m_iState", CsgoOffsets.NetVars.Weapon.MIState);
+            AddField<int>("Weapon.m_iClip1", CsgoOffsets.NetVars.Weapon.MIClip1);
+            AddField<float>("Weapon.m_flNextPrimaryAttack", CsgoOffsets.NetVars.Weapon.MFlNextPrimaryAttack);
+            AddField<int>("Weapon.m_bCanReload", CsgoOffsets.NetVars.Weapon.MBCanReload);
+            AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.MIWeaponTableIndex);
+            AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.MFAccuracyPenalty);
+            AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.MIWeaponId);
         }
         public override bool IsValid()
         {
-            return base.IsValid() && this.MIWeaponId > 0 && this.MIItemDefinitionIndex > 0;
+            return base.IsValid() && MIWeaponId > 0 && MIItemDefinitionIndex > 0;
         }
         public bool IsCarried()
         {
-            return this.MHOwnerEntity != 0;
+            return MHOwnerEntity != 0;
         }
         #endregion
     }

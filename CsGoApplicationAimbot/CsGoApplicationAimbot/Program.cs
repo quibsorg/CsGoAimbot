@@ -197,7 +197,7 @@ namespace CsGoApplicationAimbot
                 Thread.Sleep(250);
 
             ProcUtils = new ProcUtils(GameProcess, WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite | WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
-            MemUtils = new ExternalUtilsCSharp.MemUtils();
+            MemUtils = new MemUtils();
             MemUtils.Handle = ProcUtils.Handle;
 
             PrintInfo("> Waiting for CSGOs window to show up...");

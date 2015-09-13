@@ -19,11 +19,11 @@ namespace CsGoApplicationAimbot
         #region CONSTRUCTOR
         public CsgoConfigUtils() : base()
         {
-            this.IntegerSettings = new List<string>();
-            this.UIntegerSettings = new List<string>();
-            this.FloatSettings = new List<string>();
-            this.KeySettings = new List<string>();
-            this.BooleanSettings = new List<string>();
+            IntegerSettings = new List<string>();
+            UIntegerSettings = new List<string>();
+            FloatSettings = new List<string>();
+            KeySettings = new List<string>();
+            BooleanSettings = new List<string>();
         }
         #endregion
 
@@ -31,15 +31,15 @@ namespace CsGoApplicationAimbot
         public void FillDefaultValues()
         {
             foreach (string integerV in IntegerSettings)
-                this.SetValue(integerV, 0);
+                SetValue(integerV, 0);
             foreach (string uintegerV in UIntegerSettings)
-                this.SetValue(uintegerV, 0);
+                SetValue(uintegerV, 0);
             foreach (string floatV in FloatSettings)
-                this.SetValue(floatV, 0f);
+                SetValue(floatV, 0f);
             foreach (string keyV in KeySettings)
-                this.SetValue(keyV, WinAPI.VirtualKeyShort.LBUTTON);
+                SetValue(keyV, WinAPI.VirtualKeyShort.LBUTTON);
             foreach (string booleanV in BooleanSettings)
-                this.SetValue(booleanV, false);
+                SetValue(booleanV, false);
         }
         public override void ReadSettings(byte[] data)
         {
@@ -74,16 +74,16 @@ namespace CsGoApplicationAimbot
         {
             try
             {
-                if (this.FloatSettings.Contains(name))
-                    this.SetValue(name, Convert.ToSingle(value));
-                else if (this.IntegerSettings.Contains(name))
-                    this.SetValue(name, Convert.ToInt32(value));
-                else if (this.UIntegerSettings.Contains(name))
-                    this.SetValue(name, Convert.ToUInt32(value));
-                else if (this.BooleanSettings.Contains(name))
-                    this.SetValue(name, Convert.ToBoolean(value));
-                else if (this.KeySettings.Contains(name))
-                    this.SetValue(name, ParseEnum<WinAPI.VirtualKeyShort>(value));
+                if (FloatSettings.Contains(name))
+                    SetValue(name, Convert.ToSingle(value));
+                else if (IntegerSettings.Contains(name))
+                    SetValue(name, Convert.ToInt32(value));
+                else if (UIntegerSettings.Contains(name))
+                    SetValue(name, Convert.ToUInt32(value));
+                else if (BooleanSettings.Contains(name))
+                    SetValue(name, Convert.ToBoolean(value));
+                else if (KeySettings.Contains(name))
+                    SetValue(name, ParseEnum<WinAPI.VirtualKeyShort>(value));
                 else
                     Program.PrintError("Unknown settings-field \"{0}\" (value: \"{1}\")", name, value);
             }
@@ -98,12 +98,12 @@ namespace CsGoApplicationAimbot
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(@"#Smurf Bot 0.4");
             builder.AppendLine(@"#Made By Carlsson");
-            object[] keys = new object[this.GetKeys().Count];
-            this.GetKeys().CopyTo(keys, 0);
+            object[] keys = new object[GetKeys().Count];
+            GetKeys().CopyTo(keys, 0);
             var keysSorted = keys.OrderBy(x => x);
             foreach (string key in keysSorted)
             {
-                builder.AppendFormat("{0} = {1}\n", key, this.GetValue(key));
+                builder.AppendFormat("{0} = {1}\n", key, GetValue(key));
             }
             return Encoding.Unicode.GetBytes(builder.ToString());
         }

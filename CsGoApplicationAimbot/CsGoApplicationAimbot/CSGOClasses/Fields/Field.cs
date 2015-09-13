@@ -14,15 +14,15 @@ namespace CsGoApplicationAimbot.CSGOClasses.Fields
         { }
         public Field(int offset, T value)
         {
-            this.Offset = offset;
-            this.Value = value;
-            this.ValueRead = false;
+            Offset = offset;
+            Value = value;
+            ValueRead = false;
         }
 
         public virtual void ReadValue(int baseAddress)
         {
-            this.Value = Program.MemUtils.Read<T>((IntPtr)(baseAddress + this.Offset));
-            this.ValueRead = true;
+            Value = Program.MemUtils.Read<T>((IntPtr)(baseAddress + Offset));
+            ValueRead = true;
         }
     }
 }

@@ -18,9 +18,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region CONSTRUCTORS
         public Entity(int address)
         {
-            this.Address = address;
-            this.Fields = new Hashtable();
-            this.SetupFields();
+            Address = address;
+            Fields = new Hashtable();
+            SetupFields();
         }
         public Entity() : this(0)
         { }
@@ -29,7 +29,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region METHODS
         public override string ToString()
         {
-            return string.Format("[Entity Address={0}]", this.Address.ToString("X"));
+            return string.Format("[Entity Address={0}]", Address.ToString("X"));
         }
         #endregion
 
@@ -49,7 +49,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             Field<T> field = (Field<T>)Fields[fieldName];
             if (!field.ValueRead)
-                field.ReadValue(this.Address);
+                field.ReadValue(Address);
             return field.Value;
         }
         /// <summary>
@@ -61,7 +61,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected void CopyFieldsFrom<T>(T other) where T : Entity
         {
             foreach (string key in other.Fields.Keys)
-                this.Fields[key] = other.Fields[key];
+                Fields[key] = other.Fields[key];
         }
 
         protected virtual void SetupFields()
