@@ -47,8 +47,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (value != _mouseEnabled)
                 {
                     _mouseEnabled = value;                    
-                    //WinAPI.SetCursorPos(WithOverlay.SHDXOverlay.Location.X + WithOverlay.SHDXOverlay.Width / 2, WithOverlay.SHDXOverlay.Location.Y + WithOverlay.SHDXOverlay.Height / 2);
-                    //WithOverlay.MemUtils.Write<byte>((IntPtr)(clientDllBase + CSGOOffsets.Misc.MouseEnable), value ? (byte)1 : (byte)0);
                 }
             }
         }
@@ -182,14 +180,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region Aimbot
-            if (Program.ConfigUtils.GetValue<bool>("aimEnabled"))
+            if (Program.ConfigUtils.GetValue<bool>("Aim Enabled"))
             {
-                if (Program.ConfigUtils.GetValue<bool>("aimToggle"))
-                {
-                    if (Program.KeyUtils.KeyWentUp(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("aimKey")))
-                        AimbotActive = !AimbotActive;
-                }
-                else if (Program.ConfigUtils.GetValue<bool>("aimHold"))
+                //if (Program.ConfigUtils.GetValue<bool>("Aim Toggle"))
+                //{
+                //    if (Program.KeyUtils.KeyWentUp(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("aimKey")))
+                //        AimbotActive = !AimbotActive;
+                //}
+                /*else*/
+                if (Program.ConfigUtils.GetValue<bool>("Aim Hold"))
                 {
                     AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("aimKey"));
                 }
@@ -208,16 +207,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region triggerbot
-            if (Program.ConfigUtils.GetValue<bool>("triggerEnabled"))
+            if (Program.ConfigUtils.GetValue<bool>("Trigger Enabled"))
             {
-                if (Program.ConfigUtils.GetValue<bool>("triggerToggle"))
+                if (Program.ConfigUtils.GetValue<bool>("Trigger Toggle"))
                 {
-                    if (Program.KeyUtils.KeyWentUp(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("triggerKey")))
+                    if (Program.KeyUtils.KeyWentUp(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Trigger Key")))
                         TriggerbotActive = !TriggerbotActive;
                 }
-                else if (Program.ConfigUtils.GetValue<bool>("triggerHold"))
+                else if (Program.ConfigUtils.GetValue<bool>("Trigger Hold"))
                 {
-                    TriggerbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("triggerKey"));
+                    TriggerbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Trigger Key"));
                 }
                 if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
                     DoTriggerbot();
@@ -233,7 +232,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
                 else
                 {
-                    if (Program.ConfigUtils.GetValue<bool>("triggerBurstEnabled"))
+                    if (Program.ConfigUtils.GetValue<bool>("Trigger Burst Enabled"))
                     {
                         if (TriggerBurstFired >= TriggerBurstCount)
                         {
@@ -286,13 +285,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer == null)
                 return;
             var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth != 0 && x.Item2.MIDormant != 1);
-            if (Program.ConfigUtils.GetValue<bool>("aimFilterSpotted"))
+            if (Program.ConfigUtils.GetValue<bool>("Aim Spotted"))
                 valid = valid.Where(x => x.Item2.SeenBy(LocalPlayer));
-            if (Program.ConfigUtils.GetValue<bool>("aimFilterSpottedBy"))
+            if (Program.ConfigUtils.GetValue<bool>("Aim Spotted By"))
                 valid = valid.Where(x => LocalPlayer.SeenBy(x.Item2));
-            if (Program.ConfigUtils.GetValue<bool>("aimFilterEnemies"))
+            if (Program.ConfigUtils.GetValue<bool>("Aim Enemies"))
                 valid = valid.Where(x => x.Item2.MITeamNum != LocalPlayer.MITeamNum);
-            if (Program.ConfigUtils.GetValue<bool>("aimFilterAllies"))
+            if (Program.ConfigUtils.GetValue<bool>("Aim Allies"))
                 valid = valid.Where(x => x.Item2.MITeamNum == LocalPlayer.MITeamNum);
 
             valid = valid.OrderBy(x => (x.Item2.MVecOrigin - LocalPlayer.MVecOrigin).Length());
@@ -301,10 +300,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             foreach (Tuple<int, CsPlayer> tpl in valid)
             {
                 CsPlayer plr = tpl.Item2;
-                Vector3 newAngles = MathUtils.CalcAngle(LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset, plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("aimBone"))) - NewViewAngles;
+                Vector3 newAngles = MathUtils.CalcAngle(LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset, plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("Aim Bone"))) - NewViewAngles;
                 newAngles = MathUtils.ClampAngle(newAngles);
                 float fov = newAngles.Length() % 360f;
-                if (fov < closestFov && fov < Program.ConfigUtils.GetValue<float>("aimFov"))
+                if (fov < closestFov && fov < Program.ConfigUtils.GetValue<float>("Aim Fov"))
                 {
                     closestFov = fov;
                     closest = newAngles;
@@ -313,8 +312,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (closest != Vector3.Zero)
             {
                 DoRcs(true);
-                if (Program.ConfigUtils.GetValue<bool>("aimSmoothEnabled"))
-                    NewViewAngles = MathUtils.SmoothAngle(NewViewAngles, NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("aimSmoothValue"));
+                if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
+                    NewViewAngles = MathUtils.SmoothAngle(NewViewAngles, NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
                 else
                     NewViewAngles += closest;
                 NewViewAngles = NewViewAngles;
@@ -323,7 +322,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public void DoRcs(bool aimbot = false)
         {
-            if (Program.ConfigUtils.GetValue<bool>("rcsEnabled"))
+            if (Program.ConfigUtils.GetValue<bool>("Rcs Enabled"))
             {
                 if (LocalPlayerWeapon != null)
                 {
@@ -331,12 +330,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     {
                         if (aimbot)
                         {
-                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * Program.ConfigUtils.GetValue<float>("rcsForce"));
+                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * Program.ConfigUtils.GetValue<float>("Rcs Force"));
                         }
                         else
                         {
                             Vector3 punch = LocalPlayer.MVecPunch - LastPunch;
-                            NewViewAngles -= punch * (2f / 100f * Program.ConfigUtils.GetValue<float>("rcsForce"));
+                            NewViewAngles -= punch * (2f / 100f * Program.ConfigUtils.GetValue<float>("Rcs Force"));
                         }
                         RcsHandled = true;
                     }
@@ -351,8 +350,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (Players.Count(x => x.Item2.M_IId == LocalPlayer.MICrosshairIdx) > 0)
                 {
                     CsPlayer player = Players.First(x=>x.Item2.M_IId == LocalPlayer.MICrosshairIdx).Item2;
-                    if ((Program.ConfigUtils.GetValue<bool>("triggerFilterEnemies") && player.MITeamNum != LocalPlayer.MITeamNum) ||
-                        (Program.ConfigUtils.GetValue<bool>("triggerFilterAllies") && player.MITeamNum == LocalPlayer.MITeamNum))
+                    if ((Program.ConfigUtils.GetValue<bool>("Trigger Enemies") && player.MITeamNum != LocalPlayer.MITeamNum) ||
+                        (Program.ConfigUtils.GetValue<bool>("Trigger Allies") && player.MITeamNum == LocalPlayer.MITeamNum))
                     {
                         if (!TriggerOnTarget)
                         {
@@ -361,16 +360,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
                         }
                         else
                         {
-                            if (new TimeSpan(DateTime.Now.Ticks - TriggerLastTarget).TotalMilliseconds >= Program.ConfigUtils.GetValue<float>("triggerDelayFirstShot"))
+                            if (new TimeSpan(DateTime.Now.Ticks - TriggerLastTarget).TotalMilliseconds >= Program.ConfigUtils.GetValue<float>("Trigger Delay FirstShot"))
                             {
-                                if (new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= Program.ConfigUtils.GetValue<float>("triggerDelayShots"))
+                                if (new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= Program.ConfigUtils.GetValue<float>("Trigger Delay Shots"))
                                 {
                                     TriggerLastShot = DateTime.Now.Ticks;
                                     if(!TriggerShooting)
                                     {
-                                        if (Program.ConfigUtils.GetValue<bool>("triggerBurstRandomize"))
-                                            TriggerBurstCount = new Random().Next(1, (int)Program.ConfigUtils.GetValue<float>("triggerBurstShots"));
-                                        else TriggerBurstCount = (int)Program.ConfigUtils.GetValue<float>("triggerBurstShots");
+                                        if (Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize"))
+                                            TriggerBurstCount = new Random().Next(1, (int)Program.ConfigUtils.GetValue<float>("Trigger Burst Shots"));
+                                        else TriggerBurstCount = (int)Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
                                     }
                                     TriggerShooting = true;
                                 }

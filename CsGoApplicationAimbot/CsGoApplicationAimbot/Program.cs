@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using CsGoApplicationAimbot.CSGO.Enums;
 using CsGoApplicationAimbot.CSGOClasses;
-using CsGoApplicationAimbot.UI;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.SharpDXRenderer;
 using ExternalUtilsCSharp.SharpDXRenderer.Controls;
@@ -126,8 +125,6 @@ namespace CsGoApplicationAimbot
         private static SharpDXLabel _labelTriggerbot;
 
         //Others
-        private static PlayerRadar _ctrlRadar;
-        private static PlayerEsp[] _ctrlPlayerEsp;
         private static Crosshair _ctrlCrosshair;
         #endregion
 
@@ -145,37 +142,55 @@ namespace CsGoApplicationAimbot
             KeyUtils = new KeyUtils();
             ConfigUtils = new CsgoConfigUtils();
 
-            //ESP
-            ConfigUtils.BooleanSettings.AddRange(new string[] {"espEnabled","espBox","espSkeleton", "espName","espHealth", "espAllies", "espEnemies"});
             //Aim
-            ConfigUtils.BooleanSettings.AddRange(new string[] { "aimDrawFov", "aimEnabled", "aimToggle", "aimHold", "aimSmoothEnabled", "aimFilterSpotted", "aimFilterSpottedBy", "aimFilterEnemies", "aimFilterAllies", "aimFilterSpottedBy" });
+            ConfigUtils.BooleanSettings.AddRange(new[] 
+            {
+                "Aim Enabled",
+                "Aim Hold",
+                "Aim Smooth Enabled",
+                "Aim Spotted",
+                "Aim Spotted By",
+                "Aim Enemies",
+                "Aim Allies",
+            });
             ConfigUtils.KeySettings.Add("aimKey");
-            ConfigUtils.FloatSettings.AddRange(new string[] { "aimFov", "aimSmoothValue" });
-            ConfigUtils.IntegerSettings.Add("aimBone");
+            ConfigUtils.FloatSettings.AddRange(new[] 
+            {
+                "Aim Fov",
+                "Aim Smooth Value"
+            });
+            ConfigUtils.IntegerSettings.Add("Aim Bone");
             //RCS
-            ConfigUtils.BooleanSettings.Add("rcsEnabled");
-            ConfigUtils.FloatSettings.Add("rcsForce");
+            ConfigUtils.BooleanSettings.Add("Rcs Enabled");
+            ConfigUtils.FloatSettings.AddRange(new[]
+            {
+                "Rcs Force Max",
+                "Rcs Force Min"
+            });
             //Trigger
-            ConfigUtils.BooleanSettings.AddRange(new string[] { "triggerEnabled", "triggerToggle", "triggerHold", "triggerFilterEnemies", "triggerFilterAllies", "triggerBurstEnabled", "triggerBurstRandomize" });
-            ConfigUtils.KeySettings.Add("triggerKey");
-            ConfigUtils.FloatSettings.AddRange(new string[] { "triggerDelayFirstShot", "triggerDelayShots", "triggerBurstShots" });
-            //Radar
-            ConfigUtils.BooleanSettings.AddRange(new string[] { "radarEnabled", "radarAllies", "radarEnemies" });
-            ConfigUtils.FloatSettings.AddRange(new string[] { "radarScale", "radarWidth", "radarHeight" });
-            //Crosshair
-            ConfigUtils.BooleanSettings.AddRange(new string[] { "crosshairEnabled", "crosshairOutline" });
-            ConfigUtils.IntegerSettings.AddRange(new string[] { "crosshairType" });
-            ConfigUtils.UIntegerSettings.AddRange(new string[] { "crosshairPrimaryColor", "crosshairSecondaryColor" });
-            ConfigUtils.FloatSettings.AddRange(new string[] { "crosshairWidth", "crosshairSpreadScale", "crosshairRadius" });
-            //Windows
-            ConfigUtils.BooleanSettings.AddRange(new string[] { "windowSpectatorsEnabled", "windowPerformanceEnabled", "windowBotsEnabled", "windowEnemiesEnabled" });
-            
+            ConfigUtils.BooleanSettings.AddRange(new[]
+            {
+                "Trigger Enabled",
+                "Trigger Toggle",
+                "Trigger Hold",
+                "Trigger Enemies",
+                "Trigger Allies",
+                "Trigger Burst Enabled",
+                "Trigger Burst Randomize"
+            });
+            ConfigUtils.KeySettings.Add("Trigger Key");
+            ConfigUtils.FloatSettings.AddRange(new[]
+            {
+                "Trigger Delay FirstShot",
+                "Trigger Delay Shots",
+                "Trigger Burst Shots"
+            });
 
             ConfigUtils.FillDefaultValues();
 
-            if (!File.Exists("euc_csgo.cfg"))
-                ConfigUtils.SaveSettingsToFile("euc_csgo.cfg");
-            ConfigUtils.ReadSettingsFromFile("euc_csgo.cfg");
+            if (!File.Exists("Config.cfg"))
+                ConfigUtils.SaveSettingsToFile("Config.cfg");
+            ConfigUtils.ReadSettingsFromFile("Config.cfg");
 
             PrintInfo("> Waiting for CSGO to start up...");
             while (!ProcUtils.ProcessIsRunning(GameProcess))
@@ -222,17 +237,9 @@ namespace CsGoApplicationAimbot
                 _graphMemRead.Font = smallFont;
                 _graphMemWrite.Font = smallFont;
 
-                for (int i = 0; i < _ctrlPlayerEsp.Length; i++)
-                {
-                    _ctrlPlayerEsp[i].Font = heavyFont;
-                    ShdxOverlay.ChildControls.Add(_ctrlPlayerEsp[i]);
-                }
-                _ctrlRadar.Font = smallFont;
-
                 _windowMenu.ApplySettings(ConfigUtils);
 
                 ShdxOverlay.ChildControls.Add(_ctrlCrosshair);
-                ShdxOverlay.ChildControls.Add(_ctrlRadar);
                 ShdxOverlay.ChildControls.Add(_windowMenu);
                 ShdxOverlay.ChildControls.Add(_windowGraphs);
                 ShdxOverlay.ChildControls.Add(_windowSpectators);
@@ -241,7 +248,7 @@ namespace CsGoApplicationAimbot
                 PrintInfo("> Running overlay");
                 System.Windows.Forms.Application.Run();
             }
-            ConfigUtils.SaveSettingsToFile("euc_csgo.cfg");
+            ConfigUtils.SaveSettingsToFile("Config.cfg");
         }
 
         private static void LoopScroll()
@@ -256,20 +263,9 @@ namespace CsGoApplicationAimbot
             }
         }
 
+        //TODO REMOVE
         static void SHDXOverlay_BeforeDrawingEvent(object sender, ExternalUtilsCSharp.UI.Overlay<SharpDXRenderer, SharpDX.Color, SharpDX.Vector2, TextFormat>.OverlayEventArgs e)
         {
-            if (ConfigUtils.GetValue<bool>("aimEnabled") && ConfigUtils.GetValue<bool>("aimDrawFov"))
-            {
-                float fov = ConfigUtils.GetValue<float>("aimFov");
-                
-                SharpDX.Color foreColor = new SharpDX.Color(0.2f, 0.2f, 0.2f, 0.8f);
-                SharpDX.Color backColor = new SharpDX.Color(0.8f, 0.8f, 0.8f, 0.9f);
-                SharpDX.Vector2 size = new SharpDX.Vector2(e.Overlay.Width / 90f * fov);
-                SharpDX.Vector2 center = new SharpDX.Vector2(e.Overlay.Width / 2f, e.Overlay.Height / 2f);
-
-                e.Overlay.Renderer.DrawEllipse(foreColor, center, size, true, 3f);
-                e.Overlay.Renderer.DrawEllipse(backColor, center, size, true);
-            }
         }
 
         private static void overlay_TickEvent(object sender, SharpDXOverlay.DeltaEventArgs e)
@@ -298,35 +294,19 @@ namespace CsGoApplicationAimbot
                 _graphMemWrite.AddValue(MemUtils.BytesWritten);
             }
 
-            _ctrlRadar.X = ShdxOverlay.Width - _ctrlRadar.Width;
             _ctrlCrosshair.X = ShdxOverlay.Width / 2f;
             _ctrlCrosshair.Y = ShdxOverlay.Height / 2f;
 
-
-            for (int i = 0; i < _ctrlPlayerEsp.Length; i++)
-                _ctrlPlayerEsp[i].Visible = false;
 
             _labelAimbot.Text = string.Format("Aimbot: {0}", Framework.AimbotActive ? "ON" : "OFF");
             _labelAimbot.ForeColor = Framework.AimbotActive ? SharpDX.Color.Green : _windowBots.Caption.ForeColor;
             _labelTriggerbot.Text = string.Format("Triggerbot: {0}", Framework.TriggerbotActive ? "ON" : "OFF");
             _labelTriggerbot.ForeColor = Framework.TriggerbotActive ? SharpDX.Color.Green : _windowBots.Caption.ForeColor;
 
-            _windowGraphs.Visible = ConfigUtils.GetValue<bool>("windowPerformanceEnabled");
-            _windowBots.Visible = ConfigUtils.GetValue<bool>("windowBotsEnabled");
-            _windowSpectators.Visible = ConfigUtils.GetValue<bool>("windowSpectatorsEnabled");
-            _ctrlRadar.Visible = ConfigUtils.GetValue<bool>("radarEnabled");
-            _ctrlRadar.Width = ConfigUtils.GetValue<float>("radarWidth");
-            _ctrlRadar.Height = ConfigUtils.GetValue<float>("radarHeight");
             if (_ctrlCrosshair.PrimaryColor.ToRgba() != _colorControlCrosshairPrimary.SDXColor.ToRgba())
                 _ctrlCrosshair.PrimaryColor = _colorControlCrosshairPrimary.SDXColor;
             if (_ctrlCrosshair.SecondaryColor.ToRgba() != _colorControlCrosshairSecondary.SDXColor.ToRgba())
                 _ctrlCrosshair.SecondaryColor = _colorControlCrosshairSecondary.SDXColor;
-            _ctrlCrosshair.Type = (Crosshair.Types)ConfigUtils.GetValue<int>("crosshairType");
-            _ctrlCrosshair.Visible = ConfigUtils.GetValue<bool>("crosshairEnabled");
-            _ctrlCrosshair.Outline = ConfigUtils.GetValue<bool>("crosshairOutline");
-            _ctrlCrosshair.Radius = ConfigUtils.GetValue<float>("crosshairRadius");
-            _ctrlCrosshair.Width = ConfigUtils.GetValue<float>("crosshairWidth");
-            _ctrlCrosshair.SpreadScale = ConfigUtils.GetValue<float>("crosshairSpreadScale");
 
             if (Framework.LocalPlayer != null)
             {
@@ -339,16 +319,6 @@ namespace CsGoApplicationAimbot
             else { _ctrlCrosshair.Spread = 1f; }
             if (Framework.IsPlaying())
             {
-                #region ESP
-                for (int i = 0; i < _ctrlPlayerEsp.Length && i < Framework.Players.Length; i++)
-                {
-                    if (Framework.Players[i].Item2.MIDormant != 1 &&
-                        (ConfigUtils.GetValue<bool>("espEnemies") && Framework.Players[i].Item2.MITeamNum != Framework.LocalPlayer.MITeamNum) ||
-                        (ConfigUtils.GetValue<bool>("espAllies") && Framework.Players[i].Item2.MITeamNum == Framework.LocalPlayer.MITeamNum))
-                    _ctrlPlayerEsp[i].Visible = true;
-                    _ctrlPlayerEsp[i].Player = Framework.Players[i].Item2;
-                }
-                #endregion
                 #region Spectators
                 if (Framework.LocalPlayer != null)
                 {
@@ -568,20 +538,6 @@ namespace CsGoApplicationAimbot
             InitLabel(ref _labelTriggerbot, "Triggerbot: -", false, 200f, SharpDXLabel.TextAlignment.Left);
             _windowBots.Panel.AddChildControl(_labelAimbot);
             _windowBots.Panel.AddChildControl(_labelTriggerbot);
-
-            _ctrlRadar = new PlayerRadar();
-            _ctrlRadar.Width = 128;
-            _ctrlRadar.Height = 128;
-            _ctrlRadar.Scaling = 0.02f;
-            _ctrlRadar.DotRadius = 2f;
-            _ctrlRadar.Rotating = true;
-
-            _ctrlPlayerEsp = new PlayerEsp[64];
-            for (int i = 0; i < _ctrlPlayerEsp.Length;i++)
-            {
-                _ctrlPlayerEsp[i] = new PlayerEsp();
-                _ctrlPlayerEsp[i].Visible = false;
-            }
 
             _ctrlCrosshair = new Crosshair();
             _ctrlCrosshair.Radius = 16f;

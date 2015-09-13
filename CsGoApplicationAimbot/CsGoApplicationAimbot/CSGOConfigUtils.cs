@@ -96,18 +96,8 @@ namespace CsGoApplicationAimbot
         public override byte[] SaveSettings()
         {
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine(@"#	                        .____   ____ ____________           ___________             .__               .__                ____.                                  ");
-            builder.AppendLine(@"#	                        |   _| |    |   \_   ___ \          \_   _____/__  ___ ____ |  |  __ __  _____|__|__  __ ____   |_   |                                  ");
-            builder.AppendLine(@"#	                        |  |   |    |   /    \  \/   ______  |    __)_\  \/  // ___\|  | |  |  \/  ___/  \  \/ // __ \    |  |                                  ");
-            builder.AppendLine(@"#	                        |  |   |    |  /\     \____ /_____/  |        \>    <\  \___|  |_|  |  /\___ \|  |\   /\  ___/    |  |                                  ");
-            builder.AppendLine(@"#	                        |  |_  |______/  \______  /         /_______  /__/\_ \\___  >____/____//____  >__| \_/  \___  >  _|  |                                  ");
-            builder.AppendLine(@"#	                        |____|                  \/ puddin tells lies\/      \/    \/                \/              \/  |____|                                  ");
-            builder.AppendLine(@"#	__________       __ /\        _________   _________ ________ ________               _____        .__   __  .__.__                   __     ____   ____________  ");
-            builder.AppendLine(@"#	\____    /____ _/  |)/ ______ \_   ___ \ /   _____//  _____/ \_____  \             /     \  __ __|  |_/  |_|__|  |__ _____    ____ |  | __ \   \ /   /\_____  \ ");
-            builder.AppendLine(@"#	  /     /\__  \\   __\/  ___/ /    \  \/ \_____  \/   \  ___  /   |   \   ______  /  \ /  \|  |  \  |\   __\  |  |  \\__  \ _/ ___\|  |/ /  \   Y   /   _(__  < ");
-            builder.AppendLine(@"#	 /     /_ / __ \|  |  \___ \  \     \____/        \    \_\  \/    |    \ /_____/ /    Y    \  |  /  |_|  | |  |   Y  \/ __ \\  \___|    <    \     /   /       \");
-            builder.AppendLine(@"#	/_______ (____  /__| /____  >  \______  /_______  /\______  /\_______  /         \____|__  /____/|____/__| |__|___|  (____  /\___  >__|_ \    \___/   /______  /");
-            builder.AppendLine(@"#	        \/    \/          \/          \/        \/        \/         \/                  \/                        \/     \/     \/     \/                   \/ ");
+            builder.AppendLine(@"#Smurf Bot 0.4");
+            builder.AppendLine(@"#Made By Carlsson");
             object[] keys = new object[this.GetKeys().Count];
             this.GetKeys().CopyTo(keys, 0);
             var keysSorted = keys.OrderBy(x => x);
