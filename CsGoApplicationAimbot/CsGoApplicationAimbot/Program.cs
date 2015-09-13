@@ -36,7 +36,7 @@ namespace CsGoApplicationAimbot
             KeyUtils = new KeyUtils();
             ConfigUtils = new CsgoConfigUtils();
             
-            //Creates the setting file
+            //Creates the setting file 
             AddAndApplySettings();
 
             PrintInfo("> Waiting for CSGO to start up...");
@@ -63,7 +63,6 @@ namespace CsGoApplicationAimbot
 
             Framework = new Framework(clientDll, engineDll);
 
-            PrintInfo("> Initializing overlay");
             ShdxOverlay = new SharpDXOverlay();
             ShdxOverlay.Attach(_hWnd);
             ShdxOverlay.TickEvent += overlay_TickEvent;

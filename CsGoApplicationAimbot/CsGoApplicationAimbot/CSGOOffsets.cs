@@ -36,25 +36,25 @@
         {
             public class CBaseEntity
             {
-                public static int MIHealth = 0x00;
-                public static int M_IId = 0x00;
-                public static int MITeamNum = 0x00;
+                public static int MiHealth = 0x00;
+                public static int MIId = 0x00;
+                public static int MiTeamNum = 0x00;
                 public static int MVecOrigin = 0x134;
                 public static int MAngRotation = 0x128;
-                public static int MBSpotted = 0x935;
-                public static int MBSpottedByMask = 0x978;
-                public static int MHOwnerEntity = 0x148;
-                public static int MBDormant = 0xE9;
+                public static int MbSpotted = 0x935;
+                public static int MbSpottedByMask = 0x978;
+                public static int MhOwnerEntity = 0x148;
+                public static int MbDormant = 0xE9;
             }
 
             public class CCsPlayer
             {
                 public static int MLifeState = 0x25B;
-                public static int MHBoneMatrix = 0x00;
-                public static int MHActiveWeapon = 0x12C0;   // m_hActiveWeapon
-                public static int MIFlags = 0x100;
-                public static int MHObserverTarget = 0x173C;
-                public static int MIObserverMode = 0x1728;
+                public static int MhBoneMatrix = 0x00;
+                public static int MhActiveWeapon = 0x12C0;   // m_hActiveWeapon
+                public static int MiFlags = 0x100;
+                public static int MhObserverTarget = 0x173C;
+                public static int MiObserverMode = 0x1728;
                 public static int MVecVelocity = 0x110;
             }
 
@@ -62,20 +62,20 @@
             {
                 public static int MVecViewOffset = 0x104;
                 public static int MVecPunch = 0x13E8;
-                public static int MIShotsFired = 0x1d6C;
-                public static int MICrosshairIdx = 0x2410;
+                public static int MiShotsFired = 0x1d6C;
+                public static int MiCrosshairIdx = 0x2410;
             }
 
             public class Weapon
             {
-                public static int MIItemDefinitionIndex = 0x131C;
-                public static int MIState = 0x15B4;
-                public static int MIClip1 = 0x15c0;
+                public static int MiItemDefinitionIndex = 0x131C;
+                public static int MiState = 0x15B4;
+                public static int MiClip1 = 0x15c0;
                 public static int MFlNextPrimaryAttack = 0x159C;
-                public static int MIWeaponId = 0x1690;   // Search for weaponid
-                public static int MBCanReload = 0x15F9;
-                public static int MIWeaponTableIndex = 0x162C;
-                public static int MFAccuracyPenalty = 0x1670;
+                public static int MiWeaponId = 0x1690;   // Search for weaponid
+                public static int MbCanReload = 0x15F9;
+                public static int MiWeaponTableIndex = 0x162C;
+                public static int MfAccuracyPenalty = 0x1670;
             }
         }
     }

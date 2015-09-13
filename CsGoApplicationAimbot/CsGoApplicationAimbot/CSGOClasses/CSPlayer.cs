@@ -12,38 +12,24 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region FIELDS
-        public int MHBoneMatrix
-        {
-            get { return ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix"); }
-        }
-        public int MIFlags
-        {
-            get { return ReadFieldProxy<int>("CSPlayer.m_iFlags"); }
-        }
-        public uint MHActiveWeapon
-        {
-            get { return ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon"); }
-        }
-        public Vector3 MVecVelocity
-        {
-            get { return ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity"); }
-        }
-        public int MHObserverTarget
-        {
-            get { return ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF; }
-        }
-        public int MIObserverMode
-        {
-            get { return ReadFieldProxy<int>("CSPlayer.m_iObserverMode"); }
-        }
-        public uint MIWeaponIndex
+        public int MhBoneMatrix => ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix");
+
+        public int MiFlags => ReadFieldProxy<int>("CSPlayer.m_iFlags");
+        public uint MhActiveWeapon => ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon");
+        public Vector3 MVecVelocity => ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity");
+
+        public int MhObserverTarget => ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF;
+
+        public int MiObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");
+
+        public uint MiWeaponIndex
         {
             get
             {
                 if (_iWeaponIndex == 0)
                 {
-                    if (MHActiveWeapon != 0xFFFFFFFF)
-                    _iWeaponIndex = MHActiveWeapon & 0xFFF;
+                    if (MhActiveWeapon != 0xFFFFFFFF)
+                    _iWeaponIndex = MhActiveWeapon & 0xFFF;
                 }
                 return _iWeaponIndex;
             }
@@ -55,13 +41,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public CsPlayer(int address) : base(address)
         {
             _iWeaponIndex = 0;
-            Bones = new Skeleton(MHBoneMatrix);
+            Bones = new Skeleton(MhBoneMatrix);
         }
         public CsPlayer(BaseEntity baseEntity)
             : base(baseEntity)
         {
             _iWeaponIndex = 0;
-            Bones = new Skeleton(MHBoneMatrix);
+            Bones = new Skeleton(MhBoneMatrix);
         }
         public CsPlayer(CsPlayer copyFrom) : base(copyFrom)
         {
@@ -75,27 +61,27 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("CSPlayer.m_hBoneMatrix", CsgoOffsets.NetVars.CCsPlayer.MHBoneMatrix);
-            AddField<uint>("CSPlayer.m_hActiveWeapon", CsgoOffsets.NetVars.CCsPlayer.MHActiveWeapon);
-            AddField<int>("CSPlayer.m_iFlags", CsgoOffsets.NetVars.CCsPlayer.MIFlags);
-            AddField<int>("CSPlayer.m_hObserverTarget", CsgoOffsets.NetVars.CCsPlayer.MHObserverTarget);
-            AddField<int>("CSPlayer.m_iObserverMode", CsgoOffsets.NetVars.CCsPlayer.MIObserverMode);
+            AddField<int>("CSPlayer.m_hBoneMatrix", CsgoOffsets.NetVars.CCsPlayer.MhBoneMatrix);
+            AddField<uint>("CSPlayer.m_hActiveWeapon", CsgoOffsets.NetVars.CCsPlayer.MhActiveWeapon);
+            AddField<int>("CSPlayer.m_iFlags", CsgoOffsets.NetVars.CCsPlayer.MiFlags);
+            AddField<int>("CSPlayer.m_hObserverTarget", CsgoOffsets.NetVars.CCsPlayer.MhObserverTarget);
+            AddField<int>("CSPlayer.m_iObserverMode", CsgoOffsets.NetVars.CCsPlayer.MiObserverMode);
             AddField<Vector3>("CSPlayer.m_vecVelocity", CsgoOffsets.NetVars.CCsPlayer.MVecVelocity);
         }
         public override bool IsValid()
         {
-            return base.IsValid() && (MITeamNum == 2 ||MITeamNum == 3);
+            return base.IsValid() && (MiTeamNum == 2 ||MiTeamNum == 3);
         }
         public override string ToString()
         {
-            return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", MIHealth, Convert.ToString(MIFlags, 2).PadLeft(32, '0'), base.ToString(), MITeamNum);
+            return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", MiHealth, Convert.ToString(MiFlags, 2).PadLeft(32, '0'), base.ToString(), MiTeamNum);
         }
         public Weapon GetActiveWeapon()
         {
-            if (MHActiveWeapon == 0xFFFFFFFF)
+            if (MhActiveWeapon == 0xFFFFFFFF)
                 return null;
 
-            uint handle = MHActiveWeapon & 0xFFF;
+            uint handle = MhActiveWeapon & 0xFFF;
             if (Program.Framework.Weapons.Count(x=>x.Item1 == handle - 1) > 0)
             {
                 return Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
@@ -108,98 +94,48 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public class Skeleton : Entity
         {
             #region FIELDS
-            public Vector3 Head
-            {
-                get { return ReadFieldProxy<Vector3>("Head"); }
-            }
-            public Vector3 Neck
-            {
-                get { return ReadFieldProxy<Vector3>("Neck"); }
-            }
-            public Vector3 Spine1
-            {
-                get { return ReadFieldProxy<Vector3>("Spine1"); }
-            }
-            public Vector3 Spine2
-            {
-                get { return ReadFieldProxy<Vector3>("Spine2"); }
-            }
-            public Vector3 Spine3
-            {
-                get { return ReadFieldProxy<Vector3>("Spine3"); }
-            }
-            public Vector3 Spine4
-            {
-                get { return ReadFieldProxy<Vector3>("Spine4"); }
-            }
-            public Vector3 Spine5
-            {
-                get { return ReadFieldProxy<Vector3>("Spine5"); }
-            }
-            public Vector3 LeftHand
-            {
-                get { return ReadFieldProxy<Vector3>("LeftHand"); }
-            }
-            public Vector3 LeftElbow
-            {
-                get { return ReadFieldProxy<Vector3>("LeftElbow"); }
-            }
-            public Vector3 LeftShoulder
-            {
-                get { return ReadFieldProxy<Vector3>("LeftShoulder"); }
-            }
-            public Vector3 RightShoulder
-            {
-                get { return ReadFieldProxy<Vector3>("RightShoulder"); }
-            }
-            public Vector3 RightElbow
-            {
-                get { return ReadFieldProxy<Vector3>("RightElbow"); }
-            }
-            public Vector3 RightHand
-            {
-                get { return ReadFieldProxy<Vector3>("RightHand"); }
-            }
-            public Vector3 LeftToe
-            {
-                get { return ReadFieldProxy<Vector3>("LeftToe"); }
-            }
-            public Vector3 LeftFoot
-            {
-                get { return ReadFieldProxy<Vector3>("LeftFoot"); }
-            }
-            public Vector3 LeftKnee
-            {
-                get { return ReadFieldProxy<Vector3>("LeftKnee"); }
-            }
-            public Vector3 LeftHip
-            {
-                get { return ReadFieldProxy<Vector3>("LeftHip"); }
-            }
-            public Vector3 RightHip
-            {
-                get { return ReadFieldProxy<Vector3>("RightHip"); }
-            }
-            public Vector3 RightKnee
-            {
-                get { return ReadFieldProxy<Vector3>("RightKnee"); }
-            }
-            public Vector3 RightFoot
-            {
-                get { return ReadFieldProxy<Vector3>("RightFoot"); }
-            }
-            public Vector3 RightToe
-            {
-                get { return ReadFieldProxy<Vector3>("RightToe"); }
-            }
-            public Vector3 Weapon1
-            {
-                get { return ReadFieldProxy<Vector3>("Weapon1"); }
-            }
-            public Vector3 Weapon2
-            {
-                get { return ReadFieldProxy<Vector3>("Weapon2"); }
-            }
+            public Vector3 Head => ReadFieldProxy<Vector3>("Head");
+
+            public Vector3 Neck => ReadFieldProxy<Vector3>("Neck");
+
+            public Vector3 Spine1 => ReadFieldProxy<Vector3>("Spine1");
+
+            public Vector3 Spine2 => ReadFieldProxy<Vector3>("Spine2");
+
+            public Vector3 Spine3 => ReadFieldProxy<Vector3>("Spine3");
+
+            public Vector3 Spine4 => ReadFieldProxy<Vector3>("Spine4");
+            public Vector3 Spine5 => ReadFieldProxy<Vector3>("Spine5");
+
+            public Vector3 LeftHand => ReadFieldProxy<Vector3>("LeftHand");
+
+            public Vector3 LeftElbow => ReadFieldProxy<Vector3>("LeftElbow");
+            public Vector3 LeftShoulder => ReadFieldProxy<Vector3>("LeftShoulder");
+
+            public Vector3 RightShoulder => ReadFieldProxy<Vector3>("RightShoulder");
+
+            public Vector3 RightElbow => ReadFieldProxy<Vector3>("RightElbow");
+
+            public Vector3 RightHand => ReadFieldProxy<Vector3>("RightHand");
+
+            public Vector3 LeftToe => ReadFieldProxy<Vector3>("LeftToe");
+
+            public Vector3 LeftFoot => ReadFieldProxy<Vector3>("LeftFoot");
+            public Vector3 LeftKnee => ReadFieldProxy<Vector3>("LeftKnee");
+
+            public Vector3 LeftHip => ReadFieldProxy<Vector3>("LeftHip");
+
+            public Vector3 RightHip => ReadFieldProxy<Vector3>("RightHip");
+            public Vector3 RightKnee => ReadFieldProxy<Vector3>("RightKnee");
+
+            public Vector3 RightFoot => ReadFieldProxy<Vector3>("RightFoot");
+
+            public Vector3 RightToe => ReadFieldProxy<Vector3>("RightToe");
+
+            public Vector3 Weapon1 => ReadFieldProxy<Vector3>("Weapon1");
+
+            public Vector3 Weapon2 => ReadFieldProxy<Vector3>("Weapon2");
+
             #endregion
 
             #region CONSTRUCTORS

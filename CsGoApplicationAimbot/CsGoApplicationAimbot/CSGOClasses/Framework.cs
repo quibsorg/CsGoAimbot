@@ -128,10 +128,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (LocalPlayer != null)
             {
-                if (entities.Exists(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1))
-                    Target = entities.First(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1).Item2;
-                if (players.Exists(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1))
-                    Target = players.First(x => x.Item1 == LocalPlayer.MICrosshairIdx - 1).Item2;
+                if (entities.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
+                    Target = entities.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2;
+                if (players.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
+                    Target = players.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2;
                 else
                     Target = null;
             }
@@ -230,9 +230,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                         }
                         else
                         {
-                            if (LocalPlayerWeapon.MIClip1 != LastClip)
+                            if (LocalPlayerWeapon.MiClip1 != LastClip)
                             {
-                                TriggerBurstFired += Math.Abs(LocalPlayerWeapon.MIClip1 - LastClip);
+                                TriggerBurstFired += Math.Abs(LocalPlayerWeapon.MiClip1 - LastClip);
                             }
                             else
                             {
@@ -250,10 +250,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             #endregion
             if (LocalPlayerWeapon != null)
-                LastClip = LocalPlayerWeapon.MIClip1;
+                LastClip = LocalPlayerWeapon.MiClip1;
             else
                 LastClip = 0;
-            LastShotsFired = LocalPlayer.MIShotsFired;
+            LastShotsFired = LocalPlayer.MiShotsFired;
             LastPunch = LocalPlayer.MVecPunch;
         }
 
@@ -273,15 +273,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             if (LocalPlayer == null)
                 return;
-            var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth != 0 && x.Item2.MIDormant != 1);
+            var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MiHealth != 0 && x.Item2.MiDormant != 1);
             if (Program.ConfigUtils.GetValue<bool>("Aim Spotted"))
                 valid = valid.Where(x => x.Item2.SeenBy(LocalPlayer));
             if (Program.ConfigUtils.GetValue<bool>("Aim Spotted By"))
                 valid = valid.Where(x => LocalPlayer.SeenBy(x.Item2));
             if (Program.ConfigUtils.GetValue<bool>("Aim Enemies"))
-                valid = valid.Where(x => x.Item2.MITeamNum != LocalPlayer.MITeamNum);
+                valid = valid.Where(x => x.Item2.MiTeamNum != LocalPlayer.MiTeamNum);
             if (Program.ConfigUtils.GetValue<bool>("Aim Allies"))
-                valid = valid.Where(x => x.Item2.MITeamNum == LocalPlayer.MITeamNum);
+                valid = valid.Where(x => x.Item2.MiTeamNum == LocalPlayer.MiTeamNum);
 
             valid = valid.OrderBy(x => (x.Item2.MVecOrigin - LocalPlayer.MVecOrigin).Length());
             Vector3 closest = Vector3.Zero;
@@ -319,9 +319,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 Random random = new Random();
                 float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
 
-                if (LocalPlayerWeapon != null && LocalPlayerWeapon.MIClip1 > 0)
+                if (LocalPlayerWeapon != null && LocalPlayerWeapon.MiClip1 > 0)
                 {
-                    if (!RcsHandled && LocalPlayer.MIShotsFired > rcsStart)
+                    if (!RcsHandled && LocalPlayer.MiShotsFired > rcsStart)
                     {
                         if (aimbot)
                         {
@@ -343,11 +343,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             if (LocalPlayer != null && !TriggerShooting)
             {
-                if (Players.Count(x => x.Item2.M_IId == LocalPlayer.MICrosshairIdx) > 0)
+                if (Players.Count(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx) > 0)
                 {
-                    CsPlayer player = Players.First(x=>x.Item2.M_IId == LocalPlayer.MICrosshairIdx).Item2;
-                    if ((Program.ConfigUtils.GetValue<bool>("Trigger Enemies") && player.MITeamNum != LocalPlayer.MITeamNum) ||
-                        (Program.ConfigUtils.GetValue<bool>("Trigger Allies") && player.MITeamNum == LocalPlayer.MITeamNum))
+                    CsPlayer player = Players.First(x=>x.Item2.MIId == LocalPlayer.MiCrosshairIdx).Item2;
+                    if ((Program.ConfigUtils.GetValue<bool>("Trigger Enemies") && player.MiTeamNum != LocalPlayer.MiTeamNum) ||
+                        (Program.ConfigUtils.GetValue<bool>("Trigger Allies") && player.MiTeamNum == LocalPlayer.MiTeamNum))
                     {
                         if (!TriggerOnTarget)
                         {

@@ -180,7 +180,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 byte tmp = memUtils.Read<byte>((IntPtr)(_scan.Address.ToInt32() + 8));
-                CsgoOffsets.NetVars.CBaseEntity.M_IId = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.MIId = tmp;
             }
         }
         static void EntityHealth(MemUtils memUtils)
@@ -191,7 +191,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 int tmp = memUtils.Read<int>((IntPtr)(_scan.Address.ToInt32() + 23));
-                CsgoOffsets.NetVars.CBaseEntity.MIHealth = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.MiHealth = tmp;
             }
         }
         static void EntityVecOrigin(MemUtils memUtils)
@@ -215,7 +215,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 int tmp = memUtils.Read<int>((IntPtr)(_scan.Address.ToInt32() + 5));
-                CsgoOffsets.NetVars.CBaseEntity.MITeamNum = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.MiTeamNum = tmp;
             }
         }
         static void PlayerBoneMatrix(MemUtils memUtils)
@@ -226,7 +226,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 int tmp = memUtils.Read<int>((IntPtr)(_scan.Address.ToInt32() + 8));
-                CsgoOffsets.NetVars.CCsPlayer.MHBoneMatrix = tmp;
+                CsgoOffsets.NetVars.CCsPlayer.MhBoneMatrix = tmp;
             }
         }
         static void PlayerWeaponHandle(MemUtils memUtils)
@@ -237,7 +237,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 int tmp = memUtils.Read<int>((IntPtr)(_scan.Address.ToInt32() + 6));
-                CsgoOffsets.NetVars.CCsPlayer.MHActiveWeapon = tmp;
+                CsgoOffsets.NetVars.CCsPlayer.MhActiveWeapon = tmp;
             }
         }
         #endregion
