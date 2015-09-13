@@ -260,7 +260,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public void SetViewAngles(Vector3 viewAngles, bool clamp = true)
         {
             if (clamp)
-                viewAngles = MathUtils.ClampAngle(viewAngles);
+                viewAngles = viewAngles.ClampAngle();
             Program.MemUtils.Write<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
         }
 
@@ -289,8 +289,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             foreach (Tuple<int, CsPlayer> tpl in valid)
             {
                 CsPlayer plr = tpl.Item2;
-                Vector3 newAngles = MathUtils.CalcAngle(LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset, plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("Aim Bone"))) - NewViewAngles;
-                newAngles = MathUtils.ClampAngle(newAngles);
+                Vector3 newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle(plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("Aim Bone"))) - NewViewAngles;
+                newAngles = newAngles.ClampAngle();
                 float fov = newAngles.Length() % 360f;
                 if (fov < closestFov && fov < Program.ConfigUtils.GetValue<float>("Aim Fov"))
                 {
@@ -302,7 +302,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 ControlRecoil(true);
                 if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
-                    NewViewAngles = MathUtils.SmoothAngle(NewViewAngles, NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
+                    NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
                 else
                     NewViewAngles += closest;
                 NewViewAngles = NewViewAngles;
