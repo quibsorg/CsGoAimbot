@@ -11,15 +11,15 @@ namespace CsGoApplicationAimbot.UI
         public override void Update(double secondsElapsed, ExternalUtilsCSharp.KeyUtils keyUtils, SharpDX.Vector2 cursorPoint, bool checkMouse = false)
         {
             base.Update(secondsElapsed, keyUtils, cursorPoint, checkMouse);
-            Framework fw = WithOverlay.Framework;
+            Framework fw = Program.Framework;
             if (fw.LocalPlayer == null)
                 return;
             if (!fw.LocalPlayer.IsValid())
                 return;
 
-            this.Scaling = WithOverlay.ConfigUtils.GetValue<float>("radarScale");
-            this.Width = WithOverlay.ConfigUtils.GetValue<float>("radarWidth");
-            this.Height = WithOverlay.ConfigUtils.GetValue<float>("radarHeight");
+            this.Scaling = Program.ConfigUtils.GetValue<float>("radarScale");
+            this.Width = Program.ConfigUtils.GetValue<float>("radarWidth");
+            this.Height = Program.ConfigUtils.GetValue<float>("radarHeight");
 
             if(fw.LocalPlayer.MITeamNum == (int)Team.Terrorists)
             {
@@ -35,14 +35,14 @@ namespace CsGoApplicationAimbot.UI
             this.RotationDegrees = fw.ViewAngles.Y + 90;
             this.CenterCoordinate = new SharpDX.Vector2(fw.LocalPlayer.MVecOrigin.X, fw.LocalPlayer.MVecOrigin.Y);
 
-            if (WithOverlay.ConfigUtils.GetValue<bool>("radarEnemies"))
+            if (Program.ConfigUtils.GetValue<bool>("radarEnemies"))
             {
                 var enemies = fw.Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth > 0 && x.Item2.MITeamNum != fw.LocalPlayer.MITeamNum);
                 this.Enemies = enemies.Select(x => new Vector2(x.Item2.MVecOrigin.X, x.Item2.MVecOrigin.Y)).ToArray();
             }
             else { this.Enemies = null; }
 
-            if (WithOverlay.ConfigUtils.GetValue<bool>("radarAllies"))
+            if (Program.ConfigUtils.GetValue<bool>("radarAllies"))
             {
                 var allies = fw.Players.Where(x => x.Item2.IsValid() && x.Item2.MIHealth > 0 && x.Item2.MITeamNum == fw.LocalPlayer.MITeamNum);
                 this.Allies = allies.Select(x => new Vector2(x.Item2.MVecOrigin.X, x.Item2.MVecOrigin.Y)).ToArray();

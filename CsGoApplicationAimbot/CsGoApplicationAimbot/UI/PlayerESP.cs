@@ -17,9 +17,9 @@ namespace CsGoApplicationAimbot.UI
         public CsPlayer Player { get; set; }
         public override void Draw(ExternalUtilsCSharp.SharpDXRenderer.SharpDXRenderer renderer)
         {
-            if (!WithOverlay.ConfigUtils.GetValue<bool>("espEnabled"))
+            if (!Program.ConfigUtils.GetValue<bool>("espEnabled"))
                 return;
-            Framework fw = WithOverlay.Framework;
+            Framework fw = Program.Framework;
             
             if (!fw.IsPlaying())
                 return;
@@ -93,7 +93,7 @@ namespace CsGoApplicationAimbot.UI
             #endregion
 
             #region Box
-            if (WithOverlay.ConfigUtils.GetValue<bool>("espBox"))
+            if (Program.ConfigUtils.GetValue<bool>("espBox"))
             {
                 renderer.DrawRectangle(this.ForeColor, outerLocation, outerSize, BorderSize + 2f);
                 renderer.DrawRectangle(this.BackColor, outerLocation, outerSize, BorderSize);
@@ -101,7 +101,7 @@ namespace CsGoApplicationAimbot.UI
             #endregion
 
             #region Skeleton
-            if (WithOverlay.ConfigUtils.GetValue<bool>("espSkeleton"))
+            if (Program.ConfigUtils.GetValue<bool>("espSkeleton"))
             {
                 renderer.DrawLines(this.ForeColor, 3f, w2SArms);
                 renderer.DrawLines(this.ForeColor, 3f, w2SLegs);
@@ -119,7 +119,7 @@ namespace CsGoApplicationAimbot.UI
             Vector2 nameBoxLocation = outerLocation - Vector2.UnitY * (BorderSize + 2f) - Vector2.UnitY * nameSize.Y + Vector2.UnitX * (outerSize.X/2f - nameBoxSize.X/2f);
             Vector2 nameLocation = nameBoxLocation + Vector2.UnitX * (nameBoxSize.X / 2f - nameSize.X / 2f);
             
-            if (WithOverlay.ConfigUtils.GetValue<bool>("espName"))
+            if (Program.ConfigUtils.GetValue<bool>("espName"))
             {
                 renderer.FillRectangle(this.BackColor, nameBoxLocation, nameBoxSize);
                 renderer.DrawRectangle(this.ForeColor, nameBoxLocation, nameBoxSize);
@@ -134,7 +134,7 @@ namespace CsGoApplicationAimbot.UI
             Vector2 hpFillSize = new Vector2(1, hpSize.Y / 100f * (float)(Math.Min(100, Player.MIHealth)));
             Vector2 hpFillLocation = hpLocation + Vector2.UnitY * (hpSize.Y - hpFillSize.Y);
             
-            if (WithOverlay.ConfigUtils.GetValue<bool>("espHealth"))
+            if (Program.ConfigUtils.GetValue<bool>("espHealth"))
             {
                 renderer.DrawLine(this.ForeColor, hpLocation, hpLocation + hpSize, BorderSize * 2f + 2f);
                 renderer.DrawLine(Color.Green, hpFillLocation, hpFillLocation + hpFillSize, BorderSize * 2f);
@@ -145,16 +145,16 @@ namespace CsGoApplicationAimbot.UI
 
         private Vector2 W2S(ExternalUtilsCSharp.MathObjects.Vector3 point)
         {
-            ExternalUtilsCSharp.MathObjects.Matrix vMatrix = WithOverlay.Framework.ViewMatrix;
-            ExternalUtilsCSharp.MathObjects.Vector2 screenSize = new ExternalUtilsCSharp.MathObjects.Vector2(WithOverlay.ShdxOverlay.Width, WithOverlay.ShdxOverlay.Height);
+            ExternalUtilsCSharp.MathObjects.Matrix vMatrix = Program.Framework.ViewMatrix;
+            ExternalUtilsCSharp.MathObjects.Vector2 screenSize = new ExternalUtilsCSharp.MathObjects.Vector2(Program.ShdxOverlay.Width, Program.ShdxOverlay.Height);
 
             return SharpDXConverter.Vector2EUCtoSDX(MathUtils.WorldToScreen(vMatrix, screenSize, point));
         }
 
         private Vector2[] W2S(ExternalUtilsCSharp.MathObjects.Vector3[] points)
         {
-            ExternalUtilsCSharp.MathObjects.Matrix vMatrix = WithOverlay.Framework.ViewMatrix;
-            ExternalUtilsCSharp.MathObjects.Vector2 screenSize = new ExternalUtilsCSharp.MathObjects.Vector2(WithOverlay.ShdxOverlay.Width, WithOverlay.ShdxOverlay.Height);
+            ExternalUtilsCSharp.MathObjects.Matrix vMatrix = Program.Framework.ViewMatrix;
+            ExternalUtilsCSharp.MathObjects.Vector2 screenSize = new ExternalUtilsCSharp.MathObjects.Vector2(Program.ShdxOverlay.Width, Program.ShdxOverlay.Height);
             ExternalUtilsCSharp.MathObjects.Vector3 origin = Player.MVecOrigin;
 
             return SharpDXConverter.Vector2EUCtoSDX(MathUtils.WorldToScreen(vMatrix, screenSize, points));

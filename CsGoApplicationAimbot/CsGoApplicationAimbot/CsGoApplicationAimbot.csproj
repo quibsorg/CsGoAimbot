@@ -84,7 +84,7 @@
     <Compile Include="SignOnState.cs" />
     <Compile Include="UI\PlayerESP.cs" />
     <Compile Include="UI\PlayerRadar.cs" />
-    <Compile Include="WithOverlay.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

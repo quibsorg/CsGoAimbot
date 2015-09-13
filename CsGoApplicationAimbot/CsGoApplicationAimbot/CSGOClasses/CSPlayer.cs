@@ -96,9 +96,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return null;
 
             uint handle = this.MHActiveWeapon & 0xFFF;
-            if (WithOverlay.Framework.Weapons.Count(x=>x.Item1 == handle - 1) > 0)
+            if (Program.Framework.Weapons.Count(x=>x.Item1 == handle - 1) > 0)
             {
-                return WithOverlay.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
+                return Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
             }
             return null;
         }

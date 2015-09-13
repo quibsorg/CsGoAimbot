@@ -11,9 +11,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Fields
         public override void ReadValue(int baseAddress)
         {
             float x, y, z;
-            x = WithOverlay.MemUtils.Read<float>((IntPtr)(baseAddress + this.Offset * 0x30 + 0x0C));
-            y = WithOverlay.MemUtils.Read<float>((IntPtr)(baseAddress + this.Offset * 0x30 + 0x1C));
-            z = WithOverlay.MemUtils.Read<float>((IntPtr)(baseAddress + this.Offset * 0x30 + 0x2C));
+            x = Program.MemUtils.Read<float>((IntPtr)(baseAddress + this.Offset * 0x30 + 0x0C));
+            y = Program.MemUtils.Read<float>((IntPtr)(baseAddress + this.Offset * 0x30 + 0x1C));
+            z = Program.MemUtils.Read<float>((IntPtr)(baseAddress + this.Offset * 0x30 + 0x2C));
             this.Value = new Vector3(x, y, z);
             this.ValueRead = true;
         }

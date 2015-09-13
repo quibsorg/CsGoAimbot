@@ -85,11 +85,11 @@ namespace CsGoApplicationAimbot
                 else if (this.KeySettings.Contains(name))
                     this.SetValue(name, ParseEnum<WinAPI.VirtualKeyShort>(value));
                 else
-                    WithOverlay.PrintError("Unknown settings-field \"{0}\" (value: \"{1}\")", name, value);
+                    Program.PrintError("Unknown settings-field \"{0}\" (value: \"{1}\")", name, value);
             }
             catch(Exception ex)
             {
-                WithOverlay.PrintException(ex);
+                Program.PrintException(ex);
             }
         }
 

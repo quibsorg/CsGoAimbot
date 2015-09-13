@@ -17,7 +17,7 @@ using SharpDX.DirectWrite;
 
 namespace CsGoApplicationAimbot
 {
-    public class WithOverlay
+    public class Program
     {
         #region CONSTANTS
         private const string GameProcess = "csgo";
@@ -129,7 +129,6 @@ namespace CsGoApplicationAimbot
         private static PlayerRadar _ctrlRadar;
         private static PlayerEsp[] _ctrlPlayerEsp;
         private static Crosshair _ctrlCrosshair;
-        private static SharpDX.Direct2D1.Bitmap _ranksBmp;
         #endregion
 
         #region METHODS

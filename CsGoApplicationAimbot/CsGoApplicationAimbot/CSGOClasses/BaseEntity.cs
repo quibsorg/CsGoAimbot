@@ -143,9 +143,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 if (MIVirtualTable == 0)
                     return 0;
-                uint function = WithOverlay.MemUtils.Read<uint>((IntPtr)(MIVirtualTable + 2 * 0x04));
+                uint function = Program.MemUtils.Read<uint>((IntPtr)(MIVirtualTable + 2 * 0x04));
                 if (function != 0xFFFFFFFF)
-                    return WithOverlay.MemUtils.Read<uint>((IntPtr)(function + 0x01));
+                    return Program.MemUtils.Read<uint>((IntPtr)(function + 0x01));
                 else
                     return 0;
             }
@@ -157,7 +157,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 uint clientClass = GetClientClass();
                 if (clientClass != 0)
-                    return WithOverlay.MemUtils.Read<uint>((IntPtr)((long)clientClass + 20));
+                    return Program.MemUtils.Read<uint>((IntPtr)((long)clientClass + 20));
                 return clientClass;
             }
             catch { return 0; }
@@ -169,8 +169,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 uint clientClass = GetClientClass();
                 if (clientClass != 0)
                 {
-                    int ptr = WithOverlay.MemUtils.Read<int>((IntPtr)(clientClass + 8));
-                    return WithOverlay.MemUtils.ReadString((IntPtr)(ptr), 32, Encoding.ASCII);
+                    int ptr = Program.MemUtils.Read<int>((IntPtr)(clientClass + 8));
+                    return Program.MemUtils.ReadString((IntPtr)(ptr), 32, Encoding.ASCII);
                 }
                 return "none";
             }

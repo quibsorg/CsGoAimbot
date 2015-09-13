@@ -21,7 +21,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Fields
 
         public virtual void ReadValue(int baseAddress)
         {
-            this.Value = WithOverlay.MemUtils.Read<T>((IntPtr)(baseAddress + this.Offset));
+            this.Value = Program.MemUtils.Read<T>((IntPtr)(baseAddress + this.Offset));
             this.ValueRead = true;
         }
     }
