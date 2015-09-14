@@ -83,17 +83,17 @@ namespace CsGoApplicationAimbot
 
         private static void AddAndApplySettings()
         {
+            ConfigUtils.KeySettings.Add("Aim Key");
             ConfigUtils.BooleanSettings.AddRange(new[]
             {
                 "Aim Enabled",
-                "Aim Hold",
                 "Aim Smooth Enabled",
                 "Aim Spotted",
                 "Aim Spotted By",
                 "Aim Enemies",
                 "Aim Allies"
             });
-            ConfigUtils.KeySettings.Add("Aim Key");
+            
             ConfigUtils.FloatSettings.AddRange(new[]
             {
                 "Aim Fov",
@@ -130,6 +130,7 @@ namespace CsGoApplicationAimbot
 
             if (!File.Exists("Config.cfg"))
             {
+                PrintInfo("Settings file does not exist. Creating...");
                 ConfigUtils.SaveSettingsToFile("Config.cfg");
             }
             ConfigUtils.ReadSettingsFromFile("Config.cfg");

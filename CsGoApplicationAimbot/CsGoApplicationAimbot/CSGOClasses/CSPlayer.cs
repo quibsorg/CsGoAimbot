@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CsGoApplicationAimbot.CSGOClasses.Fields;
 using ExternalUtilsCSharp.MathObjects;
@@ -49,49 +50,29 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region FIELDS
-
             public Vector3 Head => ReadFieldProxy<Vector3>("Head");
-
             public Vector3 Neck => ReadFieldProxy<Vector3>("Neck");
-
             public Vector3 Spine1 => ReadFieldProxy<Vector3>("Spine1");
-
             public Vector3 Spine2 => ReadFieldProxy<Vector3>("Spine2");
-
             public Vector3 Spine3 => ReadFieldProxy<Vector3>("Spine3");
-
             public Vector3 Spine4 => ReadFieldProxy<Vector3>("Spine4");
             public Vector3 Spine5 => ReadFieldProxy<Vector3>("Spine5");
-
             public Vector3 LeftHand => ReadFieldProxy<Vector3>("LeftHand");
-
             public Vector3 LeftElbow => ReadFieldProxy<Vector3>("LeftElbow");
             public Vector3 LeftShoulder => ReadFieldProxy<Vector3>("LeftShoulder");
-
             public Vector3 RightShoulder => ReadFieldProxy<Vector3>("RightShoulder");
-
             public Vector3 RightElbow => ReadFieldProxy<Vector3>("RightElbow");
-
             public Vector3 RightHand => ReadFieldProxy<Vector3>("RightHand");
-
             public Vector3 LeftToe => ReadFieldProxy<Vector3>("LeftToe");
-
             public Vector3 LeftFoot => ReadFieldProxy<Vector3>("LeftFoot");
             public Vector3 LeftKnee => ReadFieldProxy<Vector3>("LeftKnee");
-
             public Vector3 LeftHip => ReadFieldProxy<Vector3>("LeftHip");
-
             public Vector3 RightHip => ReadFieldProxy<Vector3>("RightHip");
             public Vector3 RightKnee => ReadFieldProxy<Vector3>("RightKnee");
-
             public Vector3 RightFoot => ReadFieldProxy<Vector3>("RightFoot");
-
             public Vector3 RightToe => ReadFieldProxy<Vector3>("RightToe");
-
             public Vector3 Weapon1 => ReadFieldProxy<Vector3>("Weapon1");
-
             public Vector3 Weapon2 => ReadFieldProxy<Vector3>("Weapon2");
-
             #endregion
 
             #region METHODS
@@ -99,12 +80,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
             public Vector3 GetBoneByIndex(int index)
             {
                 var fields = Fields.Values.Cast<BonesField>();
-                if (fields.Count(x => x.Offset == index) == 0)
+                var bonesFields = fields as BonesField[] ?? fields.ToArray();
+                if (bonesFields.Count(x => x.Offset == index) == 0)
                     return Vector3.Zero;
-                var field = fields.First(x => x.Offset == index);
-                foreach (string name in Fields.Keys)
-                    if (Fields[name] == field)
-                        return ReadFieldProxy<Vector3>(name);
+                var field = bonesFields.First(x => x.Offset == index);
+                foreach (string name in Fields.Keys.Cast<string>().Where(name => Fields[name] == field))
+                    return ReadFieldProxy<Vector3>(name);
                 return Vector3.Zero;
             }
 
@@ -119,32 +100,25 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region FIELDS
-
         public int MhBoneMatrix => ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix");
-
         public int MiFlags => ReadFieldProxy<int>("CSPlayer.m_iFlags");
         public uint MhActiveWeapon => ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon");
         public Vector3 MVecVelocity => ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity");
-
         public int MhObserverTarget => ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF;
-
         public int MiObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");
 
         public uint MiWeaponIndex
         {
             get
             {
-                if (_iWeaponIndex == 0)
-                {
-                    if (MhActiveWeapon != 0xFFFFFFFF)
-                        _iWeaponIndex = MhActiveWeapon & 0xFFF;
-                }
+                if (_iWeaponIndex != 0) return _iWeaponIndex;
+                if (MhActiveWeapon != 0xFFFFFFFF)
+                    _iWeaponIndex = MhActiveWeapon & 0xFFF;
                 return _iWeaponIndex;
             }
         }
 
         public Skeleton Bones { get; }
-
         #endregion
 
         #region CONSTRUCTORS
@@ -155,8 +129,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Bones = new Skeleton(MhBoneMatrix);
         }
 
-        public CsPlayer(BaseEntity baseEntity)
-            : base(baseEntity)
+        public CsPlayer(BaseEntity baseEntity) : base(baseEntity)
         {
             _iWeaponIndex = 0;
             Bones = new Skeleton(MhBoneMatrix);
@@ -201,11 +174,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return null;
 
             var handle = MhActiveWeapon & 0xFFF;
-            if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
-            {
-                return Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
-            }
-            return null;
+            //if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
+            //{
+            //    return Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
+            //}
+            //return null;
+            return Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
         }
 
         #endregion

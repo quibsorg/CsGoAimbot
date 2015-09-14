@@ -16,11 +16,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public Framework(ProcessModule clientDll, ProcessModule engineDll)
         {
             CsgoScanner.ScanOffsets(Program.MemUtils, clientDll, engineDll);
-            _clientDllBase = (int) clientDll.BaseAddress;
-            var engineDllBase = (int) engineDll.BaseAddress;
+            _clientDllBase = (int)clientDll.BaseAddress;
+            var engineDllBase = (int)engineDll.BaseAddress;
             _dwEntityList = _clientDllBase + CsgoOffsets.Misc.EntityList;
             _dwViewMatrix = _clientDllBase + CsgoOffsets.Misc.ViewMatrix;
-            _dwClientState = Program.MemUtils.Read<int>((IntPtr) (engineDllBase + CsgoOffsets.ClientState.Base));
+            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(engineDllBase + CsgoOffsets.ClientState.Base));
             AimbotActive = false;
             TriggerbotActive = false;
         }
@@ -91,28 +91,27 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
 
-            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr) (_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
-            _dwIGameResources = Program.MemUtils.Read<int>((IntPtr) (_clientDllBase + CsgoOffsets.GameResources.Base));
+            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
+            _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
 
-            State =
-                (SignOnState) Program.MemUtils.Read<int>((IntPtr) (_dwClientState + CsgoOffsets.ClientState.MDwInGame));
+            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwInGame));
             if (State != SignOnState.SignonstateFull)
                 return;
 
-            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr) _dwViewMatrix, 4, 4);
+            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
             ViewAngles =
-                Program.MemUtils.Read<Vector3>((IntPtr) (_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
+                Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
             NewViewAngles = ViewAngles;
             RcsHandled = false;
 
             #region Read entities
 
-            var data = new byte[16*8192];
-            Program.MemUtils.Read((IntPtr) (_dwEntityList), out data, data.Length);
+            var data = new byte[16 * 8192];
+            Program.MemUtils.Read((IntPtr)(_dwEntityList), out data, data.Length);
 
-            for (var i = 0; i < data.Length/16; i++)
+            for (var i = 0; i < data.Length / 16; i++)
             {
-                var address = BitConverter.ToInt32(data, 16*i);
+                var address = BitConverter.ToInt32(data, 16 * i);
                 if (address == 0) continue;
                 var ent = new BaseEntity(address);
                 if (!ent.IsValid())
@@ -163,32 +162,32 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (_dwIGameResources != 0)
             {
-                Kills = Program.MemUtils.ReadArray<int>((IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Kills),
+                Kills = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills),
                     65);
                 Deaths = Program.MemUtils.ReadArray<int>(
-                    (IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
-                Armor = Program.MemUtils.ReadArray<int>((IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Armor),
+                    (IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
+                Armor = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor),
                     65);
                 Assists =
-                    Program.MemUtils.ReadArray<int>((IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
-                Score = Program.MemUtils.ReadArray<int>((IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Score),
+                    Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
+                Score = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score),
                     65);
 
-                var clantagsData = new byte[16*65];
-                Program.MemUtils.Read((IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData,
+                var clantagsData = new byte[16 * 65];
+                Program.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData,
                     clantagsData.Length);
                 var clantags = new string[65];
                 for (var i = 0; i < 65; i++)
-                    clantags[i] = Encoding.Unicode.GetString(clantagsData, i*16, 16);
+                    clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
                 Clantags = clantags;
 
                 var namePtrs =
-                    Program.MemUtils.ReadArray<int>((IntPtr) (_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
+                    Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
                 var names = new string[65];
                 for (var i = 0; i < 65; i++)
                     try
                     {
-                        names[i] = Program.MemUtils.ReadString((IntPtr) namePtrs[i], 32, Encoding.ASCII);
+                        names[i] = Program.MemUtils.ReadString((IntPtr)namePtrs[i], 32, Encoding.ASCII);
                     }
                     catch
                     {
@@ -202,11 +201,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (Program.ConfigUtils.GetValue<bool>("Aim Enabled"))
             {
-                if (Program.ConfigUtils.GetValue<bool>("Aim Hold"))
-                {
-                    AimbotActive =
-                        Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
-                }
+                AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
                 if (AimbotActive)
                     ControlAim();
             }
@@ -294,7 +289,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr) (_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
+            Program.MemUtils.Write((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
         }
 
         public bool IsPlaying()
@@ -326,7 +321,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle(
                         plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("Aim Bone"))) - NewViewAngles;
                 newAngles = newAngles.ClampAngle();
-                var fov = newAngles.Length()%360f;
+                var fov = newAngles.Length() % 360f;
                 if (!(fov < closestFov) || !(fov < Program.ConfigUtils.GetValue<float>("Aim Fov"))) continue;
                 closestFov = fov;
                 closest = newAngles;
@@ -349,7 +344,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 var rcsForceMin = Program.ConfigUtils.GetValue<float>("Rcs Force Min");
                 var rcsStart = Program.ConfigUtils.GetValue<int>("Rcs Start");
                 var random = new Random();
-                float randomRcsForce = random.Next((int) rcsForceMin, (int) rcsForceMax);
+                float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
 
                 if (LocalPlayerWeapon != null && LocalPlayerWeapon.MiClip1 > 0 && !LocalPlayerWeapon.IsPistol())
                 {
@@ -357,13 +352,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     {
                         if (aimbot)
                         {
-                            var aimbotForce = randomRcsForce/2;
-                            NewViewAngles -= LocalPlayer.MVecPunch*(2f/100f*aimbotForce);
+                            var aimbotForce = randomRcsForce / 2;
+                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
                         }
                         else
                         {
                             var punch = LocalPlayer.MVecPunch - LastPunch;
-                            NewViewAngles -= punch*(2f/100f*randomRcsForce);
+                            NewViewAngles -= punch * (2f / 100f * randomRcsForce);
                         }
                         RcsHandled = true;
                     }
@@ -401,10 +396,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                                     {
                                         if (Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize"))
                                             TriggerBurstCount = new Random().Next(1,
-                                                (int) Program.ConfigUtils.GetValue<float>("Trigger Burst Shots"));
+                                                (int)Program.ConfigUtils.GetValue<float>("Trigger Burst Shots"));
                                         else
                                             TriggerBurstCount =
-                                                (int) Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
+                                                (int)Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
                                     }
                                     TriggerShooting = true;
                                 }

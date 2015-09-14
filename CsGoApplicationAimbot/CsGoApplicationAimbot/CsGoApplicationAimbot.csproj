@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="bin\Debug\Debug.rar" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
