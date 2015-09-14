@@ -10,17 +10,15 @@ using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.SharpDXRenderer;
 using ExternalUtilsCSharp.UI;
-using SharpDX;
 using SharpDX.DirectWrite;
+using SharpDX;
 
 namespace CsGoApplicationAimbot
 {
-    public class Program
+    public static class Program
     {
         #region CONTROLS
-
-        public static SharpDXOverlay ShdxOverlay;
-
+        private static SharpDXOverlay _shdxOverlay;
         #endregion
 
         #region CONSTANTS
@@ -35,13 +33,10 @@ namespace CsGoApplicationAimbot
         public static KeyUtils KeyUtils;
         private static IntPtr _hWnd;
         public static Framework Framework;
-        public static ProcUtils ProcUtils;
+        private static ProcUtils _procUtils;
         public static MemUtils MemUtils;
         public static CsgoConfigUtils ConfigUtils;
 
-        #endregion
-
-        #region METHODS
 
         public static void Main(string[] args)
         {
@@ -56,12 +51,12 @@ namespace CsGoApplicationAimbot
             while (!ProcUtils.ProcessIsRunning(GameProcess))
                 Thread.Sleep(250);
 
-            ProcUtils = new ProcUtils(GameProcess,
+            _procUtils = new ProcUtils(GameProcess,
                 WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite |
                 WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
             MemUtils = new MemUtils
             {
-                Handle = ProcUtils.Handle
+                Handle = _procUtils.Handle
             };
 
             PrintInfo("> Waiting for CSGOs window to show up...");
@@ -70,17 +65,17 @@ namespace CsGoApplicationAimbot
 
             ProcessModule clientDll, engineDll;
             PrintInfo("> Waiting for CSGO to load client.dll...");
-            while ((clientDll = ProcUtils.GetModuleByName(@"bin\client.dll")) == null)
+            while ((clientDll = _procUtils.GetModuleByName(@"bin\client.dll")) == null)
                 Thread.Sleep(250);
             PrintInfo("> Waiting for CSGO to load engine.dll...");
-            while ((engineDll = ProcUtils.GetModuleByName(@"engine.dll")) == null)
+            while ((engineDll = _procUtils.GetModuleByName(@"engine.dll")) == null)
                 Thread.Sleep(250);
 
             Framework = new Framework(clientDll, engineDll);
 
-            ShdxOverlay = new SharpDXOverlay();
-            ShdxOverlay.Attach(_hWnd);
-            ShdxOverlay.TickEvent += overlay_TickEvent;
+            _shdxOverlay = new SharpDXOverlay();
+            _shdxOverlay.Attach(_hWnd);
+            _shdxOverlay.TickEvent += ProOverlayTickEvent;
 
             Application.Run();
             ConfigUtils.SaveSettingsToFile("Config.cfg");
@@ -140,12 +135,11 @@ namespace CsGoApplicationAimbot
             ConfigUtils.ReadSettingsFromFile("Config.cfg");
         }
 
-        private static void overlay_TickEvent(object sender,
-            Overlay<SharpDXRenderer, Color, Vector2, TextFormat>.DeltaEventArgs e)
+        private static void ProOverlayTickEvent(object sender, Overlay<SharpDXRenderer, Color, Vector2, TextFormat>.DeltaEventArgs e)
         {
             KeyUtils.Update();
             Framework.Update();
-            ShdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
+            _shdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
 
             #region Spectators
 

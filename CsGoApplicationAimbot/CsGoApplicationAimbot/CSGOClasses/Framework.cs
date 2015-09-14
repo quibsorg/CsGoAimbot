@@ -290,7 +290,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             LastPunch = LocalPlayer.MVecPunch;
         }
 
-        public void SetViewAngles(Vector3 viewAngles, bool clamp = true)
+        private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
