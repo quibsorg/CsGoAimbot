@@ -84,7 +84,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (bonesFields.Count(x => x.Offset == index) == 0)
                     return Vector3.Zero;
                 var field = bonesFields.First(x => x.Offset == index);
-                foreach (string name in Fields.Keys.Cast<string>().Where(name => Fields[name] == field))
+                foreach (var name in Fields.Keys.Cast<string>().Where(name => Fields[name] == field))
                     return ReadFieldProxy<Vector3>(name);
                 return Vector3.Zero;
             }

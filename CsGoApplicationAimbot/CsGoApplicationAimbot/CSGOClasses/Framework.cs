@@ -99,13 +99,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return;
 
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
-            ViewAngles =
-                Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
             NewViewAngles = ViewAngles;
             RcsHandled = false;
 
             #region Read entities
-
             var data = new byte[16 * 8192];
             Program.MemUtils.Read((IntPtr)(_dwEntityList), out data, data.Length);
 
@@ -191,6 +189,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     }
                     catch
                     {
+                        //ignored
                     }
                 Names = names;
             }
@@ -198,8 +197,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region Aimbot
+            bool aimEnaled = Program.ConfigUtils.GetValue<bool>("Aim Enabled");
 
-            if (Program.ConfigUtils.GetValue<bool>("Aim Enabled"))
+            if (aimEnaled)
             {
                 AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
                 if (AimbotActive)
@@ -299,16 +299,24 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         private void ControlAim()
         {
+            bool aimSpotted = Program.ConfigUtils.GetValue<bool>("Aim Spotted");
+            bool aimSpottedBy = Program.ConfigUtils.GetValue<bool>("Aim Spotted By");
+            bool aimEnemies = Program.ConfigUtils.GetValue<bool>("Aim Enemies");
+            bool aimAllies = Program.ConfigUtils.GetValue<bool>("Aim Allies");
+            int aimBone = Program.ConfigUtils.GetValue<int>("Aim Bone");
+            float aimFov = Program.ConfigUtils.GetValue<float>("Aim Fov");
+
+
             if (LocalPlayer == null && LocalPlayerWeapon.IsPistol())
                 return;
             var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MiHealth != 0 && x.Item2.MiDormant != 1);
-            if (Program.ConfigUtils.GetValue<bool>("Aim Spotted"))
+            if (aimSpotted)
                 valid = valid.Where(x => x.Item2.SeenBy(LocalPlayer));
-            if (Program.ConfigUtils.GetValue<bool>("Aim Spotted By"))
+            if (aimSpottedBy)
                 valid = valid.Where(x => LocalPlayer.SeenBy(x.Item2));
-            if (Program.ConfigUtils.GetValue<bool>("Aim Enemies"))
+            if (aimEnemies)
                 valid = valid.Where(x => x.Item2.MiTeamNum != LocalPlayer.MiTeamNum);
-            if (Program.ConfigUtils.GetValue<bool>("Aim Allies"))
+            if (aimAllies)
                 valid = valid.Where(x => x.Item2.MiTeamNum == LocalPlayer.MiTeamNum);
 
             valid = valid.OrderBy(x => (x.Item2.MVecOrigin - LocalPlayer.MVecOrigin).Length());
@@ -317,100 +325,88 @@ namespace CsGoApplicationAimbot.CSGOClasses
             foreach (var tpl in valid)
             {
                 var plr = tpl.Item2;
-                var newAngles =
-                    (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle(
-                        plr.Bones.GetBoneByIndex(Program.ConfigUtils.GetValue<int>("Aim Bone"))) - NewViewAngles;
+                var newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle( plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
                 newAngles = newAngles.ClampAngle();
                 var fov = newAngles.Length() % 360f;
-                if (!(fov < closestFov) || !(fov < Program.ConfigUtils.GetValue<float>("Aim Fov"))) continue;
+                if (!(fov < closestFov) || !(fov < aimFov)) continue;
                 closestFov = fov;
                 closest = newAngles;
             }
             if (closest == Vector3.Zero) return;
+
             ControlRecoil(true);
+
             if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
-                NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest,
-                    Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
+                NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
             else
                 NewViewAngles += closest;
+
             NewViewAngles = NewViewAngles;
         }
 
         public void ControlRecoil(bool aimbot = false)
         {
-            if (Program.ConfigUtils.GetValue<bool>("Rcs Enabled"))
-            {
-                var rcsForceMax = Program.ConfigUtils.GetValue<float>("Rcs Force Max");
-                var rcsForceMin = Program.ConfigUtils.GetValue<float>("Rcs Force Min");
-                var rcsStart = Program.ConfigUtils.GetValue<int>("Rcs Start");
-                var random = new Random();
-                float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
+            var rcsEnabled = Program.ConfigUtils.GetValue<bool>("Rcs Enabled");
+            var rcsForceMax = Program.ConfigUtils.GetValue<float>("Rcs Force Max");
+            var rcsForceMin = Program.ConfigUtils.GetValue<float>("Rcs Force Min");
+            var rcsStart = Program.ConfigUtils.GetValue<int>("Rcs Start");
+            var random = new Random();
+            float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
 
-                if (LocalPlayerWeapon != null && LocalPlayerWeapon.MiClip1 > 0 && !LocalPlayerWeapon.IsPistol())
-                {
-                    if (!RcsHandled && LocalPlayer.MiShotsFired > rcsStart)
-                    {
-                        if (aimbot)
-                        {
-                            var aimbotForce = randomRcsForce / 2;
-                            NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
-                        }
-                        else
-                        {
-                            var punch = LocalPlayer.MVecPunch - LastPunch;
-                            NewViewAngles -= punch * (2f / 100f * randomRcsForce);
-                        }
-                        RcsHandled = true;
-                    }
-                }
+            if (!rcsEnabled) return;
+
+            if (LocalPlayerWeapon == null || LocalPlayerWeapon.MiClip1 <= 0 || LocalPlayerWeapon.IsPistol()) return;
+            if (RcsHandled || LocalPlayer.MiShotsFired <= rcsStart) return;
+            if (aimbot)
+            {
+                var aimbotForce = randomRcsForce / 2;
+                NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
             }
+            else
+            {
+                var punch = LocalPlayer.MVecPunch - LastPunch;
+                NewViewAngles -= punch * (2f / 100f * randomRcsForce);
+            }
+            RcsHandled = true;
         }
 
         public void Triggerbot()
         {
-            if (LocalPlayer != null && !TriggerShooting && !LocalPlayerWeapon.IsGrenade())
+            bool triggerEnemies = Program.ConfigUtils.GetValue<bool>("Trigger Enemies");
+            bool triggerAllies = Program.ConfigUtils.GetValue<bool>("Trigger Allies");
+            float firstShot = Program.ConfigUtils.GetValue<float>("Trigger Delay FirstShot");
+            float delayShot = Program.ConfigUtils.GetValue<float>("Trigger Delay Shots");
+            bool burstRandomize = Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize");
+            float burstShots = Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
+
+            if (LocalPlayer == null || TriggerShooting || LocalPlayerWeapon.IsGrenade()) return;
+            if (Players.Count(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx) <= 0) return;
+            var player = Players.First(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx).Item2;
+            if ((triggerEnemies && player.MiTeamNum != LocalPlayer.MiTeamNum) || (triggerAllies && player.MiTeamNum == LocalPlayer.MiTeamNum))
             {
-                if (Players.Count(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx) > 0)
+                if (!TriggerOnTarget)
                 {
-                    var player = Players.First(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx).Item2;
-                    if ((Program.ConfigUtils.GetValue<bool>("Trigger Enemies") &&
-                         player.MiTeamNum != LocalPlayer.MiTeamNum) ||
-                        (Program.ConfigUtils.GetValue<bool>("Trigger Allies") &&
-                         player.MiTeamNum == LocalPlayer.MiTeamNum))
-                    {
-                        if (!TriggerOnTarget)
-                        {
-                            TriggerOnTarget = true;
-                            TriggerLastTarget = DateTime.Now.Ticks;
-                        }
-                        else
-                        {
-                            if (new TimeSpan(DateTime.Now.Ticks - TriggerLastTarget).TotalMilliseconds >=
-                                Program.ConfigUtils.GetValue<float>("Trigger Delay FirstShot"))
-                            {
-                                if (new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >=
-                                    Program.ConfigUtils.GetValue<float>("Trigger Delay Shots"))
-                                {
-                                    TriggerLastShot = DateTime.Now.Ticks;
-                                    if (!TriggerShooting)
-                                    {
-                                        if (Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize"))
-                                            TriggerBurstCount = new Random().Next(1,
-                                                (int)Program.ConfigUtils.GetValue<float>("Trigger Burst Shots"));
-                                        else
-                                            TriggerBurstCount =
-                                                (int)Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
-                                    }
-                                    TriggerShooting = true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TriggerOnTarget = false;
-                    }
+                    TriggerOnTarget = true;
+                    TriggerLastTarget = DateTime.Now.Ticks;
                 }
+                else
+                {
+                    if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastTarget).TotalMilliseconds >= firstShot)) return;
+                    if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= delayShot)) return;
+                    TriggerLastShot = DateTime.Now.Ticks;
+                    if (!TriggerShooting)
+                    {
+                        if (burstRandomize)
+                            TriggerBurstCount = new Random().Next(1, (int)burstShots);
+                        else
+                            TriggerBurstCount = (int)burstShots;
+                    }
+                    TriggerShooting = true;
+                }
+            }
+            else
+            {
+                TriggerOnTarget = false;
             }
         }
 
