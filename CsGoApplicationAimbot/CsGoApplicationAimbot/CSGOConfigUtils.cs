@@ -106,6 +106,7 @@ namespace CsGoApplicationAimbot
             var builder = new StringBuilder();
             builder.AppendLine(@"#Smurf Bot 0.4");
             builder.AppendLine(@"#Made By Carlsson");
+            builder.AppendLine(@"#Key codes can be found at https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx Just remove VK_ before so VK_MENU is just MENU");
             var keys = new object[GetKeys().Count];
             GetKeys().CopyTo(keys, 0);
             var keysSorted = keys.OrderBy(x => x);

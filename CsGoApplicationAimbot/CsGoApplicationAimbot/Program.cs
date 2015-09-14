@@ -169,12 +169,12 @@ namespace CsGoApplicationAimbot
 
         #region HELPERS
 
-        public static void PrintInfo(string text, params object[] arguments)
+        private static void PrintInfo(string text, params object[] arguments)
         {
             PrintEncolored(text, ConsoleColor.White, arguments);
         }
 
-        public static void PrintSuccess(string text, params object[] arguments)
+        private static void PrintSuccess(string text, params object[] arguments)
         {
             PrintEncolored(text, ConsoleColor.Green, arguments);
         }
@@ -189,7 +189,7 @@ namespace CsGoApplicationAimbot
             PrintError("An Exception occured: {0}\n\"{1}\"\n{2}", ex.GetType().Name, ex.Message, ex.StackTrace);
         }
 
-        public static void PrintEncolored(string text, ConsoleColor color, params object[] arguments)
+        private static void PrintEncolored(string text, ConsoleColor color, params object[] arguments)
         {
             var clr = Console.ForegroundColor;
             Console.ForegroundColor = color;
