@@ -78,6 +78,7 @@
     <Compile Include="CSGO\Enums\SignOnState.cs" />
     <Compile Include="CSGO\Enums\SpectatorView.cs" />
     <Compile Include="CSGO\Enums\Team.cs" />
+    <Compile Include="Injection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignOnState.cs" />
     <Compile Include="Program.cs" />

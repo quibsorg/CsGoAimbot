@@ -8,11 +8,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Fields
         {
         }
 
-        public Field(int offset) : this(offset, default(T))
-        {
-        }
-
-        public Field(int offset, T value)
+        public Field(int offset, T value = default(T))
         {
             Offset = offset;
             Value = value;
@@ -20,7 +16,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Fields
         }
 
         public bool ValueRead { get; protected set; }
-        public int Offset { get; protected set; }
+        public int Offset { get; private set; }
         public T Value { get; protected set; }
 
         public virtual void ReadValue(int baseAddress)
