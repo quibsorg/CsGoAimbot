@@ -13,14 +13,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public override string ToString()
         {
-            return string.Format("[Entity Address={0}]", Address.ToString("X"));
+            return $"[Entity Address={Address.ToString("X")}]";
         }
 
         #endregion
 
         #region PROPERTIES
 
-        public Hashtable Fields { get; }
+        protected Hashtable Fields { get; }
         public int Address { get; protected set; }
 
         #endregion

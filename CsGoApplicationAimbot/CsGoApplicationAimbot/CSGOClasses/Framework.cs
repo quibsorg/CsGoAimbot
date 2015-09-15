@@ -344,7 +344,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             NewViewAngles = NewViewAngles;
         }
 
-        public void ControlRecoil(bool aimbot = false)
+        private void ControlRecoil(bool aimbot = false)
         {
             var rcsEnabled = Program.ConfigUtils.GetValue<bool>("Rcs Enabled");
             var rcsForceMax = Program.ConfigUtils.GetValue<float>("Rcs Force Max");
@@ -359,6 +359,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (RcsHandled || LocalPlayer.MiShotsFired <= rcsStart) return;
             if (aimbot)
             {
+                //TODO fix aimbot force.
                 var aimbotForce = randomRcsForce / 2;
                 NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
             }
@@ -410,6 +411,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
+
+        //TODO Auto Pistol
+        //TODO Bunny jump
+        //TODO Weapon Configs
         private void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
