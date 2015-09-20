@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -37,7 +38,9 @@ namespace CsGoApplicationAimbot
         public static MemUtils MemUtils;
         public static CsgoConfigUtils ConfigUtils;
 
+        #endregion
 
+        #region Method
         public static void Main(string[] args)
         {
             PrintSuccess("Smurf bot");
@@ -81,8 +84,24 @@ namespace CsGoApplicationAimbot
             ConfigUtils.SaveSettingsToFile("Config.cfg");
         }
 
+
         private static void AddAndApplySettings()
         {
+            var weaponList = new List<string>
+            {
+             "CZ75",
+             DEagle
+             Dual Berettas
+             Five-SeveN
+             Glock-18
+             P228
+             P250
+             P2000
+             Tec-9
+             USP-S
+            };
+
+
             ConfigUtils.KeySettings.Add("Aim Key");
             ConfigUtils.BooleanSettings.AddRange(new[]
             {
@@ -93,7 +112,7 @@ namespace CsGoApplicationAimbot
                 "Aim Enemies",
                 "Aim Allies"
             });
-            
+
             ConfigUtils.FloatSettings.AddRange(new[]
             {
                 "Aim Fov",
@@ -171,7 +190,6 @@ namespace CsGoApplicationAimbot
             //
             #endregion
         }
-
         #endregion
 
         #region HELPERS
