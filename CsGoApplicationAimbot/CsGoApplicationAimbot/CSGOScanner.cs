@@ -14,7 +14,7 @@ namespace CsGoApplicationAimbot
         private static ProcessModule _engineDll;
         private static int _engineDllBase;
 
-        public static void ScanOffsets(MemUtils memUtils, ProcessModule client, ProcessModule engine)
+        public static void ScanOffsets(ProcessModule client, ProcessModule engine, MemUtils memUtils)
         {
             _clientDll = client;
             _engineDll = engine;
@@ -241,7 +241,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<byte>((IntPtr) (_scan.Address.ToInt32() + 8));
-                CsgoOffsets.NetVars.CBaseEntity.MIId = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.MiId = tmp;
             }
         }
 

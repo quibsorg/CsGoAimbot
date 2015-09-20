@@ -13,9 +13,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
     {
         #region CONSTRUCTOR
 
-        public Framework(ProcessModule clientDll, ProcessModule engineDll)
+        public Framework(ProcessModule engineDll, ProcessModule clientDll)
         {
-            CsgoScanner.ScanOffsets(Program.MemUtils, clientDll, engineDll);
+            CsgoScanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
             _clientDllBase = (int)clientDll.BaseAddress;
             var engineDllBase = (int)engineDll.BaseAddress;
             _dwEntityList = _clientDllBase + CsgoOffsets.Misc.EntityList;
@@ -307,7 +307,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             float aimFov = Program.ConfigUtils.GetValue<float>("Aim Fov");
 
 
-            if (LocalPlayer == null && LocalPlayerWeapon.IsPistol())
+            if (LocalPlayer == null)
                 return;
             var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MiHealth != 0 && x.Item2.MiDormant != 1);
             if (aimSpotted)
@@ -355,8 +355,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (!rcsEnabled) return;
 
-            if (LocalPlayerWeapon == null || LocalPlayerWeapon.MiClip1 <= 0 || LocalPlayerWeapon.IsPistol()) return;
-            if (RcsHandled || LocalPlayer.MiShotsFired <= rcsStart) return;
+            if (LocalPlayerWeapon == null || LocalPlayerWeapon.MiClip1 <= 0)
+                return;
+            if (RcsHandled || LocalPlayer.MiShotsFired <= rcsStart)
+                return;
             if (aimbot)
             {
                 //TODO fix aimbot force.
@@ -381,8 +383,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             float burstShots = Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
 
             if (LocalPlayer == null || TriggerShooting || LocalPlayerWeapon.IsGrenade()) return;
-            if (Players.Count(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx) <= 0) return;
-            var player = Players.First(x => x.Item2.MIId == LocalPlayer.MiCrosshairIdx).Item2;
+            if (Players.Count(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx) <= 0) return;
+            var player = Players.First(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx).Item2;
             if ((triggerEnemies && player.MiTeamNum != LocalPlayer.MiTeamNum) || (triggerAllies && player.MiTeamNum == LocalPlayer.MiTeamNum))
             {
                 if (!TriggerOnTarget)
