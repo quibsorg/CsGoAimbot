@@ -91,6 +91,7 @@
     <Compile Include="CSGOClasses\CSLocalPlayer.cs" />
     <Compile Include="CSGOClasses\CSPlayer.cs" />
     <Compile Include="CSGOClasses\Entity.cs" />
+    <Compile Include="CSGOClasses\Enums\PlayerState.cs" />
     <Compile Include="CSGOClasses\Fields\BonesField.cs" />
     <Compile Include="CSGOClasses\Fields\Field.cs" />
     <Compile Include="CSGOClasses\Framework.cs" />
@@ -98,7 +99,7 @@
     <Compile Include="CSGOConfigUtils.cs" />
     <Compile Include="CSGOOffsets.cs" />
     <Compile Include="CSGOScanner.cs" />
-    <Compile Include="CSGOClasses\CSGOClassID.cs" />
+    <Compile Include="CSGOClasses\Enums\CSGOClassID.cs" />
     <Compile Include="CSGOClasses\Enums\LifeState.cs" />
     <Compile Include="CSGOClasses\Enums\SignOnState.cs" />
     <Compile Include="CSGOClasses\Enums\SpectatorView.cs" />

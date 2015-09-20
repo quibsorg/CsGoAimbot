@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
@@ -15,7 +16,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #region PROPERTIES
 
-        public uint MiClientClass
+        private uint MiClientClass
         {
             get
             {
@@ -23,10 +24,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     _iClientClass = GetClientClass();
                 return _iClientClass;
             }
-            protected set { _iClientClass = value; }
+            set { _iClientClass = value; }
         }
 
-        public uint MiClassId
+        private uint MiClassId
         {
             get
             {
@@ -34,10 +35,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     _iClassId = GetClassId();
                 return _iClassId;
             }
-            protected set { _iClassId = value; }
+            set { _iClassId = value; }
         }
 
-        public string MSzClassName
+        private string MSzClassName
         {
             get
             {
@@ -45,7 +46,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     _szClassName = GetClassName();
                 return _szClassName;
             }
-            protected set { _szClassName = value; }
+            set { _szClassName = value; }
         }
 
         #endregion
@@ -54,17 +55,17 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public int MiHealth => ReadFieldProxy<int>("CSPlayer.m_iHealth");
 
-        public int MiVirtualTable => ReadFieldProxy<int>("Entity.m_iVirtualTable");
+        private int MiVirtualTable => ReadFieldProxy<int>("Entity.m_iVirtualTable");
 
         public int MiId => ReadFieldProxy<int>("Entity.m_iID");
 
         public byte MiDormant => ReadFieldProxy<byte>("Entity.m_iDormant");
 
-        public int MhOwnerEntity => ReadFieldProxy<int>("Entity.m_hOwnerEntity");
+        protected int MhOwnerEntity => ReadFieldProxy<int>("Entity.m_hOwnerEntity");
         public int MiTeamNum => ReadFieldProxy<int>("Entity.m_iTeamNum");
 
         public int MbSpotted => ReadFieldProxy<int>("Entity.m_bSpotted");
-        public long MbSpottedByMask => ReadFieldProxy<long>("Entity.m_bSpottedByMask");
+        private long MbSpottedByMask => ReadFieldProxy<long>("Entity.m_bSpottedByMask");
 
         public Vector3 MVecOrigin => ReadFieldProxy<Vector3>("Entity.m_vecOrigin");
 
@@ -122,7 +123,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             return Address != 0 /* && this.m_iDormant != 1*/&& MiId > 0 && MiClassId > 0;
         }
 
-        public bool SeenBy(int entityIndex)
+        private bool SeenBy(int entityIndex)
         {
             return (MbSpottedByMask & (0x1 << entityIndex)) != 0;
         }
@@ -132,15 +133,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             return SeenBy(ent.MiId - 1);
         }
 
-        protected uint GetClientClass()
+        private uint GetClientClass()
         {
             try
             {
                 if (MiVirtualTable == 0)
                     return 0;
-                var function = Program.MemUtils.Read<uint>((IntPtr) (MiVirtualTable + 2*0x04));
+                var function = Program.MemUtils.Read<uint>((IntPtr)(MiVirtualTable + 2 * 0x04));
                 if (function != 0xFFFFFFFF)
-                    return Program.MemUtils.Read<uint>((IntPtr) (function + 0x01));
+                    return Program.MemUtils.Read<uint>((IntPtr)(function + 0x01));
                 return 0;
             }
             catch
@@ -149,13 +150,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
-        protected uint GetClassId()
+        private uint GetClassId()
         {
             try
             {
                 var clientClass = GetClientClass();
                 if (clientClass != 0)
-                    return Program.MemUtils.Read<uint>((IntPtr) ((long) clientClass + 20));
+                    return Program.MemUtils.Read<uint>((IntPtr)((long)clientClass + 20));
                 return clientClass;
             }
             catch
@@ -164,15 +165,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
-        protected string GetClassName()
+        private string GetClassName()
         {
             try
             {
                 var clientClass = GetClientClass();
                 if (clientClass != 0)
                 {
-                    var ptr = Program.MemUtils.Read<int>((IntPtr) (clientClass + 8));
-                    return Program.MemUtils.ReadString((IntPtr) (ptr), 32, Encoding.ASCII);
+                    var ptr = Program.MemUtils.Read<int>((IntPtr)(clientClass + 8));
+                    return Program.MemUtils.ReadString((IntPtr)(ptr), 32, Encoding.ASCII);
                 }
                 return "none";
             }
@@ -185,7 +186,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public bool IsPlayer()
         {
             return
-                MiClassId == (int) ClassId.CsPlayer;
+                MiClassId == (int)ClassId.CsPlayer;
         }
 
         public bool IsWeapon()
@@ -195,6 +196,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 MiClassId == (int) ClassId.DEagle ||
                 MiClassId == (int) ClassId.WeaponAug ||
                 MiClassId == (int) ClassId.WeaponAwp ||
+                MiClassId == (int) ClassId.WeaponG3Sg1 ||
+                MiClassId == (int) ClassId.WeaponScar20 ||
                 MiClassId == (int) ClassId.WeaponDualBerettas ||
                 MiClassId == (int) ClassId.WeaponElite ||
                 MiClassId == (int) ClassId.WeaponFiveSeven ||
@@ -209,12 +212,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 MiClassId == (int) ClassId.WeaponSsg08 ||
                 MiClassId == (int) ClassId.WeaponTaser ||
                 MiClassId == (int) ClassId.WeaponTec9 ||
-                MiClassId == (int) ClassId.WeaponUmp45;
-        }
-
-        public bool IsGrenade()
-        {
-            return
+                MiClassId == (int) ClassId.WeaponUmp45 ||
+                MiClassId == (int) ClassId.DynamicProp ||
+                MiClassId == (int) ClassId.PhysicsProp ||
+                MiClassId == (int) ClassId.PhysicsPropMultiplayer ||
+                MiClassId == (int) ClassId.WeaponAwp ||
+                MiClassId == (int) ClassId.WeaponSsg08 ||
+                MiClassId == (int) ClassId.WeaponG3Sg1 ||
+                MiClassId == (int) ClassId.WeaponScar20 ||
+                MiClassId == (int) ClassId.Knife ||
                 MiClassId == (int) ClassId.DecoyGrenade ||
                 MiClassId == (int) ClassId.HeGrenade ||
                 MiClassId == (int) ClassId.IncendiaryGrenade ||
@@ -222,22 +228,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 MiClassId == (int) ClassId.SmokeGrenade ||
                 MiClassId == (int) ClassId.Flashbang;
         }
-
-        public bool IsMelee()
-        {
-            return
-            MiClassId == (int) ClassId.Knife ||
-            MiClassId == (int) ClassId.Knife;
-        }
-
-        public bool IsProp()
-        {
-            return
-                MiClassId == (int) ClassId.DynamicProp ||
-                MiClassId == (int) ClassId.PhysicsProp ||
-                MiClassId == (int) ClassId.PhysicsPropMultiplayer;
-        }
-
         #endregion
     }
 }

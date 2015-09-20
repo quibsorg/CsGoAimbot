@@ -66,7 +66,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private int[] Armor { get; set; }
         private int[] Score { get; set; }
         private string[] Clantags { get; set; }
-        public string[] Names { get; private set; }
+        private string[] Names { get; set; }
         private SignOnState State { get; set; }
         private bool AimbotActive { get; set; }
         private bool TriggerbotActive { get; set; }
@@ -100,9 +100,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
             ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
             NewViewAngles = ViewAngles;
-            RcsHandled = false;
-
-            #region Read entities
+            RcsHandled = false
+                ;
             var data = new byte[16 * 8192];
             Program.MemUtils.Read((IntPtr)(_dwEntityList), out data, data.Length);
 
@@ -136,15 +135,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayer = null;
                 LocalPlayerWeapon = null;
             }
-
             if (LocalPlayer != null)
             {
                 if (entities.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
                     Target = entities.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2;
-                if (players.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
-                    Target = players.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2;
-                else
-                    Target = null;
+                Target = players.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2 : null;
             }
 
             if (LocalPlayer == null)
@@ -165,7 +160,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
                 Clantags = clantags;
 
-                var namePtrs =Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
+                var namePtrs = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
                 var names = new string[65];
                 for (var i = 0; i < 65; i++)
                     try
@@ -181,7 +176,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
 
             bool aimEnaled = Program.ConfigUtils.GetValue<bool>("Aim Enabled");
-
             if (aimEnaled)
             {
                 AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
@@ -244,12 +238,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     }
                 }
             }
-
-            #endregion
-
             LastClip = LocalPlayerWeapon?.MiClip1 ?? 0;
             LastShotsFired = LocalPlayer.MiShotsFired;
             LastPunch = LocalPlayer.MVecPunch;
+
         }
 
         private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
@@ -291,7 +283,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             foreach (var tpl in valid)
             {
                 var plr = tpl.Item2;
-                var newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle( plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
+                var newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle(plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
                 newAngles = newAngles.ClampAngle();
                 var fov = newAngles.Length() % 360f;
                 if (!(fov < closestFov) || !(fov < aimFov)) continue;
@@ -316,6 +308,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var rcsForceMax = Program.ConfigUtils.GetValue<float>("Rcs Force Max");
             var rcsForceMin = Program.ConfigUtils.GetValue<float>("Rcs Force Min");
             var rcsStart = Program.ConfigUtils.GetValue<int>("Rcs Start");
+
             var random = new Random();
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
 
@@ -323,12 +316,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (LocalPlayerWeapon == null || LocalPlayerWeapon.MiClip1 <= 0)
                 return;
-            if (RcsHandled || LocalPlayer.MiShotsFired <= rcsStart)
+            if ((RcsHandled || LocalPlayer.MiShotsFired <= rcsStart))
                 return;
             if (aimbot)
             {
-                var aimbotForce = randomRcsForce / 2;
-                NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
+                var aimbotForce = randomRcsForce / 1.6;
+                NewViewAngles -= LocalPlayer.MVecPunch * (float) (2f / 100f * aimbotForce);
             }
             else
             {
@@ -347,7 +340,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             bool burstRandomize = Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize");
             float burstShots = Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
 
-            if (LocalPlayer == null || TriggerShooting) return;
+            if (LocalPlayer == null || TriggerShooting)
+                return;
             if (Players.Count(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx) <= 0) return;
             var player = Players.First(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx).Item2;
             if ((triggerEnemies && player.MiTeamNum != LocalPlayer.MiTeamNum) || (triggerAllies && player.MiTeamNum == LocalPlayer.MiTeamNum))
@@ -378,9 +372,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
-
-        //TODO Auto Pistol
-        //TODO Bunny jump
         //TODO Weapon Configs
         private void Shoot()
         {

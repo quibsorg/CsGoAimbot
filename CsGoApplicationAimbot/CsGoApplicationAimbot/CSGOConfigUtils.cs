@@ -23,7 +23,7 @@ namespace CsGoApplicationAimbot
 
         #region PROPERTIES
 
-        public List<string> UIntegerSettings { get; private set; }
+        public List<string> UIntegerSettings { get; }
         public List<string> IntegerSettings { get; }
         public List<string> FloatSettings { get; }
         public List<string> KeySettings { get; }

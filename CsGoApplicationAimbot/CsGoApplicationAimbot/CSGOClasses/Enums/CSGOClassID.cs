@@ -1,4 +1,4 @@
-﻿namespace CsGoApplicationAimbot.CSGOClasses
+﻿namespace CsGoApplicationAimbot.CSGOClasses.Enums
 {
     public enum ClassId
     {

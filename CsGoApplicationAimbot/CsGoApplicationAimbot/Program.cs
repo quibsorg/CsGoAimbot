@@ -126,6 +126,14 @@ namespace CsGoApplicationAimbot
                 "Trigger Delay Shots",
                 "Trigger Burst Shots"
             });
+            //Sound ESP
+            ConfigUtils.BooleanSettings.Add("Sound Esp Enabled");
+            ConfigUtils.FloatSettings.AddRange(new[]
+            {
+                "Sound Range",
+                "Sound Interval",
+                "Sound Volume"
+            });
             ConfigUtils.FillDefaultValues();
 
             if (!File.Exists("Config.cfg"))
@@ -143,24 +151,24 @@ namespace CsGoApplicationAimbot
             _shdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
 
             #region Spectators
-
-            if (!Framework.IsPlaying()) return;
-            if (Framework.LocalPlayer == null) return;
-            var spectators =
-                Framework.Players.Where(
-                    x =>
-                        x.Item2.MhObserverTarget == Framework.LocalPlayer.MiId && x.Item2.MiHealth == 0 &&
-                        x.Item2.MiDormant != 1);
-            var builder = new StringBuilder();
-            foreach (var player in spectators.Select(spec => spec.Item2))
-            {
-                builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.MiId], (SpectatorView) player.MiObserverMode, builder.Length > 0 ? "\n" : "");
-            }
-            if (builder.Length > 0)
-            {
-                Console.WriteLine(builder.ToString());
-            }
-
+            //
+            //if (!Framework.IsPlaying()) return;
+            //if (Framework.LocalPlayer == null) return;
+            //var spectators =
+            //    Framework.Players.Where(
+            //        x =>
+            //            x.Item2.MhObserverTarget == Framework.LocalPlayer.MiId && x.Item2.MiHealth == 0 &&
+            //            x.Item2.MiDormant != 1);
+            //var builder = new StringBuilder();
+            //foreach (var player in spectators.Select(spec => spec.Item2))
+            //{
+            //    builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.MiId], (SpectatorView) player.MiObserverMode, builder.Length > 0 ? "\n" : "");
+            //}
+            //if (builder.Length > 0)
+            //{
+            //    Console.WriteLine(builder.ToString());
+            //}
+            //
             #endregion
         }
 
