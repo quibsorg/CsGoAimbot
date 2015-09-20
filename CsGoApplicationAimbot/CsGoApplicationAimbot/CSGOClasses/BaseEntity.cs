@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using CsGoApplicationAimbot.CSGO;
 using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
@@ -194,8 +193,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             return
                 MiClassId == (int) ClassId.Ak47 ||
                 MiClassId == (int) ClassId.DEagle ||
-                MiClassId == (int) ClassId.Knife ||
-                MiClassId == (int) ClassId.Knife ||
                 MiClassId == (int) ClassId.WeaponAug ||
                 MiClassId == (int) ClassId.WeaponAwp ||
                 MiClassId == (int) ClassId.WeaponDualBerettas ||
@@ -212,13 +209,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 MiClassId == (int) ClassId.WeaponSsg08 ||
                 MiClassId == (int) ClassId.WeaponTaser ||
                 MiClassId == (int) ClassId.WeaponTec9 ||
-                MiClassId == (int) ClassId.WeaponUmp45 ||
-                MiClassId == (int) ClassId.DecoyGrenade ||
-                MiClassId == (int) ClassId.HeGrenade ||
-                MiClassId == (int) ClassId.IncendiaryGrenade ||
-                MiClassId == (int) ClassId.MolotovGrenade ||
-                MiClassId == (int) ClassId.SmokeGrenade ||
-                MiClassId == (int) ClassId.Flashbang;
+                MiClassId == (int) ClassId.WeaponUmp45;
         }
 
         public bool IsGrenade()
@@ -230,6 +221,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 MiClassId == (int) ClassId.MolotovGrenade ||
                 MiClassId == (int) ClassId.SmokeGrenade ||
                 MiClassId == (int) ClassId.Flashbang;
+        }
+
+        public bool IsMelee()
+        {
+            return
+            MiClassId == (int) ClassId.Knife ||
+            MiClassId == (int) ClassId.Knife;
         }
 
         public bool IsProp()

@@ -1,4 +1,4 @@
-namespace CsGoApplicationAimbot.CSGO.Enums
+namespace CsGoApplicationAimbot.CSGOClasses.Enums
 {
     public enum Team
     {

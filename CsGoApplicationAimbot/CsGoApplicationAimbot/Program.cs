@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using CsGoApplicationAimbot.CSGO.Enums;
 using CsGoApplicationAimbot.CSGOClasses;
+using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.SharpDXRenderer;
 using ExternalUtilsCSharp.UI;
@@ -154,8 +154,7 @@ namespace CsGoApplicationAimbot
             var builder = new StringBuilder();
             foreach (var player in spectators.Select(spec => spec.Item2))
             {
-                builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.MiId],
-                    (SpectatorView) player.MiObserverMode, builder.Length > 0 ? "\n" : "");
+                builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.MiId], (SpectatorView) player.MiObserverMode, builder.Length > 0 ? "\n" : "");
             }
             if (builder.Length > 0)
             {

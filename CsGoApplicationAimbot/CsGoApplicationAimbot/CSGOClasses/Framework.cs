@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.MathObjects;
 
@@ -83,8 +84,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #endregion
 
-        #region METHODS
-
         public void Update()
         {
             var players = new List<Tuple<int, CsPlayer>>();
@@ -126,9 +125,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Entities = entities.ToArray();
             Weapons = weapons.ToArray();
 
-            #endregion
-
-            #region LocalPlayer and Target
 
             if (players.Exists(x => x.Item2.Address == _dwLocalPlayer))
             {
@@ -151,36 +147,25 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     Target = null;
             }
 
-            #endregion
-
             if (LocalPlayer == null)
                 return;
 
-            #region IGameResources
-
             if (_dwIGameResources != 0)
             {
-                Kills = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills),
-                    65);
-                Deaths = Program.MemUtils.ReadArray<int>(
-                    (IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
-                Armor = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor),
-                    65);
-                Assists =
-                    Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
-                Score = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score),
-                    65);
+                Kills = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills), 65);
+                Deaths = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
+                Armor = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor), 65);
+                Assists = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
+                Score = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score), 65);
 
                 var clantagsData = new byte[16 * 65];
-                Program.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData,
-                    clantagsData.Length);
+                Program.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData, clantagsData.Length);
                 var clantags = new string[65];
                 for (var i = 0; i < 65; i++)
                     clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
                 Clantags = clantags;
 
-                var namePtrs =
-                    Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
+                var namePtrs =Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
                 var names = new string[65];
                 for (var i = 0; i < 65; i++)
                     try
@@ -194,9 +179,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 Names = names;
             }
 
-            #endregion
 
-            #region Aimbot
             bool aimEnaled = Program.ConfigUtils.GetValue<bool>("Aim Enabled");
 
             if (aimEnaled)
@@ -206,22 +189,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     ControlAim();
             }
 
-            #endregion
-
-            #region RCS
-
             ControlRecoil();
-
-            #endregion
-
-            #region Set view angles
 
             if (NewViewAngles != ViewAngles)
                 SetViewAngles(NewViewAngles);
-
-            #endregion
-
-            #region triggerbot
 
             if (Program.ConfigUtils.GetValue<bool>("Trigger Enabled"))
             {
@@ -238,10 +209,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
                     Triggerbot();
             }
-
-            #endregion
-
-            #region triggerbot-burst
 
             if (TriggerShooting)
             {
@@ -306,7 +273,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             int aimBone = Program.ConfigUtils.GetValue<int>("Aim Bone");
             float aimFov = Program.ConfigUtils.GetValue<float>("Aim Fov");
 
-
             if (LocalPlayer == null)
                 return;
             var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MiHealth != 0 && x.Item2.MiDormant != 1);
@@ -361,7 +327,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return;
             if (aimbot)
             {
-                //TODO fix aimbot force.
                 var aimbotForce = randomRcsForce / 2;
                 NewViewAngles -= LocalPlayer.MVecPunch * (2f / 100f * aimbotForce);
             }
@@ -382,7 +347,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             bool burstRandomize = Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize");
             float burstShots = Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
 
-            if (LocalPlayer == null || TriggerShooting || LocalPlayerWeapon.IsGrenade()) return;
+            if (LocalPlayer == null || TriggerShooting) return;
             if (Players.Count(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx) <= 0) return;
             var player = Players.First(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx).Item2;
             if ((triggerEnemies && player.MiTeamNum != LocalPlayer.MiTeamNum) || (triggerAllies && player.MiTeamNum == LocalPlayer.MiTeamNum))
@@ -424,6 +389,5 @@ namespace CsGoApplicationAimbot.CSGOClasses
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
 
-        #endregion
     }
 }

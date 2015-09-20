@@ -23,11 +23,11 @@ namespace CsGoApplicationAimbot
 
         #region PROPERTIES
 
-        public List<string> UIntegerSettings { get; set; }
-        public List<string> IntegerSettings { get; set; }
-        public List<string> FloatSettings { get; set; }
-        public List<string> KeySettings { get; set; }
-        public List<string> BooleanSettings { get; set; }
+        public List<string> UIntegerSettings { get; private set; }
+        public List<string> IntegerSettings { get; }
+        public List<string> FloatSettings { get; }
+        public List<string> KeySettings { get; }
+        public List<string> BooleanSettings { get; }
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace CsGoApplicationAimbot
         public override byte[] SaveSettings()
         {
             var builder = new StringBuilder();
-            builder.AppendLine(@"#Smurf Bot 0.4");
+            builder.AppendLine(@"#Smurf Bot 0.5");
             builder.AppendLine(@"#Made By Carlsson");
             builder.AppendLine(@"#Key codes can be found at https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx Just remove VK_ before so VK_MENU is just MENU");
             var keys = new object[GetKeys().Count];
