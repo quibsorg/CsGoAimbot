@@ -133,6 +133,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
+                Console.WriteLine(WeaponSection);
             }
             else
             {
@@ -178,7 +179,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 Names = names;
             }
 
-            bool aimEnaled = _settings.GetBool("Default", "Aim Enabled");
+            bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
             if (aimEnaled)
             {
                 AimbotActive = Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON);
@@ -267,7 +268,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             bool aimSpotted = _settings.GetBool(WeaponSection, "Aim Spotted");
             bool aimSpottedBy = _settings.GetBool(WeaponSection, "Aim Spotted By");
-            bool aimEnemies = _settings.GetBool(WeaponSection, " Aim Enemies");
+            bool aimEnemies = _settings.GetBool(WeaponSection, "Aim Enemies");
             bool aimAllies = _settings.GetBool(WeaponSection, "Aim Allies");
             bool aimSmooth = _settings.GetBool(WeaponSection, "Aim Smooth Enabled");
             int aimBone = _settings.GetInt(WeaponSection, "Aim Bone");

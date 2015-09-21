@@ -53,7 +53,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 //"CZ75",
                 "DEagle",
                 "Elite",
-                "FiveSeveN",
+                "FiveSeven",
                 "Glock",
                 "P228",
                 "P250",
@@ -85,13 +85,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
                 //Snipers
                 "AWP",
-                "SSG 08",
+                "SSG08",
                 "Scar-20",
                 "G3SG1",
 
                 //Machine Guins
                 "M249",
                 "Negev",
+
             };
 
             StringBuilder builder = new StringBuilder();

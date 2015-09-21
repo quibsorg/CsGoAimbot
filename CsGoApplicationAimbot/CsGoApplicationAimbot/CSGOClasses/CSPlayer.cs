@@ -204,6 +204,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 {
                     weaponName = weaponName.Replace("Weapon", "");
                 }
+                if (weaponName.Contains("Knife"))
+                {
+                    return "Default";
+                }
 
                 return weaponName;
             }
