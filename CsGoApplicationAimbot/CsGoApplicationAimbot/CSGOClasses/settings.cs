@@ -59,7 +59,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 "P250",
                 "HKP2000",
                 "Tec9",
-                //"USP-S",
 
                 //Heavy
                 "Nova",
@@ -78,7 +77,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 //Rifles
                 "Galil AR",
                 "AK47",
-                "Sg 553",
+                "SG553",
                 "Famas",
                 "M4A1",
                 "AUG",
