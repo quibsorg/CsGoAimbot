@@ -194,6 +194,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
 
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
+            bool triggerBurstEnabled = _settings.GetBool(WeaponSection, "Trigger Burst Enabled");
             bool triggerToggle = _settings.GetBool(WeaponSection, "Trigger Toggle");
             bool triggerHold = _settings.GetBool(WeaponSection, "Trigger Hold");
 
@@ -206,8 +207,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
                 else if (triggerHold)
                 {
-                    TriggerbotActive =
-                        Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.MENU);
+                    TriggerbotActive = Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.MENU);
                 }
                 if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
                     Triggerbot();
@@ -221,7 +221,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
                 else
                 {
-                    if (Program.ConfigUtils.GetValue<bool>("Trigger Burst Enabled"))
+                    if (triggerBurstEnabled)
                     {
                         if (TriggerBurstFired >= TriggerBurstCount)
                         {
@@ -347,7 +347,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             bool triggerAllies = _settings.GetBool(WeaponSection, "Trigger Allies");
             bool burstRandomize = _settings.GetBool(WeaponSection, "Trigger Burst Randomize");
             float firstShot = _settings.GetFloat(WeaponSection, "Trigger Delay FirstShot");
-            float delayShot = _settings.GetFloat(WeaponSection, "Trigger Delay Shot");
+            float delayShot = _settings.GetFloat(WeaponSection, "Trigger Delay Shots");
             float burstShots = _settings.GetFloat(WeaponSection, "Trigger Burst Shots");
 
             if (LocalPlayer == null || TriggerShooting)
