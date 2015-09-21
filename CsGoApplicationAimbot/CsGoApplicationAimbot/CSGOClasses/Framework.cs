@@ -89,6 +89,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var players = new List<Tuple<int, CsPlayer>>();
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
+            var settings = new Settings();
 
             _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
             _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
@@ -175,10 +176,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
 
 
-            bool aimEnaled = Program.ConfigUtils.GetValue<bool>("Aim Enabled");
+            bool aimEnaled = settings.GetBool("Default", "Aim Enabled");
             if (aimEnaled)
             {
-                AimbotActive = Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Aim Key"));
+                AimbotActive = Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON);
                 if (AimbotActive)
                     ControlAim();
             }
@@ -192,13 +193,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 if (Program.ConfigUtils.GetValue<bool>("Trigger Toggle"))
                 {
-                    if (Program.KeyUtils.KeyWentUp(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Trigger Key")))
+                    if (Program.KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.MENU))
                         TriggerbotActive = !TriggerbotActive;
                 }
                 else if (Program.ConfigUtils.GetValue<bool>("Trigger Hold"))
                 {
                     TriggerbotActive =
-                        Program.KeyUtils.KeyIsDown(Program.ConfigUtils.GetValue<WinAPI.VirtualKeyShort>("Trigger Key"));
+                        Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.MENU);
                 }
                 if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
                     Triggerbot();
