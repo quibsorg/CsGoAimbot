@@ -153,7 +153,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Rcs Force Max = 100");
             builder.AppendLine("Rcs Force Min = 83").AppendLine();
             //Trigger
-            builder.AppendLine("Trigger Enabled = False");
+            builder.AppendLine("Trigger Enabled = True");
             builder.AppendLine("Trigger Key = MENU");
             builder.AppendLine("Trigger Toggle = False");
             builder.AppendLine("Trigger Hold = False");
@@ -162,8 +162,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Trigger Burst Enabled = False");
             builder.AppendLine("Trigger Burst Shots = 0");
             builder.AppendLine("Trigger Burst Randomize = False");
-            builder.AppendLine("Trigger Delay FirstShot = 21");
-            builder.AppendLine("Trigger Delay Shots = 21");
+            builder.AppendLine("Trigger Delay FirstShot = 31");
+            builder.AppendLine("Trigger Delay Shots = 25");
             if (!File.Exists("Config.ini"))
             {
                 Console.WriteLine("> Config does not exist. Creating..");
