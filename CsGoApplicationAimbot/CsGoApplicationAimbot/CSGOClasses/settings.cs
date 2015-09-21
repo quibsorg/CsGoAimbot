@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Permissions;
 using System.Text;
-using System.Threading.Tasks;
-using ExternalUtilsCSharp;
 using IniParser;
 using IniParser.Model;
 
@@ -54,16 +50,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var weaponList = new List<string>
             {
                 //Pistols
-                "CZ75",
+                //"CZ75",
                 "DEagle",
-                "Dual Berettas",
-                "Five-SeveN",
-                "Glock-18",
+                "Elite",
+                "FiveSeveN",
+                "Glock",
                 "P228",
                 "P250",
-                "P2000",
-                "Tec-9",
-                "USP-S",
+                "HKP2000",
+                "Tec9",
+                //"USP-S",
 
                 //Heavy
                 "Nova",
@@ -81,10 +77,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
                 //Rifles
                 "Galil AR",
-                "AK-47",
+                "AK47",
                 "Sg 553",
                 "Famas",
-                "M4A4 / M4A1-S",
+                "M4A1",
                 "AUG",
 
                 //Snipers
@@ -115,6 +111,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Aim Enabled = True");
                 builder.AppendLine("Aim Key = LBUTTON");
                 builder.AppendLine("Aim Fov = 2");
+                builder.AppendLine("Aim Bone = 5");
                 builder.AppendLine("Aim Smooth Enabled = True");
                 builder.AppendLine("Aim Smooth Value = 0,35");
                 builder.AppendLine("Aim Spotted = True");
@@ -123,6 +120,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Aim Allies = False").AppendLine();
                 //RCS
                 builder.AppendLine("Rcs Enabled = True");
+                builder.AppendLine("Rcs Start = 1");
                 builder.AppendLine("Rcs Force Max = 100");
                 builder.AppendLine("Rcs Force Min = 83").AppendLine();
                 //Trigger
@@ -142,6 +140,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Aim Enabled = False");
             builder.AppendLine("Aim Key = LBUTTON");
             builder.AppendLine("Aim Fov = 0");
+            builder.AppendLine("Aim Bone = 5");
             builder.AppendLine("Aim Smooth Enabled = False");
             builder.AppendLine("Aim Smooth Value = 0");
             builder.AppendLine("Aim Spotted = False");
@@ -149,9 +148,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Aim Enemies = False");
             builder.AppendLine("Aim Allies = False").AppendLine();
             //RCS
-            builder.AppendLine("Rcs Enabled = False");
-            builder.AppendLine("Rcs Force Max = 0");
-            builder.AppendLine("Rcs Force Min = 0").AppendLine();
+            builder.AppendLine("Rcs Enabled = True");
+            builder.AppendLine("Rcs Start = 1");
+            builder.AppendLine("Rcs Force Max = 100");
+            builder.AppendLine("Rcs Force Min = 83").AppendLine();
             //Trigger
             builder.AppendLine("Trigger Enabled = False");
             builder.AppendLine("Trigger Key = MENU");
@@ -163,7 +163,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Trigger Burst Shots = 0");
             builder.AppendLine("Trigger Burst Randomize = False");
             builder.AppendLine("Trigger Delay FirstShot = 21");
-            builder.AppendLine("Trigger Delay Shots = 21").AppendLine();
+            builder.AppendLine("Trigger Delay Shots = 21");
             if (!File.Exists("Config.ini"))
             {
                 Console.WriteLine("> Config does not exist. Creating..");

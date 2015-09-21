@@ -170,7 +170,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public Weapon GetActiveWeapon()
         {
             if (MhActiveWeapon == 0xFFFFFFFF)
+            {
                 return null;
+            }
 
             var handle = MhActiveWeapon & 0xFFF;
             //if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
@@ -179,6 +181,33 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //}
             //return null;
             return Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
+        }
+
+        /// <summary>
+        /// Returns Weapon name
+        /// </summary>
+        /// <returns></returns>
+        public string GetActiveWeaponName()
+        {
+            if (MhActiveWeapon == 0xFFFFFFFF)
+            {
+                return null;
+            }
+
+            var handle = MhActiveWeapon & 0xFFF;
+            if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
+            {
+                Weapon weapon = Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
+                string weaponName = weapon.MSzClassName;
+                weaponName = weaponName.Remove(0, 1);
+                if (weaponName.Contains("Weapon"))
+                {
+                    weaponName = weaponName.Replace("Weapon", "");
+                }
+
+                return weaponName;
+            }
+            return "Default";
         }
 
         #endregion

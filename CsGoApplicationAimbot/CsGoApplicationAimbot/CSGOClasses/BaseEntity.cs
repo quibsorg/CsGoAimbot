@@ -10,7 +10,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region VARIABLES
 
         private uint _iClientClass, _iClassId;
-        private string _szClassName;
+        public string _szClassName;
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             set { _iClassId = value; }
         }
 
-        private string MSzClassName
+        public string MSzClassName
         {
             get
             {
@@ -194,39 +194,60 @@ namespace CsGoApplicationAimbot.CSGOClasses
             return
                 MiClassId == (int) ClassId.Ak47 ||
                 MiClassId == (int) ClassId.DEagle ||
-                MiClassId == (int) ClassId.WeaponAug ||
-                MiClassId == (int) ClassId.WeaponAwp ||
-                MiClassId == (int) ClassId.WeaponG3Sg1 ||
-                MiClassId == (int) ClassId.WeaponScar20 ||
-                MiClassId == (int) ClassId.WeaponDualBerettas ||
-                MiClassId == (int) ClassId.WeaponElite ||
-                MiClassId == (int) ClassId.WeaponFiveSeven ||
-                MiClassId == (int) ClassId.WeaponGlock ||
-                MiClassId == (int) ClassId.WeaponHkp2000 ||
-                MiClassId == (int) ClassId.WeaponM4A1 ||
-                MiClassId == (int) ClassId.WeaponMp7 ||
-                MiClassId == (int) ClassId.WeaponMp9 ||
-                MiClassId == (int) ClassId.WeaponP250 ||
-                MiClassId == (int) ClassId.WeaponP90 ||
-                MiClassId == (int) ClassId.WeaponSg556 ||
-                MiClassId == (int) ClassId.WeaponSsg08 ||
-                MiClassId == (int) ClassId.WeaponTaser ||
-                MiClassId == (int) ClassId.WeaponTec9 ||
-                MiClassId == (int) ClassId.WeaponUmp45 ||
+                MiClassId == (int) ClassId.Aug ||
+                MiClassId == (int) ClassId.Awp ||
+                MiClassId == (int) ClassId.G3Sg1 ||
+                MiClassId == (int) ClassId.Scar20 ||
+                MiClassId == (int) ClassId.DualBerettas ||
+                MiClassId == (int) ClassId.Elite ||
+                MiClassId == (int) ClassId.FiveSeven ||
+                MiClassId == (int) ClassId.Glock ||
+                MiClassId == (int) ClassId.Hkp2000 ||
+                MiClassId == (int) ClassId.M4A1 ||
+                MiClassId == (int) ClassId.Mp7 ||
+                MiClassId == (int) ClassId.Mp9 ||
+                MiClassId == (int) ClassId.P250 ||
+                MiClassId == (int) ClassId.P90 ||
+                MiClassId == (int) ClassId.Sg556 ||
+                MiClassId == (int) ClassId.Ssg08 ||
+                MiClassId == (int) ClassId.Taser ||
+                MiClassId == (int) ClassId.Tec9 ||
+                MiClassId == (int) ClassId.Ump45 ||
                 MiClassId == (int) ClassId.DynamicProp ||
                 MiClassId == (int) ClassId.PhysicsProp ||
                 MiClassId == (int) ClassId.PhysicsPropMultiplayer ||
-                MiClassId == (int) ClassId.WeaponAwp ||
-                MiClassId == (int) ClassId.WeaponSsg08 ||
-                MiClassId == (int) ClassId.WeaponG3Sg1 ||
-                MiClassId == (int) ClassId.WeaponScar20 ||
+                MiClassId == (int) ClassId.Awp ||
+                MiClassId == (int) ClassId.Ssg08 ||
+                MiClassId == (int) ClassId.G3Sg1 ||
+                MiClassId == (int) ClassId.Scar20 ||
                 MiClassId == (int) ClassId.Knife ||
                 MiClassId == (int) ClassId.DecoyGrenade ||
                 MiClassId == (int) ClassId.HeGrenade ||
                 MiClassId == (int) ClassId.IncendiaryGrenade ||
                 MiClassId == (int) ClassId.MolotovGrenade ||
                 MiClassId == (int) ClassId.SmokeGrenade ||
-                MiClassId == (int) ClassId.Flashbang;
+                MiClassId == (int) ClassId.Flashbang ||
+                MiClassId == (int) ClassId.Famas ||
+                MiClassId == (int) ClassId.Mac10 ||
+                MiClassId == (int) ClassId.GalilAr ||
+                MiClassId == (int) ClassId.M249 ||
+                MiClassId == (int) ClassId.M249X ||
+                MiClassId == (int) ClassId.Mag7 ||
+                MiClassId == (int) ClassId.NOVA ||
+                MiClassId == (int) ClassId.Negev ||
+                MiClassId == (int) ClassId.Ump45X ||
+                MiClassId == (int) ClassId.Xm1014 ||
+                MiClassId == (int) ClassId.Xm1014X ||
+                MiClassId == (int) ClassId.M4 ||
+                MiClassId == (int) ClassId.Nova ||
+                MiClassId == (int) ClassId.Mag ||
+                MiClassId == (int) ClassId.G3Sg1 ||
+                MiClassId == (int) ClassId.G3Sg1X ||
+                MiClassId == (int) ClassId.Tec9X ||
+                MiClassId == (int) ClassId.PpBizon ||
+                MiClassId == (int) ClassId.P90X ||
+                MiClassId == (int) ClassId.Scar20X;
+
         }
         #endregion
     }
