@@ -11,7 +11,7 @@
         public int MbCanReload => ReadFieldProxy<int>("Weapon.m_bCanReload");
         public int MiWeaponTableIndex => ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex");
         public float MfAccuracyPenalty => ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty");
-        private int MiWeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
+        public int MiWeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
 
         #endregion
 

@@ -26,6 +26,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             TriggerbotActive = false;
         }
 
+        readonly Settings _settings = new Settings();
         #endregion
 
         #region VARIABLES
@@ -53,6 +54,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region PROPERTIES
 
         public CsLocalPlayer LocalPlayer { get; private set; }
+        public string WeaponSection { get; set; }
         private BaseEntity Target { get; set; }
         public Tuple<int, CsPlayer>[] Players { get; private set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
@@ -89,7 +91,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var players = new List<Tuple<int, CsPlayer>>();
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
-            var settings = new Settings();
+            
 
             _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
             _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
@@ -101,8 +103,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
             ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
             NewViewAngles = ViewAngles;
-            RcsHandled = false
-                ;
+            RcsHandled = false;
+
             var data = new byte[16 * 8192];
             Program.MemUtils.Read((IntPtr)(_dwEntityList), out data, data.Length);
 
@@ -130,6 +132,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
+                WeaponSection = LocalPlayer.GetActiveWeaponName();
             }
             else
             {
@@ -175,8 +178,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 Names = names;
             }
 
-
-            bool aimEnaled = settings.GetBool("Default", "Aim Enabled");
+            bool aimEnaled = _settings.GetBool("Default", "Aim Enabled");
             if (aimEnaled)
             {
                 AimbotActive = Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON);
@@ -189,14 +191,19 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (NewViewAngles != ViewAngles)
                 SetViewAngles(NewViewAngles);
 
-            if (Program.ConfigUtils.GetValue<bool>("Trigger Enabled"))
+
+            bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
+            bool triggerToggle = _settings.GetBool(WeaponSection, "Trigger Toggle");
+            bool triggerHold = _settings.GetBool(WeaponSection, "Trigger Hold");
+
+            if (triggerEnabled)
             {
-                if (Program.ConfigUtils.GetValue<bool>("Trigger Toggle"))
+                if (triggerToggle)
                 {
                     if (Program.KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.MENU))
                         TriggerbotActive = !TriggerbotActive;
                 }
-                else if (Program.ConfigUtils.GetValue<bool>("Trigger Hold"))
+                else if (triggerHold)
                 {
                     TriggerbotActive =
                         Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.MENU);
@@ -242,7 +249,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             LastClip = LocalPlayerWeapon?.MiClip1 ?? 0;
             LastShotsFired = LocalPlayer.MiShotsFired;
             LastPunch = LocalPlayer.MVecPunch;
-
         }
 
         private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
@@ -259,12 +265,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         private void ControlAim()
         {
-            bool aimSpotted = Program.ConfigUtils.GetValue<bool>("Aim Spotted");
-            bool aimSpottedBy = Program.ConfigUtils.GetValue<bool>("Aim Spotted By");
-            bool aimEnemies = Program.ConfigUtils.GetValue<bool>("Aim Enemies");
-            bool aimAllies = Program.ConfigUtils.GetValue<bool>("Aim Allies");
-            int aimBone = Program.ConfigUtils.GetValue<int>("Aim Bone");
-            float aimFov = Program.ConfigUtils.GetValue<float>("Aim Fov");
+            bool aimSpotted = _settings.GetBool(WeaponSection, "Aim Spotted");
+            bool aimSpottedBy = _settings.GetBool(WeaponSection, "Aim Spotted By");
+            bool aimEnemies = _settings.GetBool(WeaponSection, " Aim Enemies");
+            bool aimAllies = _settings.GetBool(WeaponSection, "Aim Allies");
+            bool aimSmooth = _settings.GetBool(WeaponSection, "Aim Smooth Enabled");
+            int aimBone = _settings.GetInt(WeaponSection, "Aim Bone");
+            float aimFov = _settings.GetFloat(WeaponSection, "Aim Fov");
+            float aimSmoothValue = _settings.GetFloat(WeaponSection, "Aim Smooth Value");
 
             if (LocalPlayer == null)
                 return;
@@ -295,8 +303,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             ControlRecoil(true);
 
-            if (Program.ConfigUtils.GetValue<bool>("Aim Smooth Enabled"))
-                NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest, Program.ConfigUtils.GetValue<float>("Aim Smooth Value"));
+            if (aimSmooth)
+                NewViewAngles = NewViewAngles.SmoothAngle(NewViewAngles + closest, aimSmoothValue);
             else
                 NewViewAngles += closest;
 
@@ -305,10 +313,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         private void ControlRecoil(bool aimbot = false)
         {
-            var rcsEnabled = Program.ConfigUtils.GetValue<bool>("Rcs Enabled");
-            var rcsForceMax = Program.ConfigUtils.GetValue<float>("Rcs Force Max");
-            var rcsForceMin = Program.ConfigUtils.GetValue<float>("Rcs Force Min");
-            var rcsStart = Program.ConfigUtils.GetValue<int>("Rcs Start");
+            var rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
+            var rcsForceMax = _settings.GetFloat(WeaponSection, "Rcs Force Max");
+            var rcsForceMin = _settings.GetFloat(WeaponSection, "Rcs Force Min");
+            var rcsStart = _settings.GetInt(WeaponSection, "Rcs Start");
 
             var random = new Random();
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
@@ -334,12 +342,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public void Triggerbot()
         {
-            bool triggerEnemies = Program.ConfigUtils.GetValue<bool>("Trigger Enemies");
-            bool triggerAllies = Program.ConfigUtils.GetValue<bool>("Trigger Allies");
-            float firstShot = Program.ConfigUtils.GetValue<float>("Trigger Delay FirstShot");
-            float delayShot = Program.ConfigUtils.GetValue<float>("Trigger Delay Shots");
-            bool burstRandomize = Program.ConfigUtils.GetValue<bool>("Trigger Burst Randomize");
-            float burstShots = Program.ConfigUtils.GetValue<float>("Trigger Burst Shots");
+            bool triggerEnemies = _settings.GetBool(WeaponSection, "Trigger Enemies");
+            bool triggerAllies = _settings.GetBool(WeaponSection, "Trigger Allies");
+            bool burstRandomize = _settings.GetBool(WeaponSection, "Trigger Burst Randomize");
+            float firstShot = _settings.GetFloat(WeaponSection, "Trigger Delay FirstShot");
+            float delayShot = _settings.GetFloat(WeaponSection, "Trigger Delay Shot");
+            float burstShots = _settings.GetFloat(WeaponSection, "Trigger Burst Shots");
 
             if (LocalPlayer == null || TriggerShooting)
                 return;
@@ -373,7 +381,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
 
-        //TODO Weapon Configs
         private void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
