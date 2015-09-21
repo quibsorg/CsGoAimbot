@@ -69,6 +69,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\ExternalUtilsCSharp.SharpDXRenderer.dll</HintPath>
     </Reference>
+    <Reference Include="INIFileParser, Version=2.2.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
+      <HintPath>..\packages\ini-parser.2.2.2\lib\net20\INIFileParser.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\SharpDX.dll</HintPath>
@@ -95,6 +99,7 @@
     <Compile Include="CSGOClasses\Fields\BonesField.cs" />
     <Compile Include="CSGOClasses\Fields\Field.cs" />
     <Compile Include="CSGOClasses\Framework.cs" />
+    <Compile Include="CSGOClasses\settings.cs" />
     <Compile Include="CSGOClasses\Weapon.cs" />
     <Compile Include="CSGOConfigUtils.cs" />
     <Compile Include="CSGOOffsets.cs" />
