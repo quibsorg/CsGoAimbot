@@ -37,6 +37,7 @@ namespace CsGoApplicationAimbot
         private static ProcUtils _procUtils;
         public static MemUtils MemUtils;
         public static CsgoConfigUtils ConfigUtils;
+        public static Settings Settings;
 
         #endregion
 
@@ -44,11 +45,10 @@ namespace CsGoApplicationAimbot
         public static void Main(string[] args)
         {
             PrintSuccess("Smurf bot");
+            //We make the config if it dosen't exist.
+            Settings = new Settings();
             KeyUtils = new KeyUtils();
             ConfigUtils = new CsgoConfigUtils();
-
-            //Creates the setting file 
-            AddAndApplySettings();
 
             PrintInfo("> Waiting for CSGO to start up...");
             while (!ProcUtils.ProcessIsRunning(GameProcess))
@@ -84,128 +84,6 @@ namespace CsGoApplicationAimbot
             ConfigUtils.SaveSettingsToFile("Config.cfg");
         }
 
-
-        private static void AddAndApplySettings()
-        {
-            var weaponList = new List<string>
-            {
-                //Pistols
-                "CZ75",
-                "DEagle",
-                "Dual Berettas",
-                "Five-SeveN",
-                "Glock-18",
-                "P228",
-                "P250",
-                "P2000",
-                "Tec-9",
-                "USP-S",
-                    
-                //Heavy
-                "Nova",
-                "XM1014",
-                "Sawed-Off",
-                "Mag-7",
-
-                //SMG
-                "Mac-10",
-                "Mp9",
-                "Mp7",
-                "Ump-45",
-                "PP-Bizon",
-                "P90",
-
-                //Rifles
-                "Galil AR",
-                "AK-47",
-                "Sg 553",
-                "Famas",
-                "M4A4 / M4A1-S",
-                "AUG",
-
-                //Snipers
-                "AWP",
-                "SSG 08",
-                "Scar-20",
-                "G3SG1",
-
-                //Machine Guins
-                "M249",
-                "Negev",
-
-            };
-
-            foreach (var weapon in weaponList)
-            {
-
-                ConfigUtils.KeySettings.Add("Aim Key");
-                ConfigUtils.BooleanSettings.AddRange(new[]
-                {
-                "Aim Enabled",
-                "Aim Smooth Enabled",
-                "Aim Spotted",
-                "Aim Spotted By",
-                "Aim Enemies",
-                "Aim Allies"
-                });
-
-                ConfigUtils.FloatSettings.AddRange(new[]
-                {
-                "Aim Fov",
-                "Aim Smooth Value"
-                });
-
-                ConfigUtils.IntegerSettings.Add("Aim Bone");
-                //RCS
-                ConfigUtils.BooleanSettings.Add("Rcs Enabled");
-                ConfigUtils.FloatSettings.AddRange(new[]
-                {
-                "Rcs Force Max",
-                "Rcs Force Min"
-                });
-
-                ConfigUtils.IntegerSettings.Add("Rcs Start");
-                //Trigger
-                ConfigUtils.BooleanSettings.AddRange(new[]
-                {
-                "Trigger Enabled",
-                "Trigger Toggle",
-                "Trigger Hold",
-                "Trigger Enemies",
-                "Trigger Allies",
-                "Trigger Burst Enabled",
-                "Trigger Burst Randomize"
-                });
-
-                ConfigUtils.KeySettings.Add("Trigger Key");
-                ConfigUtils.FloatSettings.AddRange(new[]
-                {
-                "Trigger Delay FirstShot",
-                "Trigger Delay Shots",
-                "Trigger Burst Shots"
-                });
-
-                //Sound ESP
-                ConfigUtils.BooleanSettings.Add("Sound Esp Enabled");
-                ConfigUtils.FloatSettings.AddRange(new[]
-                {
-                "Sound Range",
-                "Sound Interval",
-                "Sound Volume"
-                });
-
-            ConfigUtils.FillDefaultValues();
-
-            if (!File.Exists("Config.cfg"))
-            {
-                PrintInfo("Settings file does not exist. Creating...");
-                ConfigUtils.SaveSettingsToFile("Config.cfg");
-            }
-            }
-
-            ConfigUtils.ReadSettingsFromFile("Config.cfg");
-        }
-
         private static void ProOverlayTickEvent(object sender, Overlay<SharpDXRenderer, Color, Vector2, TextFormat>.DeltaEventArgs e)
         {
             KeyUtils.Update();
@@ -234,7 +112,7 @@ namespace CsGoApplicationAimbot
 
         #region HELPERS
 
-        private static void PrintInfo(string text, params object[] arguments)
+        public static void PrintInfo(string text, params object[] arguments)
         {
             PrintEncolored(text, ConsoleColor.White, arguments);
         }
