@@ -89,47 +89,85 @@ namespace CsGoApplicationAimbot
         {
             var weaponList = new List<string>
             {
-             "CZ75",
-             DEagle
-             Dual Berettas
-             Five-SeveN
-             Glock-18
-             P228
-             P250
-             P2000
-             Tec-9
-             USP-S
+                //Pistols
+                "CZ75",
+                "DEagle",
+                "Dual Berettas",
+                "Five-SeveN",
+                "Glock-18",
+                "P228",
+                "P250",
+                "P2000",
+                "Tec-9",
+                "USP-S",
+                    
+                //Heavy
+                "Nova",
+                "XM1014",
+                "Sawed-Off",
+                "Mag-7",
+
+                //SMG
+                "Mac-10",
+                "Mp9",
+                "Mp7",
+                "Ump-45",
+                "PP-Bizon",
+                "P90",
+
+                //Rifles
+                "Galil AR",
+                "AK-47",
+                "Sg 553",
+                "Famas",
+                "M4A4 / M4A1-S",
+                "AUG",
+
+                //Snipers
+                "AWP",
+                "SSG 08",
+                "Scar-20",
+                "G3SG1",
+
+                //Machine Guins
+                "M249",
+                "Negev",
+
             };
 
-
-            ConfigUtils.KeySettings.Add("Aim Key");
-            ConfigUtils.BooleanSettings.AddRange(new[]
+            foreach (var weapon in weaponList)
             {
+
+                ConfigUtils.KeySettings.Add("Aim Key");
+                ConfigUtils.BooleanSettings.AddRange(new[]
+                {
                 "Aim Enabled",
                 "Aim Smooth Enabled",
                 "Aim Spotted",
                 "Aim Spotted By",
                 "Aim Enemies",
                 "Aim Allies"
-            });
+                });
 
-            ConfigUtils.FloatSettings.AddRange(new[]
-            {
+                ConfigUtils.FloatSettings.AddRange(new[]
+                {
                 "Aim Fov",
                 "Aim Smooth Value"
-            });
-            ConfigUtils.IntegerSettings.Add("Aim Bone");
-            //RCS
-            ConfigUtils.BooleanSettings.Add("Rcs Enabled");
-            ConfigUtils.FloatSettings.AddRange(new[]
-            {
+                });
+
+                ConfigUtils.IntegerSettings.Add("Aim Bone");
+                //RCS
+                ConfigUtils.BooleanSettings.Add("Rcs Enabled");
+                ConfigUtils.FloatSettings.AddRange(new[]
+                {
                 "Rcs Force Max",
                 "Rcs Force Min"
-            });
-            ConfigUtils.IntegerSettings.Add("Rcs Start");
-            //Trigger
-            ConfigUtils.BooleanSettings.AddRange(new[]
-            {
+                });
+
+                ConfigUtils.IntegerSettings.Add("Rcs Start");
+                //Trigger
+                ConfigUtils.BooleanSettings.AddRange(new[]
+                {
                 "Trigger Enabled",
                 "Trigger Toggle",
                 "Trigger Hold",
@@ -137,22 +175,25 @@ namespace CsGoApplicationAimbot
                 "Trigger Allies",
                 "Trigger Burst Enabled",
                 "Trigger Burst Randomize"
-            });
-            ConfigUtils.KeySettings.Add("Trigger Key");
-            ConfigUtils.FloatSettings.AddRange(new[]
-            {
+                });
+
+                ConfigUtils.KeySettings.Add("Trigger Key");
+                ConfigUtils.FloatSettings.AddRange(new[]
+                {
                 "Trigger Delay FirstShot",
                 "Trigger Delay Shots",
                 "Trigger Burst Shots"
-            });
-            //Sound ESP
-            ConfigUtils.BooleanSettings.Add("Sound Esp Enabled");
-            ConfigUtils.FloatSettings.AddRange(new[]
-            {
+                });
+
+                //Sound ESP
+                ConfigUtils.BooleanSettings.Add("Sound Esp Enabled");
+                ConfigUtils.FloatSettings.AddRange(new[]
+                {
                 "Sound Range",
                 "Sound Interval",
                 "Sound Volume"
-            });
+                });
+
             ConfigUtils.FillDefaultValues();
 
             if (!File.Exists("Config.cfg"))
@@ -160,6 +201,8 @@ namespace CsGoApplicationAimbot
                 PrintInfo("Settings file does not exist. Creating...");
                 ConfigUtils.SaveSettingsToFile("Config.cfg");
             }
+            }
+
             ConfigUtils.ReadSettingsFromFile("Config.cfg");
         }
 
@@ -170,11 +213,9 @@ namespace CsGoApplicationAimbot
             _shdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
 
             #region Spectators
-            //
             //if (!Framework.IsPlaying()) return;
             //if (Framework.LocalPlayer == null) return;
-            //var spectators =
-            //    Framework.Players.Where(
+            //var spectators = Framework.Players.Where(
             //        x =>
             //            x.Item2.MhObserverTarget == Framework.LocalPlayer.MiId && x.Item2.MiHealth == 0 &&
             //            x.Item2.MiDormant != 1);
@@ -187,7 +228,6 @@ namespace CsGoApplicationAimbot
             //{
             //    Console.WriteLine(builder.ToString());
             //}
-            //
             #endregion
         }
         #endregion

@@ -66,7 +66,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private int[] Armor { get; set; }
         private int[] Score { get; set; }
         private string[] Clantags { get; set; }
-        private string[] Names { get; set; }
+        public string[] Names { get; set; }
         private SignOnState State { get; set; }
         private bool AimbotActive { get; set; }
         private bool TriggerbotActive { get; set; }
