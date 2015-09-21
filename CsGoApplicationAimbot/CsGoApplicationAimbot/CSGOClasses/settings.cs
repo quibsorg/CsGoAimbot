@@ -13,8 +13,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
 {
     public class Settings
     {
-        static FileIniDataParser _parser = new FileIniDataParser();
-        IniData _data;
+        static readonly FileIniDataParser Parser = new FileIniDataParser();
+        readonly IniData _data;
         public Settings()
         {
             if (!File.Exists("Config.ini"))
@@ -22,58 +22,33 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 CreateAndSaveConfig();
             }
 
-            _data = _parser.ReadFile("Config.ini");
+            _data = Parser.ReadFile("Config.ini");
         }
-        /// <summary>
-        /// Get's int from the .ini
-        /// </summary>
-        /// <param name="section"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public int GetInt(string section, string key)
         {
             string keyValue = _data[section][key];
             int setting = int.Parse(keyValue);
             return setting;
         }
-
-        /// <summary>
-        /// Get's UInt from the .ini
-        /// </summary>
-        /// <param name="section"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public uint GetUInt(string section, string key)
         {
             string keyValue = _data[section][key];
             uint setting = uint.Parse(keyValue);
             return setting;
         }
-        /// <summary>
-        /// Get's Float from the .ini
-        /// </summary>
-        /// <param name="section"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public float GetFloat(string section, string key)
         {
             string keyValue = _data[section][key];
             float setting = float.Parse(keyValue);
             return setting;
         }
-        /// <summary>
-        /// Get's bool from the .ini
-        /// </summary>
-        /// <param name="section"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public bool GetBool(string section, string key)
         {
             string keyValue = _data[section][key];
             bool setting = bool.Parse(keyValue);
             return setting;
         }
-        
+
         public static void CreateAndSaveConfig()
         {
             var weaponList = new List<string>
