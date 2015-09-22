@@ -133,7 +133,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
-                Console.WriteLine(WeaponSection);
             }
             else
             {
@@ -180,9 +179,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
 
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
+            var aimKey = _settings.GetKey(WeaponSection, "Aim Key");
             if (aimEnaled)
             {
-                AimbotActive = Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON);
+                AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
                 if (AimbotActive)
                     ControlAim();
             }
@@ -192,7 +192,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (NewViewAngles != ViewAngles)
                 SetViewAngles(NewViewAngles);
 
-
+            var triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
             bool triggerBurstEnabled = _settings.GetBool(WeaponSection, "Trigger Burst Enabled");
             bool triggerToggle = _settings.GetBool(WeaponSection, "Trigger Toggle");
@@ -207,7 +207,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
                 else if (triggerHold)
                 {
-                    TriggerbotActive = Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.MENU);
+                    TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
                 }
                 if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
                     Triggerbot();
