@@ -113,6 +113,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             //Sound ESP
             builder.AppendLine("[Sound Esp]");
+            builder.AppendLine("Sound Enabled = false");
             builder.AppendLine("Sound Key = 0");
             builder.AppendLine("Sound Range = 0");
             builder.AppendLine("Sound Intverval = 0");

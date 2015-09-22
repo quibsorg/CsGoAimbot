@@ -52,7 +52,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region PROPERTIES
-
+        public float LastPercent { get; private set; }
         public CsLocalPlayer LocalPlayer { get; private set; }
         public string WeaponSection { get; set; }
         private BaseEntity Target { get; set; }
@@ -91,7 +91,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var players = new List<Tuple<int, CsPlayer>>();
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
-            
 
             _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
             _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
@@ -132,6 +131,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
+                //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
             }
             else
@@ -139,6 +139,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayer = null;
                 LocalPlayerWeapon = null;
             }
+
             if (LocalPlayer != null)
             {
                 if (entities.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
@@ -149,35 +150,40 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer == null)
                 return;
 
-            if (_dwIGameResources != 0)
-            {
-                Kills = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills), 65);
-                Deaths = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
-                Armor = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor), 65);
-                Assists = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
-                Score = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score), 65);
+            #region Specator
+            //We use this if we can to list all the specators in the console window. But it will not be used for now.
 
-                var clantagsData = new byte[16 * 65];
-                Program.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData, clantagsData.Length);
-                var clantags = new string[65];
-                for (var i = 0; i < 65; i++)
-                    clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
-                Clantags = clantags;
+            //if (_dwIGameResources != 0)
+            //{
+            //    Kills = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills), 65);
+            //    Deaths = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
+            //    Armor = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor), 65);
+            //    Assists = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
+            //    Score = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score), 65);
+            //
+            //    var clantagsData = new byte[16 * 65];
+            //    Program.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData, clantagsData.Length);
+            //    var clantags = new string[65];
+            //    for (var i = 0; i < 65; i++)
+            //        clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
+            //    Clantags = clantags;
+            //
+            //    var namePtrs = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
+            //    var names = new string[65];
+            //    for (var i = 0; i < 65; i++)
+            //        try
+            //        {
+            //            names[i] = Program.MemUtils.ReadString((IntPtr)namePtrs[i], 32, Encoding.ASCII);
+            //        }
+            //        catch
+            //        {
+            //            //ignored
+            //        }
+            //    Names = names;
+            //}
+            #endregion
 
-                var namePtrs = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
-                var names = new string[65];
-                for (var i = 0; i < 65; i++)
-                    try
-                    {
-                        names[i] = Program.MemUtils.ReadString((IntPtr)namePtrs[i], 32, Encoding.ASCII);
-                    }
-                    catch
-                    {
-                        //ignored
-                    }
-                Names = names;
-            }
-
+            #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
             var aimKey = _settings.GetKey(WeaponSection, "Aim Key");
             if (aimEnaled)
@@ -186,12 +192,17 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (AimbotActive)
                     ControlAim();
             }
+            #endregion
 
+            #region Rcs
             ControlRecoil();
+            #endregion
 
+            //Sets the view angles.
             if (NewViewAngles != ViewAngles)
                 SetViewAngles(NewViewAngles);
 
+            #region Trigger
             var triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
             bool triggerBurstEnabled = _settings.GetBool(WeaponSection, "Trigger Burst Enabled");
@@ -252,6 +263,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             LastPunch = LocalPlayer.MVecPunch;
         }
 
+        #endregion
         private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
         {
             if (clamp)
@@ -263,7 +275,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             return State == SignOnState.SignonstateFull && LocalPlayer != null;
         }
-
+        #region Aimbot
         private void ControlAim()
         {
             bool aimSpotted = _settings.GetBool(WeaponSection, "Aim Spotted");
@@ -311,7 +323,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             NewViewAngles = NewViewAngles;
         }
+        #endregion
 
+        #region Rcs
         private void ControlRecoil(bool aimbot = false)
         {
             var rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
@@ -331,7 +345,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (aimbot)
             {
                 var aimbotForce = randomRcsForce / 1.6;
-                NewViewAngles -= LocalPlayer.MVecPunch * (float) (2f / 100f * aimbotForce);
+                NewViewAngles -= LocalPlayer.MVecPunch * (float)(2f / 100f * aimbotForce);
             }
             else
             {
@@ -340,7 +354,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             RcsHandled = true;
         }
+        #endregion
 
+        #region Trigger
         public void Triggerbot()
         {
             bool triggerEnemies = _settings.GetBool(WeaponSection, "Trigger Enemies");
@@ -381,13 +397,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 TriggerOnTarget = false;
             }
         }
-
         private void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             Thread.Sleep(1);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
+        #endregion
 
     }
 }
