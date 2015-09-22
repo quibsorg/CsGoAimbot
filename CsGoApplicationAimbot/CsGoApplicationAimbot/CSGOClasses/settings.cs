@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using ExternalUtilsCSharp;
 using IniParser;
 using IniParser.Model;
 
@@ -44,7 +45,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
             bool setting = bool.Parse(keyValue);
             return setting;
         }
-
+        public WinAPI.VirtualKeyShort GetKey(string section, string key)
+        {
+            string keyValue = _data[section][key];
+            WinAPI.VirtualKeyShort button = (WinAPI.VirtualKeyShort) int.Parse(keyValue);
+            return button;
+        }
         public static void CreateAndSaveConfig()
         {
             var weaponList = new List<string>
@@ -95,21 +101,28 @@ namespace CsGoApplicationAimbot.CSGOClasses
             };
 
             StringBuilder builder = new StringBuilder();
+            //Comments
+            builder.AppendLine(";Smurf Bot Config.");
+            builder.AppendLine(";Key codes can be found here: http://pastebin.com/kr8PT0Hh");
+            builder.AppendLine(";Just remove the 0x part. 0x01 > 01");
+
             //Misc
             builder.AppendLine("[Bunny Jump]");
             builder.AppendLine("Bunny Jump Enabled = True");
-            builder.AppendLine("Bunny Jump Key = SPACE").AppendLine();
+            builder.AppendLine("Bunny Jump Key = 32").AppendLine();
 
             //Sound ESP
             builder.AppendLine("[Sound Esp]");
+            builder.AppendLine("Sound Key = 0");
             builder.AppendLine("Sound Range = 0");
             builder.AppendLine("Sound Intverval = 0");
             builder.AppendLine("Sound Voulme = 0").AppendLine();
+
             foreach (var weapon in weaponList)
             {
                 builder.AppendLine("[" + weapon + "]");
                 builder.AppendLine("Aim Enabled = True");
-                builder.AppendLine("Aim Key = LBUTTON");
+                builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Fov = 2");
                 builder.AppendLine("Aim Bone = 5");
                 builder.AppendLine("Aim Smooth Enabled = True");
@@ -125,7 +138,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Rcs Force Min = 83").AppendLine();
                 //Trigger
                 builder.AppendLine("Trigger Enabled = True");
-                builder.AppendLine("Trigger Key = MENU");
+                builder.AppendLine("Trigger Key = 18");
                 builder.AppendLine("Trigger Toggle = False");
                 builder.AppendLine("Trigger Hold = True");
                 builder.AppendLine("Trigger Enemies = True");
@@ -138,7 +151,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             builder.AppendLine("[Default]");
             builder.AppendLine("Aim Enabled = False");
-            builder.AppendLine("Aim Key = LBUTTON");
+            builder.AppendLine("Aim Key = 01");
             builder.AppendLine("Aim Fov = 0");
             builder.AppendLine("Aim Bone = 5");
             builder.AppendLine("Aim Smooth Enabled = False");
@@ -154,7 +167,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Rcs Force Min = 83").AppendLine();
             //Trigger
             builder.AppendLine("Trigger Enabled = True");
-            builder.AppendLine("Trigger Key = MENU");
+            builder.AppendLine("Trigger Key = 12");
             builder.AppendLine("Trigger Toggle = False");
             builder.AppendLine("Trigger Hold = False");
             builder.AppendLine("Trigger Enemies = False");
