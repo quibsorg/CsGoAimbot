@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
@@ -186,10 +187,21 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
-            var aimKey = _settings.GetKey(WeaponSection, "Aim Key");
+            bool aimToggle = _settings.GetBool(WeaponSection, "Aim Toggle");
+            bool aimHold = _settings.GetBool(WeaponSection, "Aim Hold");
+            WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
+
             if (aimEnaled)
             {
-                AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
+                if (aimToggle)
+                {
+                    if (Program.KeyUtils.KeyWentUp(aimKey))
+                        AimbotActive = !AimbotActive;
+                }
+                else if (aimHold)
+                {
+                    AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
+                }
                 if (AimbotActive)
                     ControlAim();
             }

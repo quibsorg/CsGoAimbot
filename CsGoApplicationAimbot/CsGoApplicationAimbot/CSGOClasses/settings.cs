@@ -114,6 +114,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("[Bunny Jump]");
             builder.AppendLine("Bunny Jump Enabled = True");
             builder.AppendLine("Bunny Jump Strafe = True");
+            builder.AppendLine("Bunny Jump Jumps = 5");
             builder.AppendLine("Bunny Jump Key = 32").AppendLine();
 
             //Sound ESP
@@ -128,6 +129,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 builder.AppendLine("[" + weapon + "]");
                 builder.AppendLine("Aim Enabled = True");
+                builder.AppendLine("Aim Toggle = False");
+                builder.AppendLine("Aim Hold = True");
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Fov = 2");
                 builder.AppendLine("Aim Bone = 5");
@@ -148,6 +151,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Trigger Toggle = False");
                 builder.AppendLine("Trigger Hold = True");
                 builder.AppendLine("Trigger When Scoped = False");
+                builder.AppendLine("Trigger When Standing Still = False");
                 builder.AppendLine("Trigger Enemies = True");
                 builder.AppendLine("Trigger Allies = True");
                 builder.AppendLine("Trigger Burst Enabled = False");
