@@ -187,23 +187,44 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
+            bool aimScoped = _settings.GetBool(WeaponSection, "Aim When Scoped");
             bool aimToggle = _settings.GetBool(WeaponSection, "Aim Toggle");
             bool aimHold = _settings.GetBool(WeaponSection, "Aim Hold");
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
 
             if (aimEnaled)
             {
-                if (aimToggle)
+                if (aimScoped)
                 {
-                    if (Program.KeyUtils.KeyWentUp(aimKey))
-                        AimbotActive = !AimbotActive;
+                    if (LocalPlayerWeapon.MzoonLevel > 0)
+                    {
+                        if (aimToggle)
+                        {
+                            if (Program.KeyUtils.KeyWentUp(aimKey))
+                                AimbotActive = !AimbotActive;
+                        }
+                        else if (aimHold)
+                        {
+                            AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
+                        }
+                        if (AimbotActive)
+                            ControlAim();
+                    }
                 }
-                else if (aimHold)
+                else if (!aimScoped)
                 {
-                    AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
+                    if (aimToggle)
+                    {
+                        if (Program.KeyUtils.KeyWentUp(aimKey))
+                            AimbotActive = !AimbotActive;
+                    }
+                    else if (aimHold)
+                    {
+                        AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
+                    }
+                    if (AimbotActive)
+                        ControlAim();
                 }
-                if (AimbotActive)
-                    ControlAim();
             }
             #endregion
 

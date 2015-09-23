@@ -129,9 +129,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 builder.AppendLine("[" + weapon + "]");
                 builder.AppendLine("Aim Enabled = True");
+                builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
-                builder.AppendLine("Aim Key = 01");
+                builder.AppendLine("Aim When Scoped = False");
                 builder.AppendLine("Aim Fov = 2");
                 builder.AppendLine("Aim Bone = 5");
                 builder.AppendLine("Aim Smooth Enabled = True");
