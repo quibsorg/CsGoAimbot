@@ -205,23 +205,45 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #region Trigger
             var triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
+            bool triggerScoped = _settings.GetBool(WeaponSection, "Trigger When Scoped");
             bool triggerBurstEnabled = _settings.GetBool(WeaponSection, "Trigger Burst Enabled");
             bool triggerToggle = _settings.GetBool(WeaponSection, "Trigger Toggle");
             bool triggerHold = _settings.GetBool(WeaponSection, "Trigger Hold");
 
             if (triggerEnabled)
             {
-                if (triggerToggle)
+                if (triggerScoped)
                 {
-                    if (Program.KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.MENU))
-                        TriggerbotActive = !TriggerbotActive;
+                    //ZoomLevel 0 = No Zoom
+                    if (LocalPlayerWeapon.MzoonLevel > 0)
+                    {
+                        if (triggerToggle)
+                        {
+                            if (Program.KeyUtils.KeyWentUp(triggerKey))
+                                TriggerbotActive = !TriggerbotActive;
+                        }
+                        else if (triggerHold)
+                        {
+                            TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
+                        }
+                        if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
+                            Triggerbot();
+                    }
                 }
-                else if (triggerHold)
+                else if (!triggerScoped)
                 {
-                    TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
+                    if (triggerToggle)
+                    {
+                        if (Program.KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.MENU))
+                            TriggerbotActive = !TriggerbotActive;
+                    }
+                    else if (triggerHold)
+                    {
+                        TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
+                    }
+                    if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
+                        Triggerbot();
                 }
-                if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
-                    Triggerbot();
             }
 
             if (TriggerShooting)

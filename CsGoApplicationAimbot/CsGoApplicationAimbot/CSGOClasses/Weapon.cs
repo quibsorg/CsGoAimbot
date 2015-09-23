@@ -12,7 +12,7 @@
         public int MiWeaponTableIndex => ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex");
         public float MfAccuracyPenalty => ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty");
         public int MiWeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
-
+        public int MzoonLevel => ReadFieldProxy<int>("Weapon.m_zoomLevel");
         #endregion
 
         #region CONSTRUCTORS
@@ -47,6 +47,7 @@
             AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.MiWeaponTableIndex);
             AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.MfAccuracyPenalty);
             AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.MiWeaponId);
+            AddField<int>("Weapon.m_zoomLevel", CsgoOffsets.NetVars.Weapon.MZoonLevel);
         }
 
         public override bool IsValid()

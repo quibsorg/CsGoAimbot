@@ -79,6 +79,7 @@
                 public static int MbCanReload = 0x15ed;
                 public static int MiWeaponTableIndex = 0x1624;
                 public static int MfAccuracyPenalty = 0x1668;
+                public static int MZoonLevel = 0x16E0; //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
             }
         }
     }

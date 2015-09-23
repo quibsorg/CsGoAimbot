@@ -175,23 +175,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
 
             var handle = MhActiveWeapon & 0xFFF;
-            //if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
-            //{
-            //    return Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
-            //}
-            //return null;
             return Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
         }
 
-        /// <summary>
-        /// Returns Weapon name
-        /// </summary>
-        /// <returns></returns>
         public string GetActiveWeaponName()
         {
             if (MhActiveWeapon == 0xFFFFFFFF)
             {
-                return null;
+                //If we return null it will crash.
+                return "Default";
             }
 
             var handle = MhActiveWeapon & 0xFFF;

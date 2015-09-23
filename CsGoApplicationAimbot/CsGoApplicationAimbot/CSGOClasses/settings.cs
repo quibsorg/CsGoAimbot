@@ -98,6 +98,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 "M249",
                 "Negev",
 
+                //Default for unkown weapons
+                "Default"
+
             };
 
             StringBuilder builder = new StringBuilder();
@@ -105,6 +108,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine(";Smurf Bot Config.");
             builder.AppendLine(";Key codes can be found here: http://pastebin.com/kr8PT0Hh");
             builder.AppendLine(";Just remove the 0x part. 0x01 > 01");
+            builder.AppendLine(@";Trigger When Scoped is only good on weapons with scopes.");
 
             //Misc
             builder.AppendLine("[Bunny Jump]");
@@ -142,6 +146,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Trigger Key = 18");
                 builder.AppendLine("Trigger Toggle = False");
                 builder.AppendLine("Trigger Hold = True");
+                builder.AppendLine("Trigger When Scoped = False");
                 builder.AppendLine("Trigger Enemies = True");
                 builder.AppendLine("Trigger Allies = True");
                 builder.AppendLine("Trigger Burst Enabled = False");
@@ -150,34 +155,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Trigger Delay FirstShot = 21");
                 builder.AppendLine("Trigger Delay Shots = 21").AppendLine();
             }
-            builder.AppendLine("[Default]");
-            builder.AppendLine("Aim Enabled = False");
-            builder.AppendLine("Aim Key = 01");
-            builder.AppendLine("Aim Fov = 0");
-            builder.AppendLine("Aim Bone = 5");
-            builder.AppendLine("Aim Smooth Enabled = False");
-            builder.AppendLine("Aim Smooth Value = 0");
-            builder.AppendLine("Aim Spotted = False");
-            builder.AppendLine("Aim Spotted By = False");
-            builder.AppendLine("Aim Enemies = False");
-            builder.AppendLine("Aim Allies = False").AppendLine();
-            //RCS
-            builder.AppendLine("Rcs Enabled = True");
-            builder.AppendLine("Rcs Start = 1");
-            builder.AppendLine("Rcs Force Max = 100");
-            builder.AppendLine("Rcs Force Min = 83").AppendLine();
-            //Trigger
-            builder.AppendLine("Trigger Enabled = True");
-            builder.AppendLine("Trigger Key = 12");
-            builder.AppendLine("Trigger Toggle = False");
-            builder.AppendLine("Trigger Hold = False");
-            builder.AppendLine("Trigger Enemies = False");
-            builder.AppendLine("Trigger Allies = False");
-            builder.AppendLine("Trigger Burst Enabled = False");
-            builder.AppendLine("Trigger Burst Shots = 0");
-            builder.AppendLine("Trigger Burst Randomize = False");
-            builder.AppendLine("Trigger Delay FirstShot = 31");
-            builder.AppendLine("Trigger Delay Shots = 25");
             if (!File.Exists("Config.ini"))
             {
                 Console.WriteLine("> Config does not exist. Creating..");
