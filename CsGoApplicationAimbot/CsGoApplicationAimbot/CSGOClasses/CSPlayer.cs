@@ -170,9 +170,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public Weapon GetActiveWeapon()
         {
             if (MhActiveWeapon == 0xFFFFFFFF)
-            {
                 return null;
-            }
 
             var handle = MhActiveWeapon & 0xFFF;
             return Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;

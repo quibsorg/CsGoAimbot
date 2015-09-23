@@ -83,10 +83,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 //Rifles
                 "Galil AR",
                 "AK47",
-                "SG553",
+                "SG556",
                 "Famas",
                 "M4A1",
-                "AUG",
+                "Aug",
 
                 //Snipers
                 "AWP",
@@ -113,6 +113,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //Misc
             builder.AppendLine("[Bunny Jump]");
             builder.AppendLine("Bunny Jump Enabled = True");
+            builder.AppendLine("Bunny Jump Strafe = True");
             builder.AppendLine("Bunny Jump Key = 32").AppendLine();
 
             //Sound ESP

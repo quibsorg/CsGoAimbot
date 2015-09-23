@@ -133,6 +133,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
+                Console.WriteLine(WeaponSection);
             }
             else
             {
