@@ -64,9 +64,9 @@
             public class LocalPlayer
             {
                 public static int MVecViewOffset = 0x104;
-                public static int MVecPunch = 0x13fc;
-                public static int MiShotsFired = 0x8660;
-                public static int MiCrosshairIdx = 0x8d04;
+                public static int MVecPunch = 0x13E0;
+                public static int MiShotsFired = 0x8640;
+                public static int MiCrosshairIdx = 0x8CE4;
             }
 
             public class Weapon
