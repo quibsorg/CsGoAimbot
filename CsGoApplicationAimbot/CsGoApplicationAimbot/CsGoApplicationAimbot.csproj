@@ -102,14 +102,10 @@
     <Compile Include="CSGOClasses\OffsetsConfig.cs" />
     <Compile Include="CSGOClasses\SettingsConfig.cs" />
     <Compile Include="CSGOClasses\Weapon.cs" />
-    <Compile Include="CSGOConfigUtils.cs" />
     <Compile Include="CSGOOffsets.cs" />
     <Compile Include="CSGOScanner.cs" />
     <Compile Include="CSGOClasses\Enums\CSGOClassID.cs" />
-    <Compile Include="CSGOClasses\Enums\LifeState.cs" />
     <Compile Include="CSGOClasses\Enums\SignOnState.cs" />
-    <Compile Include="CSGOClasses\Enums\SpectatorView.cs" />
-    <Compile Include="CSGOClasses\Enums\Team.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>

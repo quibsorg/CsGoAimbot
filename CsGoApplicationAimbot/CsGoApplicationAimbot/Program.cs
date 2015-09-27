@@ -36,7 +36,6 @@ namespace CsGoApplicationAimbot
         public static Framework Framework;
         private static ProcUtils _procUtils;
         public static MemUtils MemUtils;
-        public static CsgoConfigUtils ConfigUtils;
         public static SettingsConfig Settings;
 
         #endregion
@@ -48,7 +47,6 @@ namespace CsGoApplicationAimbot
             //We make the config if it dosen't exist.
             Settings = new SettingsConfig();
             KeyUtils = new KeyUtils();
-            ConfigUtils = new CsgoConfigUtils();
 
             PrintInfo("> Waiting for CSGO to start up...");
             while (!ProcUtils.ProcessIsRunning(GameProcess))
@@ -80,8 +78,8 @@ namespace CsGoApplicationAimbot
             _shdxOverlay.Attach(_hWnd);
             _shdxOverlay.TickEvent += ProOverlayTickEvent;
 
+            PrintSuccess("Cheat is now running.");
             Application.Run();
-            ConfigUtils.SaveSettingsToFile("Config.cfg");
         }
 
         private static void ProOverlayTickEvent(object sender, Overlay<SharpDXRenderer, Color, Vector2, TextFormat>.DeltaEventArgs e)
@@ -94,7 +92,7 @@ namespace CsGoApplicationAimbot
 
         #region HELPERS
 
-        public static void PrintInfo(string text, params object[] arguments)
+        private static void PrintInfo(string text, params object[] arguments)
         {
             PrintEncolored(text, ConsoleColor.White, arguments);
         }
@@ -104,7 +102,7 @@ namespace CsGoApplicationAimbot
             PrintEncolored(text, ConsoleColor.Green, arguments);
         }
 
-        public static void PrintError(string text, params object[] arguments)
+        private static void PrintError(string text, params object[] arguments)
         {
             PrintEncolored(text, ConsoleColor.Red, arguments);
         }
