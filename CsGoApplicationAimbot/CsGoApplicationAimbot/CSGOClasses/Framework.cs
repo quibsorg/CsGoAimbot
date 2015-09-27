@@ -151,39 +151,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer == null)
                 return;
 
-            #region Specator
-            //We use this if we can to list all the specators in the console window. But it will not be used for now.
-
-            //if (_dwIGameResources != 0)
-            //{
-            //    Kills = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Kills), 65);
-            //    Deaths = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Deaths), 65);
-            //    Armor = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Armor), 65);
-            //    Assists = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Assists), 65);
-            //    Score = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Score), 65);
-            //
-            //    var clantagsData = new byte[16 * 65];
-            //    Program.MemUtils.Read((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Clantag), out clantagsData, clantagsData.Length);
-            //    var clantags = new string[65];
-            //    for (var i = 0; i < 65; i++)
-            //        clantags[i] = Encoding.Unicode.GetString(clantagsData, i * 16, 16);
-            //    Clantags = clantags;
-            //
-            //    var namePtrs = Program.MemUtils.ReadArray<int>((IntPtr)(_dwIGameResources + CsgoOffsets.GameResources.Names), 65);
-            //    var names = new string[65];
-            //    for (var i = 0; i < 65; i++)
-            //        try
-            //        {
-            //            names[i] = Program.MemUtils.ReadString((IntPtr)namePtrs[i], 32, Encoding.ASCII);
-            //        }
-            //        catch
-            //        {
-            //            //ignored
-            //        }
-            //    Names = names;
-            //}
-            #endregion
-
             #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
             bool aimScoped = _settings.GetBool(WeaponSection, "Aim When Scoped");

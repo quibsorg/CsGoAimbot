@@ -89,24 +89,6 @@ namespace CsGoApplicationAimbot
             KeyUtils.Update();
             Framework.Update();
             _shdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
-
-            #region Spectators
-            //if (!Framework.IsPlaying()) return;
-            //if (Framework.LocalPlayer == null) return;
-            //var spectators = Framework.Players.Where(
-            //        x =>
-            //            x.Item2.MhObserverTarget == Framework.LocalPlayer.MiId && x.Item2.MiHealth == 0 &&
-            //            x.Item2.MiDormant != 1);
-            //var builder = new StringBuilder();
-            //foreach (var player in spectators.Select(spec => spec.Item2))
-            //{
-            //    builder.AppendFormat("{0} [{1}]{2}", Framework.Names[player.MiId], (SpectatorView) player.MiObserverMode, builder.Length > 0 ? "\n" : "");
-            //}
-            //if (builder.Length > 0)
-            //{
-            //    Console.WriteLine(builder.ToString());
-            //}
-            #endregion
         }
         #endregion
 
