@@ -27,7 +27,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             TriggerbotActive = false;
         }
 
-        readonly Settings _settings = new Settings();
+        readonly SettingsConfig _settings = new SettingsConfig();
         #endregion
 
         #region VARIABLES
@@ -134,7 +134,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
-                Console.WriteLine(WeaponSection);
             }
             else
             {
@@ -192,7 +191,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             bool aimHold = _settings.GetBool(WeaponSection, "Aim Hold");
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
 
-            if (aimEnaled)
+            //Won't aim if we do not have any ammo in the clip.
+            if (aimEnaled && LocalPlayerWeapon.MiClip1 > 0 )
             {
                 if (aimScoped)
                 {

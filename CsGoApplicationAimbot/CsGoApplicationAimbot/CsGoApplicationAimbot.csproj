@@ -99,7 +99,8 @@
     <Compile Include="CSGOClasses\Fields\BonesField.cs" />
     <Compile Include="CSGOClasses\Fields\Field.cs" />
     <Compile Include="CSGOClasses\Framework.cs" />
-    <Compile Include="CSGOClasses\Settings.cs" />
+    <Compile Include="CSGOClasses\OffsetsConfig.cs" />
+    <Compile Include="CSGOClasses\SettingsConfig.cs" />
     <Compile Include="CSGOClasses\Weapon.cs" />
     <Compile Include="CSGOConfigUtils.cs" />
     <Compile Include="CSGOOffsets.cs" />

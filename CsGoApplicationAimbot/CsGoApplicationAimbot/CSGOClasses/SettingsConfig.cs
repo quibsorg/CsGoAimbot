@@ -8,19 +8,20 @@ using IniParser.Model;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {
-    public class Settings
+    public class SettingsConfig
     {
         static readonly FileIniDataParser Parser = new FileIniDataParser();
         readonly IniData _data;
-        public Settings()
+        public SettingsConfig()
         {
             if (!File.Exists("Config.ini"))
             {
-                CreateAndSaveConfig();
+                CreateAndSaveSettings();
             }
 
             _data = Parser.ReadFile("Config.ini");
         }
+
         public int GetInt(string section, string key)
         {
             string keyValue = _data[section][key];
@@ -51,7 +52,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             WinAPI.VirtualKeyShort button = (WinAPI.VirtualKeyShort) int.Parse(keyValue);
             return button;
         }
-        public static void CreateAndSaveConfig()
+
+        private static void CreateAndSaveSettings()
         {
             var weaponList = new List<string>
             {

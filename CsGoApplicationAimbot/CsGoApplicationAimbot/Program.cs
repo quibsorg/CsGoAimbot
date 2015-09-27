@@ -37,7 +37,7 @@ namespace CsGoApplicationAimbot
         private static ProcUtils _procUtils;
         public static MemUtils MemUtils;
         public static CsgoConfigUtils ConfigUtils;
-        public static Settings Settings;
+        public static SettingsConfig Settings;
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace CsGoApplicationAimbot
         {
             PrintSuccess("Smurf bot");
             //We make the config if it dosen't exist.
-            Settings = new Settings();
+            Settings = new SettingsConfig();
             KeyUtils = new KeyUtils();
             ConfigUtils = new CsgoConfigUtils();
 
