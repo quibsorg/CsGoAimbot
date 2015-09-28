@@ -95,7 +95,6 @@
     <Compile Include="CSGOClasses\CSLocalPlayer.cs" />
     <Compile Include="CSGOClasses\CSPlayer.cs" />
     <Compile Include="CSGOClasses\Entity.cs" />
-    <Compile Include="CSGOClasses\Enums\PlayerState.cs" />
     <Compile Include="CSGOClasses\Fields\BonesField.cs" />
     <Compile Include="CSGOClasses\Fields\Field.cs" />
     <Compile Include="CSGOClasses\Framework.cs" />
