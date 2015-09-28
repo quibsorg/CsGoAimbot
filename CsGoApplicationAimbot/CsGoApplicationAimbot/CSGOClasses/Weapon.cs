@@ -4,15 +4,15 @@
     {
         #region FIELDS
 
-        private int MiItemDefinitionIndex => ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex");
-        public int MiState => ReadFieldProxy<int>("Weapon.m_iState");
-        public int MiClip1 => ReadFieldProxy<int>("Weapon.m_iClip1");
-        public float MFlNextPrimaryAttack => ReadFieldProxy<float>("Weapon.m_flNextPrimaryAttack");
-        public int MbCanReload => ReadFieldProxy<int>("Weapon.m_bCanReload");
-        public int MiWeaponTableIndex => ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex");
-        public float MfAccuracyPenalty => ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty");
-        public int MiWeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
-        public int MzoonLevel => ReadFieldProxy<int>("Weapon.m_zoomLevel");
+        private int ItemDefinitionIndex => ReadFieldProxy<int>("Weapon.m_iItemDefinitionIndex");
+        public int State => ReadFieldProxy<int>("Weapon.m_iState");
+        public int Clip1 => ReadFieldProxy<int>("Weapon.m_iClip1");
+        public float NextPrimaryAttack => ReadFieldProxy<float>("Weapon.m_flNextPrimaryAttack");
+        public bool CanReload => ReadFieldProxy<bool>("Weapon.m_bCanReload");
+        public int WeaponTableIndex => ReadFieldProxy<int>("Weapon.m_iWeaponTableIndex");
+        public float AccuracyPenalty => ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty");
+        public int WeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
+        public int ZoomLevel => ReadFieldProxy<int>("Weapon.m_zoomLevel");
         #endregion
 
         #region CONSTRUCTORS
@@ -39,25 +39,25 @@
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("Weapon.m_iItemDefinitionIndex", CsgoOffsets.NetVars.Weapon.MiItemDefinitionIndex);
-            AddField<int>("Weapon.m_iState", CsgoOffsets.NetVars.Weapon.MiState);
-            AddField<int>("Weapon.m_iClip1", CsgoOffsets.NetVars.Weapon.MiClip1);
-            AddField<float>("Weapon.m_flNextPrimaryAttack", CsgoOffsets.NetVars.Weapon.MFlNextPrimaryAttack);
-            AddField<int>("Weapon.m_bCanReload", CsgoOffsets.NetVars.Weapon.MbCanReload);
-            AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.MiWeaponTableIndex);
-            AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.MfAccuracyPenalty);
-            AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.MiWeaponId);
+            AddField<int>("Weapon.m_iItemDefinitionIndex", CsgoOffsets.NetVars.Weapon.ItemDefinitionIndex);
+            AddField<int>("Weapon.m_iState", CsgoOffsets.NetVars.Weapon.State);
+            AddField<int>("Weapon.m_iClip1", CsgoOffsets.NetVars.Weapon.Clip1);
+            AddField<float>("Weapon.m_flNextPrimaryAttack", CsgoOffsets.NetVars.Weapon.NextPrimaryAttack);
+            AddField<int>("Weapon.m_bCanReload", CsgoOffsets.NetVars.Weapon.CanReload);
+            AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.WeaponTableIndex);
+            AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.AccuracyPenalty);
+            AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.WeaponId);
             AddField<int>("Weapon.m_zoomLevel", CsgoOffsets.NetVars.Weapon.MZoomLevel);
         }
 
         public override bool IsValid()
         {
-            return base.IsValid() && MiWeaponId > 0 && MiItemDefinitionIndex > 0;
+            return base.IsValid() && WeaponId > 0 && ItemDefinitionIndex > 0;
         }
 
         public bool IsCarried()
         {
-            return MhOwnerEntity != 0;
+            return OwnerEntity != 0;
         }
 
         #endregion

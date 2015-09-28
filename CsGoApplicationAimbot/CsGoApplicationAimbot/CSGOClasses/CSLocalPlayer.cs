@@ -27,20 +27,20 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public CsLocalPlayer(int address)
             : base(address)
         {
-            AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CsgoOffsets.NetVars.LocalPlayer.MVecViewOffset);
-            AddField<Vector3>("CSLocalPlayer.m_vecPunch", CsgoOffsets.NetVars.LocalPlayer.MVecPunch);
-            AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.MiShotsFired);
-            AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.MiCrosshairIdx);
+            AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CsgoOffsets.NetVars.LocalPlayer.VecViewOffset);
+            AddField<Vector3>("CSLocalPlayer.m_vecPunch", CsgoOffsets.NetVars.LocalPlayer.VecPunch);
+            AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.ShotsFired);
+            AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.CrosshairIdx);
         }
 
         public CsLocalPlayer(CsPlayer player)
             : base(player)
         {
             CopyFieldsFrom(player);
-            AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CsgoOffsets.NetVars.LocalPlayer.MVecViewOffset);
-            AddField<Vector3>("CSLocalPlayer.m_vecPunch", CsgoOffsets.NetVars.LocalPlayer.MVecPunch);
-            AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.MiShotsFired);
-            AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.MiCrosshairIdx);
+            AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", CsgoOffsets.NetVars.LocalPlayer.VecViewOffset);
+            AddField<Vector3>("CSLocalPlayer.m_vecPunch", CsgoOffsets.NetVars.LocalPlayer.VecPunch);
+            AddField<int>("CSLocalPlayer.m_iShotsFired", CsgoOffsets.NetVars.LocalPlayer.ShotsFired);
+            AddField<int>("CSLocalPlayer.m_iCrosshairIdx", CsgoOffsets.NetVars.LocalPlayer.CrosshairIdx);
         }
 
         #endregion

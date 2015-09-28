@@ -96,12 +96,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
             _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
             _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
 
-            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwInGame));
+            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.InGame));
             if (State != SignOnState.SignonstateFull)
                 return;
 
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
-            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles));
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
             RcsHandled = false;
 
@@ -134,6 +134,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
+                Console.WriteLine(LocalPlayer.Flags);
             }
             else
             {
@@ -145,6 +146,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 if (entities.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
                     Target = entities.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2;
+
                 Target = players.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2 : null;
             }
 
@@ -159,11 +161,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
 
             //Won't aim if we do not have any ammo in the clip.
-            if (aimEnaled && LocalPlayerWeapon.MiClip1 > 0 )
+            if (aimEnaled && LocalPlayerWeapon.Clip1 > 0 )
             {
                 if (aimScoped)
                 {
-                    if (LocalPlayerWeapon.MzoonLevel > 0)
+                    if (LocalPlayerWeapon.ZoomLevel > 0)
                     {
                         if (aimToggle)
                         {
@@ -216,7 +218,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (triggerScoped)
                 {
                     //ZoomLevel 0 = No Zoom
-                    if (LocalPlayerWeapon.MzoonLevel > 0)
+                    if (LocalPlayerWeapon.ZoomLevel > 0)
                     {
                         if (triggerToggle)
                         {
@@ -264,9 +266,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                         }
                         else
                         {
-                            if (LocalPlayerWeapon.MiClip1 != LastClip)
+                            if (LocalPlayerWeapon.Clip1 != LastClip)
                             {
-                                TriggerBurstFired += Math.Abs(LocalPlayerWeapon.MiClip1 - LastClip);
+                                TriggerBurstFired += Math.Abs(LocalPlayerWeapon.Clip1 - LastClip);
                             }
                             else
                             {
@@ -281,7 +283,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     }
                 }
             }
-            LastClip = LocalPlayerWeapon?.MiClip1 ?? 0;
+            LastClip = LocalPlayerWeapon?.Clip1 ?? 0;
             LastShotsFired = LocalPlayer.MiShotsFired;
             LastPunch = LocalPlayer.MVecPunch;
         }
@@ -291,7 +293,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr)(_dwClientState + CsgoOffsets.ClientState.MDwViewAngles), viewAngles);
+            Program.MemUtils.Write((IntPtr)(_dwClientState + CsgoOffsets.ClientState.ViewAngles), viewAngles);
         }
 
         public bool IsPlaying()
@@ -318,9 +320,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (aimSpottedBy)
                 valid = valid.Where(x => LocalPlayer.SeenBy(x.Item2));
             if (aimEnemies)
-                valid = valid.Where(x => x.Item2.MiTeamNum != LocalPlayer.MiTeamNum);
+                valid = valid.Where(x => x.Item2.TeamNum != LocalPlayer.TeamNum);
             if (aimAllies)
-                valid = valid.Where(x => x.Item2.MiTeamNum == LocalPlayer.MiTeamNum);
+                valid = valid.Where(x => x.Item2.TeamNum == LocalPlayer.TeamNum);
 
             valid = valid.OrderBy(x => (x.Item2.MVecOrigin - LocalPlayer.MVecOrigin).Length());
             var closest = Vector3.Zero;
@@ -361,7 +363,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (!rcsEnabled) return;
 
-            if (LocalPlayerWeapon == null || LocalPlayerWeapon.MiClip1 <= 0)
+            if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0)
                 return;
             if ((RcsHandled || LocalPlayer.MiShotsFired <= rcsStart))
                 return;
@@ -393,7 +395,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return;
             if (Players.Count(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx) <= 0) return;
             var player = Players.First(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx).Item2;
-            if ((triggerEnemies && player.MiTeamNum != LocalPlayer.MiTeamNum) || (triggerAllies && player.MiTeamNum == LocalPlayer.MiTeamNum))
+            if ((triggerEnemies && player.TeamNum != LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == LocalPlayer.TeamNum))
             {
                 if (!TriggerOnTarget)
                 {
