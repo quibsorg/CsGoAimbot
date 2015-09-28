@@ -1,6 +1,6 @@
 ﻿namespace CsGoApplicationAimbot
 {
-    internal class CsgoOffsets
+    internal class Offsets
     {
         public class Misc
         {

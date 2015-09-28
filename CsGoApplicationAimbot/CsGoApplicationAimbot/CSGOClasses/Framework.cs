@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
@@ -17,12 +15,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public Framework(ProcessModule engineDll, ProcessModule clientDll)
         {
-            CsgoScanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
+            Scanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
             _clientDllBase = (int)clientDll.BaseAddress;
             var engineDllBase = (int)engineDll.BaseAddress;
-            _dwEntityList = _clientDllBase + CsgoOffsets.Misc.EntityList;
-            _dwViewMatrix = _clientDllBase + CsgoOffsets.Misc.ViewMatrix;
-            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(engineDllBase + CsgoOffsets.ClientState.Base));
+            _dwEntityList = _clientDllBase + Offsets.Misc.EntityList;
+            _dwViewMatrix = _clientDllBase + Offsets.Misc.ViewMatrix;
+            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(engineDllBase + Offsets.ClientState.Base));
             AimbotActive = false;
             TriggerbotActive = false;
         }
@@ -32,32 +30,21 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #region VARIABLES
 
-        private readonly int
-            _dwEntityList;
-
-        private readonly int
-            _dwViewMatrix;
-
-        private int
-            _dwLocalPlayer;
-
-        private readonly int
-            _dwClientState;
-
-        private readonly int
-            _clientDllBase;
-
-        private int
-            _dwIGameResources;
+        private readonly int _dwEntityList;
+        private readonly int _dwViewMatrix;
+        private readonly int _dwClientState;
+        private readonly int _clientDllBase;
+        private int _dwIGameResources;
+        private int _dwLocalPlayer;
 
         #endregion
 
         #region PROPERTIES
         public float LastPercent { get; private set; }
-        public CsLocalPlayer LocalPlayer { get; private set; }
-        public string WeaponSection { get; set; }
+        private CsLocalPlayer LocalPlayer { get; set; }
+        private string WeaponSection { get; set; }
         private BaseEntity Target { get; set; }
-        public Tuple<int, CsPlayer>[] Players { get; private set; }
+        private Tuple<int, CsPlayer>[] Players { get; set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
         private Matrix ViewMatrix { get; set; }
@@ -93,15 +80,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
 
-            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.Misc.LocalPlayer));
-            _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + CsgoOffsets.GameResources.Base));
+            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.Misc.LocalPlayer));
+            _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.GameResources.Base));
 
-            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.InGame));
+            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + Offsets.ClientState.InGame));
             if (State != SignOnState.SignonstateFull)
                 return;
 
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
-            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + CsgoOffsets.ClientState.ViewAngles));
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
             RcsHandled = false;
 
@@ -134,7 +121,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
-                Console.WriteLine(LocalPlayer.Flags);
+                Console.WriteLine(WeaponSection);
             }
             else
             {
@@ -161,7 +148,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
 
             //Won't aim if we do not have any ammo in the clip.
-            if (aimEnaled && LocalPlayerWeapon.Clip1 > 0 )
+            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0) )
             {
                 if (aimScoped)
                 {
@@ -201,10 +188,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
             ControlRecoil();
             #endregion
 
+            #region Bunny Hop
+            BunnyHop();
+            #endregion
             //Sets the view angles.
             if (NewViewAngles != ViewAngles)
                 SetViewAngles(NewViewAngles);
-
             #region Trigger
             var triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
@@ -287,13 +276,27 @@ namespace CsGoApplicationAimbot.CSGOClasses
             LastShotsFired = LocalPlayer.MiShotsFired;
             LastPunch = LocalPlayer.MVecPunch;
         }
-
         #endregion
+        private void BunnyHop()
+        {
+            bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
+            WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
+
+            if (bunnyJump)
+            {
+                if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
+                {
+                    Program.MemUtils.Write((IntPtr) (_clientDllBase + Offsets.Misc.Jump),
+                        LocalPlayer.Flags == 256 ? 4 : 5);
+                }
+            }
+        }
+
         private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr)(_dwClientState + CsgoOffsets.ClientState.ViewAngles), viewAngles);
+            Program.MemUtils.Write((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles), viewAngles);
         }
 
         public bool IsPlaying()

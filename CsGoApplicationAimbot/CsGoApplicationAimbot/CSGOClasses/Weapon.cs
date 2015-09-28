@@ -39,15 +39,15 @@
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("Weapon.m_iItemDefinitionIndex", CsgoOffsets.NetVars.Weapon.ItemDefinitionIndex);
-            AddField<int>("Weapon.m_iState", CsgoOffsets.NetVars.Weapon.State);
-            AddField<int>("Weapon.m_iClip1", CsgoOffsets.NetVars.Weapon.Clip1);
-            AddField<float>("Weapon.m_flNextPrimaryAttack", CsgoOffsets.NetVars.Weapon.NextPrimaryAttack);
-            AddField<int>("Weapon.m_bCanReload", CsgoOffsets.NetVars.Weapon.CanReload);
-            AddField<int>("Weapon.m_iWeaponTableIndex", CsgoOffsets.NetVars.Weapon.WeaponTableIndex);
-            AddField<float>("Weapon.m_fAccuracyPenalty", CsgoOffsets.NetVars.Weapon.AccuracyPenalty);
-            AddField<int>("Weapon.m_iWeaponID", CsgoOffsets.NetVars.Weapon.WeaponId);
-            AddField<int>("Weapon.m_zoomLevel", CsgoOffsets.NetVars.Weapon.MZoomLevel);
+            AddField<int>("Weapon.m_iItemDefinitionIndex", Offsets.NetVars.Weapon.ItemDefinitionIndex);
+            AddField<int>("Weapon.m_iState", Offsets.NetVars.Weapon.State);
+            AddField<int>("Weapon.m_iClip1", Offsets.NetVars.Weapon.Clip1);
+            AddField<float>("Weapon.m_flNextPrimaryAttack", Offsets.NetVars.Weapon.NextPrimaryAttack);
+            AddField<int>("Weapon.m_bCanReload", Offsets.NetVars.Weapon.CanReload);
+            AddField<int>("Weapon.m_iWeaponTableIndex", Offsets.NetVars.Weapon.WeaponTableIndex);
+            AddField<float>("Weapon.m_fAccuracyPenalty", Offsets.NetVars.Weapon.AccuracyPenalty);
+            AddField<int>("Weapon.m_iWeaponID", Offsets.NetVars.Weapon.WeaponId);
+            AddField<int>("Weapon.m_zoomLevel", Offsets.NetVars.Weapon.MZoomLevel);
         }
 
         public override bool IsValid()

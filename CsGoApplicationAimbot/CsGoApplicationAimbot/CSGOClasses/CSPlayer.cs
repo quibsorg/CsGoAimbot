@@ -148,12 +148,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("CSPlayer.m_hBoneMatrix", CsgoOffsets.NetVars.CCsPlayer.BoneMatrix);
-            AddField<uint>("CSPlayer.m_hActiveWeapon", CsgoOffsets.NetVars.CCsPlayer.ActiveWeapon);
-            AddField<int>("CSPlayer.m_iFlags", CsgoOffsets.NetVars.CCsPlayer.Flags);
-            AddField<int>("CSPlayer.m_hObserverTarget", CsgoOffsets.NetVars.CCsPlayer.ObserverTarget);
-            AddField<int>("CSPlayer.m_iObserverMode", CsgoOffsets.NetVars.CCsPlayer.ObserverMode);
-            AddField<Vector3>("CSPlayer.m_vecVelocity", CsgoOffsets.NetVars.CCsPlayer.VecVelocity);
+            AddField<int>("CSPlayer.m_hBoneMatrix", Offsets.NetVars.CCsPlayer.BoneMatrix);
+            AddField<uint>("CSPlayer.m_hActiveWeapon", Offsets.NetVars.CCsPlayer.ActiveWeapon);
+            AddField<int>("CSPlayer.m_iFlags", Offsets.NetVars.CCsPlayer.Flags);
+            AddField<int>("CSPlayer.m_hObserverTarget", Offsets.NetVars.CCsPlayer.ObserverTarget);
+            AddField<int>("CSPlayer.m_iObserverMode", Offsets.NetVars.CCsPlayer.ObserverMode);
+            AddField<Vector3>("CSPlayer.m_vecVelocity", Offsets.NetVars.CCsPlayer.VecVelocity);
         }
 
         public override bool IsValid()

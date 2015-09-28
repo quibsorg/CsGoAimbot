@@ -101,8 +101,8 @@
     <Compile Include="CSGOClasses\OffsetsConfig.cs" />
     <Compile Include="CSGOClasses\SettingsConfig.cs" />
     <Compile Include="CSGOClasses\Weapon.cs" />
-    <Compile Include="CSGOOffsets.cs" />
-    <Compile Include="CSGOScanner.cs" />
+    <Compile Include="Offsets.cs" />
+    <Compile Include="Scanner.cs" />
     <Compile Include="CSGOClasses\Enums\CSGOClassID.cs" />
     <Compile Include="CSGOClasses\Enums\SignOnState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

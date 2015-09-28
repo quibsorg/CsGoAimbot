@@ -100,16 +100,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("CSPlayer.m_iHealth", CsgoOffsets.NetVars.CBaseEntity.Health);
+            AddField<int>("CSPlayer.m_iHealth", Offsets.NetVars.CBaseEntity.Health);
             AddField<int>("Entity.m_iVirtualTable", 0x08);
-            AddField<int>("Entity.m_iID", CsgoOffsets.NetVars.CBaseEntity.Id);
-            AddField<byte>("Entity.m_iDormant", CsgoOffsets.NetVars.CBaseEntity.Dormant);
-            AddField<int>("Entity.m_hOwnerEntity", CsgoOffsets.NetVars.CBaseEntity.OwnerEntity);
-            AddField<int>("Entity.m_iTeamNum", CsgoOffsets.NetVars.CBaseEntity.TeamNum);
-            AddField<int>("Entity.m_bSpotted", CsgoOffsets.NetVars.CBaseEntity.Spotted);
-            AddField<long>("Entity.m_bSpottedByMask", CsgoOffsets.NetVars.CBaseEntity.SpottedByMask);
-            AddField<Vector3>("Entity.m_vecOrigin", CsgoOffsets.NetVars.CBaseEntity.VecOrigin);
-            AddField<Vector3>("Entity.m_angRotation", CsgoOffsets.NetVars.CBaseEntity.AngRotation);
+            AddField<int>("Entity.m_iID", Offsets.NetVars.CBaseEntity.Id);
+            AddField<byte>("Entity.m_iDormant", Offsets.NetVars.CBaseEntity.Dormant);
+            AddField<int>("Entity.m_hOwnerEntity", Offsets.NetVars.CBaseEntity.OwnerEntity);
+            AddField<int>("Entity.m_iTeamNum", Offsets.NetVars.CBaseEntity.TeamNum);
+            AddField<int>("Entity.m_bSpotted", Offsets.NetVars.CBaseEntity.Spotted);
+            AddField<long>("Entity.m_bSpottedByMask", Offsets.NetVars.CBaseEntity.SpottedByMask);
+            AddField<Vector3>("Entity.m_vecOrigin", Offsets.NetVars.CBaseEntity.VecOrigin);
+            AddField<Vector3>("Entity.m_angRotation", Offsets.NetVars.CBaseEntity.AngRotation);
         }
 
         public override string ToString()
