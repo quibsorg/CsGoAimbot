@@ -61,8 +61,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public byte MiDormant => ReadFieldProxy<byte>("Entity.m_iDormant");
 
-        protected int MhOwnerEntity => ReadFieldProxy<int>("Entity.m_hOwnerEntity");
-        public int MiTeamNum => ReadFieldProxy<int>("Entity.m_iTeamNum");
+        protected int OwnerEntity => ReadFieldProxy<int>("Entity.m_hOwnerEntity");
+        public int TeamNum => ReadFieldProxy<int>("Entity.m_iTeamNum");
 
         public int MbSpotted => ReadFieldProxy<int>("Entity.m_bSpotted");
         private long MbSpottedByMask => ReadFieldProxy<long>("Entity.m_bSpottedByMask");
@@ -100,16 +100,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("CSPlayer.m_iHealth", CsgoOffsets.NetVars.CBaseEntity.MiHealth);
+            AddField<int>("CSPlayer.m_iHealth", CsgoOffsets.NetVars.CBaseEntity.Health);
             AddField<int>("Entity.m_iVirtualTable", 0x08);
-            AddField<int>("Entity.m_iID", CsgoOffsets.NetVars.CBaseEntity.MiId);
-            AddField<byte>("Entity.m_iDormant", CsgoOffsets.NetVars.CBaseEntity.MbDormant);
-            AddField<int>("Entity.m_hOwnerEntity", CsgoOffsets.NetVars.CBaseEntity.MhOwnerEntity);
-            AddField<int>("Entity.m_iTeamNum", CsgoOffsets.NetVars.CBaseEntity.MiTeamNum);
-            AddField<int>("Entity.m_bSpotted", CsgoOffsets.NetVars.CBaseEntity.MbSpotted);
-            AddField<long>("Entity.m_bSpottedByMask", CsgoOffsets.NetVars.CBaseEntity.MbSpottedByMask);
-            AddField<Vector3>("Entity.m_vecOrigin", CsgoOffsets.NetVars.CBaseEntity.MVecOrigin);
-            AddField<Vector3>("Entity.m_angRotation", CsgoOffsets.NetVars.CBaseEntity.MAngRotation);
+            AddField<int>("Entity.m_iID", CsgoOffsets.NetVars.CBaseEntity.Id);
+            AddField<byte>("Entity.m_iDormant", CsgoOffsets.NetVars.CBaseEntity.Dormant);
+            AddField<int>("Entity.m_hOwnerEntity", CsgoOffsets.NetVars.CBaseEntity.OwnerEntity);
+            AddField<int>("Entity.m_iTeamNum", CsgoOffsets.NetVars.CBaseEntity.TeamNum);
+            AddField<int>("Entity.m_bSpotted", CsgoOffsets.NetVars.CBaseEntity.Spotted);
+            AddField<long>("Entity.m_bSpottedByMask", CsgoOffsets.NetVars.CBaseEntity.SpottedByMask);
+            AddField<Vector3>("Entity.m_vecOrigin", CsgoOffsets.NetVars.CBaseEntity.VecOrigin);
+            AddField<Vector3>("Entity.m_angRotation", CsgoOffsets.NetVars.CBaseEntity.AngRotation);
         }
 
         public override string ToString()

@@ -178,7 +178,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 11));
-                CsgoOffsets.ClientState.MDwViewAngles = tmp;
+                CsgoOffsets.ClientState.ViewAngles = tmp;
             }
         }
 
@@ -241,7 +241,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<byte>((IntPtr) (_scan.Address.ToInt32() + 8));
-                CsgoOffsets.NetVars.CBaseEntity.MiId = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.Id = tmp;
             }
         }
 
@@ -257,7 +257,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 23));
-                CsgoOffsets.NetVars.CBaseEntity.MiHealth = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.Health = tmp;
             }
         }
 
@@ -273,7 +273,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 13));
-                CsgoOffsets.NetVars.CBaseEntity.MVecOrigin = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.VecOrigin = tmp;
             }
         }
 
@@ -293,7 +293,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 5));
-                CsgoOffsets.NetVars.CBaseEntity.MiTeamNum = tmp;
+                CsgoOffsets.NetVars.CBaseEntity.TeamNum = tmp;
             }
         }
 
@@ -309,7 +309,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 8));
-                CsgoOffsets.NetVars.CCsPlayer.MhBoneMatrix = tmp;
+                CsgoOffsets.NetVars.CCsPlayer.BoneMatrix = tmp;
             }
         }
 
@@ -321,7 +321,7 @@ namespace CsGoApplicationAimbot
             if (_scan.Success)
             {
                 var tmp = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 6));
-                CsgoOffsets.NetVars.CCsPlayer.MhActiveWeapon = tmp;
+                CsgoOffsets.NetVars.CCsPlayer.ActiveWeapon = tmp;
             }
         }
 

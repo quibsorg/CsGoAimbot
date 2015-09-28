@@ -99,20 +99,20 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region FIELDS
-        public int MhBoneMatrix => ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix");
-        public int MiFlags => ReadFieldProxy<int>("CSPlayer.m_iFlags");
-        public uint MhActiveWeapon => ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon");
-        public Vector3 MVecVelocity => ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity");
-        public int MhObserverTarget => ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF;
-        public int MiObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");
+        public int BoneMatrix => ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix");
+        public int Flags => ReadFieldProxy<int>("CSPlayer.m_iFlags");
+        public uint ActiveWeapon => ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon");
+        public Vector3 VecVelocity => ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity");
+        public int ObserverTarget => ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF;
+        public int ObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");
 
-        public uint MiWeaponIndex
+        public uint WeaponIndex
         {
             get
             {
                 if (_iWeaponIndex != 0) return _iWeaponIndex;
-                if (MhActiveWeapon != 0xFFFFFFFF)
-                    _iWeaponIndex = MhActiveWeapon & 0xFFF;
+                if (ActiveWeapon != 0xFFFFFFFF)
+                    _iWeaponIndex = ActiveWeapon & 0xFFF;
                 return _iWeaponIndex;
             }
         }
@@ -125,13 +125,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public CsPlayer(int address) : base(address)
         {
             _iWeaponIndex = 0;
-            Bones = new Skeleton(MhBoneMatrix);
+            Bones = new Skeleton(BoneMatrix);
         }
 
         public CsPlayer(BaseEntity baseEntity) : base(baseEntity)
         {
             _iWeaponIndex = 0;
-            Bones = new Skeleton(MhBoneMatrix);
+            Bones = new Skeleton(BoneMatrix);
         }
 
         public CsPlayer(CsPlayer copyFrom) : base(copyFrom)
@@ -148,43 +148,43 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<int>("CSPlayer.m_hBoneMatrix", CsgoOffsets.NetVars.CCsPlayer.MhBoneMatrix);
-            AddField<uint>("CSPlayer.m_hActiveWeapon", CsgoOffsets.NetVars.CCsPlayer.MhActiveWeapon);
-            AddField<int>("CSPlayer.m_iFlags", CsgoOffsets.NetVars.CCsPlayer.MiFlags);
-            AddField<int>("CSPlayer.m_hObserverTarget", CsgoOffsets.NetVars.CCsPlayer.MhObserverTarget);
-            AddField<int>("CSPlayer.m_iObserverMode", CsgoOffsets.NetVars.CCsPlayer.MiObserverMode);
-            AddField<Vector3>("CSPlayer.m_vecVelocity", CsgoOffsets.NetVars.CCsPlayer.MVecVelocity);
+            AddField<int>("CSPlayer.m_hBoneMatrix", CsgoOffsets.NetVars.CCsPlayer.BoneMatrix);
+            AddField<uint>("CSPlayer.m_hActiveWeapon", CsgoOffsets.NetVars.CCsPlayer.ActiveWeapon);
+            AddField<int>("CSPlayer.m_iFlags", CsgoOffsets.NetVars.CCsPlayer.Flags);
+            AddField<int>("CSPlayer.m_hObserverTarget", CsgoOffsets.NetVars.CCsPlayer.ObserverTarget);
+            AddField<int>("CSPlayer.m_iObserverMode", CsgoOffsets.NetVars.CCsPlayer.ObserverMode);
+            AddField<Vector3>("CSPlayer.m_vecVelocity", CsgoOffsets.NetVars.CCsPlayer.VecVelocity);
         }
 
         public override bool IsValid()
         {
-            return base.IsValid() && (MiTeamNum == 2 || MiTeamNum == 3);
+            return base.IsValid() && (TeamNum == 2 || TeamNum == 3);
         }
 
         public override string ToString()
         {
             return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", MiHealth,
-                Convert.ToString(MiFlags, 2).PadLeft(32, '0'), base.ToString(), MiTeamNum);
+                Convert.ToString(Flags, 2).PadLeft(32, '0'), base.ToString(), TeamNum);
         }
 
         public Weapon GetActiveWeapon()
         {
-            if (MhActiveWeapon == 0xFFFFFFFF)
+            if (ActiveWeapon == 0xFFFFFFFF)
                 return null;
 
-            var handle = MhActiveWeapon & 0xFFF;
+            var handle = ActiveWeapon & 0xFFF;
             return Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
         }
 
         public string GetActiveWeaponName()
         {
-            if (MhActiveWeapon == 0xFFFFFFFF)
+            if (ActiveWeapon == 0xFFFFFFFF)
             {
                 //If we return null it will crash.
                 return "Default";
             }
 
-            var handle = MhActiveWeapon & 0xFFF;
+            var handle = ActiveWeapon & 0xFFF;
             if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
             {
                 Weapon weapon = Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;

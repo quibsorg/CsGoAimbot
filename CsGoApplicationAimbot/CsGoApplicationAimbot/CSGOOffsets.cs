@@ -17,10 +17,10 @@
         public class ClientState
         {
             public static int Base = 0x00;
-            public static int MDwInGame = 0xE8;
-            public static int MDwViewAngles = 0x4ce0;
-            public static int MDwMapname = 0x26c;
-            public static uint MDwMapDirectory = 0xf5010000;
+            public static int InGame = 0xE8;
+            public static int ViewAngles = 0x4ce0;
+            public static int Mapname = 0x26c;
+            public static uint MapDirectory = 0xf5010000;
         }
 
         public class GameResources
@@ -39,46 +39,46 @@
         {
             public class CBaseEntity
             {
-                public static int MiHealth = 0xfc;
-                public static int MiId = 0x00;
-                public static int MiTeamNum = 0xf0;
-                public static int MVecOrigin = 0x134;
-                public static int MAngRotation = 0x128;
-                public static int MbSpotted = 0x935;
-                public static int MbSpottedByMask = 0x978;
-                public static int MhOwnerEntity = 0x148;
-                public static int MbDormant = 0xE9;
+                public static int Health = 0xfc;
+                public static int Id = 0x00;
+                public static int TeamNum = 0xf0;
+                public static int VecOrigin = 0x134;
+                public static int AngRotation = 0x128;
+                public static int Spotted = 0x935;
+                public static int SpottedByMask = 0x978;
+                public static int OwnerEntity = 0x148;
+                public static int Dormant = 0xE9;
             }
 
             public class CCsPlayer
             {
-                public static int MLifeState = 0x25B;
-                public static int MhBoneMatrix = 0xa74;
-                public static int MhActiveWeapon = 0x12b8; // m_hActiveWeapon
-                public static int MiFlags = 0x100;
-                public static int MhObserverTarget = 0x173C;
-                public static int MiObserverMode = 0x1728;
-                public static int MVecVelocity = 0x110;
+                public static int LifeState = 0x25B;
+                public static int BoneMatrix = 0xa74;
+                public static int ActiveWeapon = 0x12b8; // m_hActiveWeapon
+                public static int Flags = 0x100;
+                public static int ObserverTarget = 0x173C;
+                public static int ObserverMode = 0x1728;
+                public static int VecVelocity = 0x110;
             }
 
             public class LocalPlayer
             {
-                public static int MVecViewOffset = 0x104;
-                public static int MVecPunch = 0x13E0;
-                public static int MiShotsFired = 0x8640;
-                public static int MiCrosshairIdx = 0x8CE4;
+                public static int VecViewOffset = 0x104;
+                public static int VecPunch = 0x13E0;
+                public static int ShotsFired = 0x8640;
+                public static int CrosshairIdx = 0x8CE4;
             }
 
             public class Weapon
             {
-                public static int MiItemDefinitionIndex = 0x131C;
-                public static int MiState = 0x15ac;
-                public static int MiClip1 = 0x15b8;
-                public static int MFlNextPrimaryAttack = 0x1590;
-                public static int MiWeaponId = 0x1684; // Search for weaponid
-                public static int MbCanReload = 0x15ed;
-                public static int MiWeaponTableIndex = 0x1624;
-                public static int MfAccuracyPenalty = 0x1668;
+                public static int ItemDefinitionIndex = 0x131C;
+                public static int State = 0x15ac;
+                public static int Clip1 = 0x15b8;
+                public static int NextPrimaryAttack = 0x1590;
+                public static int WeaponId = 0x1684; // Search for weaponid
+                public static int CanReload = 0x15ed;
+                public static int WeaponTableIndex = 0x1624;
+                public static int AccuracyPenalty = 0x1668;
                 public static int MZoomLevel = 0x16E0; //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
             }
         }
