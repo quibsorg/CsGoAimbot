@@ -152,7 +152,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                             ControlAim();
                     }
                 }
-                else if (!aimScoped)
+                else
                 {
                     if (aimToggle)
                     {
@@ -192,7 +192,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (triggerScoped)
                 {
                     //ZoomLevel 0 = No Zoom
-                    if (LocalPlayerWeapon.ZoomLevel > 0)
+                    if (LocalPlayerWeapon != null && LocalPlayerWeapon.ZoomLevel > 0)
                     {
                         if (triggerToggle)
                         {
@@ -207,7 +207,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                             Triggerbot();
                     }
                 }
-                else if (!triggerScoped)
+                else
                 {
                     if (triggerToggle)
                     {
@@ -331,13 +331,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (!rcsEnabled) return;
 
-            if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0)
+            if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0 || RcsHandled || LocalPlayer.ShotsFired <= rcsStart)
                 return;
-            if ((RcsHandled || LocalPlayer.ShotsFired <= rcsStart))
-                return;
+
             if (aimbot)
             {
-                var aimbotForce = randomRcsForce / 1.6;
+                var aimbotForce = randomRcsForce / 1.7;
                 NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * aimbotForce);
             }
             else
