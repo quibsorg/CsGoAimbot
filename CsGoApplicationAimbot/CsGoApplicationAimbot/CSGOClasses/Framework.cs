@@ -11,36 +11,31 @@ namespace CsGoApplicationAimbot.CSGOClasses
 {
     public class Framework
     {
-        #region CONSTRUCTOR
-
+        #region Constructor
         public Framework(ProcessModule engineDll, ProcessModule clientDll)
         {
             Scanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
             _clientDllBase = (int)clientDll.BaseAddress;
-            var engineDllBase = (int)engineDll.BaseAddress;
+            _engineDllBase = (int)engineDll.BaseAddress;
             _dwEntityList = _clientDllBase + Offsets.Misc.EntityList;
             _dwViewMatrix = _clientDllBase + Offsets.Misc.ViewMatrix;
-            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(engineDllBase + Offsets.ClientState.Base));
+            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(_engineDllBase + Offsets.ClientState.Base));
             AimbotActive = false;
             TriggerbotActive = false;
         }
-
-        readonly SettingsConfig _settings = new SettingsConfig();
         #endregion
 
-        #region VARIABLES
-
+        #region Variables
+        readonly SettingsConfig _settings = new SettingsConfig();
         private readonly int _dwEntityList;
         private readonly int _dwViewMatrix;
         private readonly int _dwClientState;
         private readonly int _clientDllBase;
-        private int _dwIGameResources;
+        private readonly int _engineDllBase;
         private int _dwLocalPlayer;
-
         #endregion
 
-        #region PROPERTIES
-        public float LastPercent { get; private set; }
+        #region Properties
         private CsLocalPlayer LocalPlayer { get; set; }
         private string WeaponSection { get; set; }
         private BaseEntity Target { get; set; }
@@ -50,13 +45,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private Matrix ViewMatrix { get; set; }
         private Vector3 ViewAngles { get; set; }
         private Vector3 NewViewAngles { get; set; }
-        private int[] Kills { get; set; }
-        private int[] Deaths { get; set; }
-        private int[] Assists { get; set; }
-        private int[] Armor { get; set; }
-        private int[] Score { get; set; }
-        private string[] Clantags { get; set; }
-        public string[] Names { get; set; }
         private SignOnState State { get; set; }
         private bool AimbotActive { get; set; }
         private bool TriggerbotActive { get; set; }
@@ -80,15 +68,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
 
-            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.Misc.LocalPlayer));
-            _dwIGameResources = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.GameResources.Base));
-
             State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + Offsets.ClientState.InGame));
+            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.Misc.LocalPlayer));
+            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles));
+
+            //If we are not ingame do not update
             if (State != SignOnState.SignonstateFull)
                 return;
 
-            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
-            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
             RcsHandled = false;
 
@@ -114,7 +102,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Entities = entities.ToArray();
             Weapons = weapons.ToArray();
 
-
+            //Check if our player exists
             if (players.Exists(x => x.Item2.Address == _dwLocalPlayer))
             {
                 LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
@@ -123,22 +111,21 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
                 Console.WriteLine(WeaponSection);
             }
+            //Localplayer does not exist, set it to null.
             else
             {
                 LocalPlayer = null;
                 LocalPlayerWeapon = null;
             }
 
-            if (LocalPlayer != null)
-            {
-                if (entities.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1))
-                    Target = entities.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2;
-
-                Target = players.Exists(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.MiCrosshairIdx - 1).Item2 : null;
-            }
-
             if (LocalPlayer == null)
                 return;
+
+            //Check the player in our crosshair
+            if (entities.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1))
+                Target = entities.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2;
+            //Curret target in our crosshair
+            Target = players.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2 : null;
 
             #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
@@ -148,7 +135,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
 
             //Won't aim if we do not have any ammo in the clip.
-            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0) )
+            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0))
             {
                 if (aimScoped)
                 {
@@ -188,12 +175,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
             ControlRecoil();
             #endregion
 
-            #region Bunny Hop
-            BunnyHop();
-            #endregion
+            #region Set View Angles 
             //Sets the view angles.
             if (NewViewAngles != ViewAngles)
                 SetViewAngles(NewViewAngles);
+            #endregion
+
             #region Trigger
             var triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
@@ -273,36 +260,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
             }
             LastClip = LocalPlayerWeapon?.Clip1 ?? 0;
-            LastShotsFired = LocalPlayer.MiShotsFired;
-            LastPunch = LocalPlayer.MVecPunch;
-        }
-        #endregion
-        private void BunnyHop()
-        {
-            bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
-            WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
+            LastShotsFired = LocalPlayer.ShotsFired;
+            LastPunch = LocalPlayer.VecPunch;
+            #endregion
 
-            if (bunnyJump)
-            {
-                if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
-                {
-                    Program.MemUtils.Write((IntPtr) (_clientDllBase + Offsets.Misc.Jump),
-                        LocalPlayer.Flags == 256 ? 4 : 5);
-                }
-            }
+            #region Bunny Hop
+            BunnyHop();
+            #endregion
+
         }
 
-        private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
-        {
-            if (clamp)
-                viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles), viewAngles);
-        }
-
-        public bool IsPlaying()
-        {
-            return State == SignOnState.SignonstateFull && LocalPlayer != null;
-        }
         #region Aimbot
         private void ControlAim()
         {
@@ -333,7 +300,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             foreach (var tpl in valid)
             {
                 var plr = tpl.Item2;
-                var newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.MVecViewOffset).CalcAngle(plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
+                var newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.VecViewOffset).CalcAngle(plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
                 newAngles = newAngles.ClampAngle();
                 var fov = newAngles.Length() % 360f;
                 if (!(fov < closestFov) || !(fov < aimFov)) continue;
@@ -368,24 +335,33 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0)
                 return;
-            if ((RcsHandled || LocalPlayer.MiShotsFired <= rcsStart))
+            if ((RcsHandled || LocalPlayer.ShotsFired <= rcsStart))
                 return;
             if (aimbot)
             {
                 var aimbotForce = randomRcsForce / 1.6;
-                NewViewAngles -= LocalPlayer.MVecPunch * (float)(2f / 100f * aimbotForce);
+                NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * aimbotForce);
             }
             else
             {
-                var punch = LocalPlayer.MVecPunch - LastPunch;
+                var punch = LocalPlayer.VecPunch - LastPunch;
                 NewViewAngles -= punch * (2f / 100f * randomRcsForce);
             }
             RcsHandled = true;
         }
         #endregion
 
+        #region Set View Angles 
+        private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
+        {
+            if (clamp)
+                viewAngles = viewAngles.ClampAngle();
+            Program.MemUtils.Write((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles), viewAngles);
+        }
+        #endregion
+
         #region Trigger
-        public void Triggerbot()
+        private void Triggerbot()
         {
             bool triggerEnemies = _settings.GetBool(WeaponSection, "Trigger Enemies");
             bool triggerAllies = _settings.GetBool(WeaponSection, "Trigger Allies");
@@ -396,8 +372,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (LocalPlayer == null || TriggerShooting)
                 return;
-            if (Players.Count(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx) <= 0) return;
-            var player = Players.First(x => x.Item2.MiId == LocalPlayer.MiCrosshairIdx).Item2;
+            if (Players.Count(x => x.Item2.MiId == LocalPlayer.CrosshairIdx) <= 0) return;
+            var player = Players.First(x => x.Item2.MiId == LocalPlayer.CrosshairIdx).Item2;
             if ((triggerEnemies && player.TeamNum != LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == LocalPlayer.TeamNum))
             {
                 if (!TriggerOnTarget)
@@ -425,11 +401,31 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 TriggerOnTarget = false;
             }
         }
+        #endregion
+
+        #region Shoot
         private void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             Thread.Sleep(1);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
+        }
+        #endregion
+
+        #region Bunny Hop
+        private void BunnyHop()
+        {
+            bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
+            WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
+
+            if (bunnyJump)
+            {
+                if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
+                {
+                    Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump),
+                        LocalPlayer.Flags == 256 ? 4 : 5);
+                }
+            }
         }
         #endregion
 
