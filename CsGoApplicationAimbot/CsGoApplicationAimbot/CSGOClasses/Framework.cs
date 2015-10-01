@@ -139,32 +139,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 {
                     if (LocalPlayerWeapon.ZoomLevel > 0)
                     {
-                        if (aimToggle)
-                        {
-                            if (Program.KeyUtils.KeyWentUp(aimKey))
-                                AimbotActive = !AimbotActive;
-                        }
-                        else if (aimHold)
-                        {
-                            AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
-                        }
-                        if (AimbotActive)
-                            ControlAim();
+                        AimToggleOrHold(aimToggle, aimHold, aimKey);
                     }
                 }
                 else
                 {
-                    if (aimToggle)
-                    {
-                        if (Program.KeyUtils.KeyWentUp(aimKey))
-                            AimbotActive = !AimbotActive;
-                    }
-                    else if (aimHold)
-                    {
-                        AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
-                    }
-                    if (AimbotActive)
-                        ControlAim();
+                    AimToggleOrHold(aimToggle, aimHold, aimKey);
                 }
             }
             #endregion
@@ -180,7 +160,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region Trigger
-            var triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
+            WinAPI.VirtualKeyShort triggerKey = _settings.GetKey(WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(WeaponSection, "Trigger Enabled");
             bool triggerScoped = _settings.GetBool(WeaponSection, "Trigger When Scoped");
             bool triggerBurstEnabled = _settings.GetBool(WeaponSection, "Trigger Burst Enabled");
@@ -189,37 +169,18 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (triggerEnabled)
             {
+                //Trigger Scoped is only good for snipers.
                 if (triggerScoped)
                 {
                     //ZoomLevel 0 = No Zoom
                     if (LocalPlayerWeapon != null && LocalPlayerWeapon.ZoomLevel > 0)
                     {
-                        if (triggerToggle)
-                        {
-                            if (Program.KeyUtils.KeyWentUp(triggerKey))
-                                TriggerbotActive = !TriggerbotActive;
-                        }
-                        else if (triggerHold)
-                        {
-                            TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
-                        }
-                        if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
-                            Triggerbot();
+                        TriggerToggleOrHold(triggerKey, triggerToggle, triggerHold);
                     }
                 }
                 else
                 {
-                    if (triggerToggle)
-                    {
-                        if (Program.KeyUtils.KeyWentUp(WinAPI.VirtualKeyShort.MENU))
-                            TriggerbotActive = !TriggerbotActive;
-                    }
-                    else if (triggerHold)
-                    {
-                        TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
-                    }
-                    if (TriggerbotActive && !Program.KeyUtils.KeyIsDown(WinAPI.VirtualKeyShort.LBUTTON))
-                        Triggerbot();
+                    TriggerToggleOrHold(triggerKey, triggerToggle, triggerHold);
                 }
             }
 
@@ -266,6 +227,34 @@ namespace CsGoApplicationAimbot.CSGOClasses
             BunnyHop();
             #endregion
 
+        }
+        private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
+        {
+            if (triggerToggle)
+            {
+                if (Program.KeyUtils.KeyWentUp(triggerKey))
+                    TriggerbotActive = !TriggerbotActive;
+            }
+            else if (triggerHold)
+            {
+                TriggerbotActive = Program.KeyUtils.KeyIsDown(triggerKey);
+            }
+            if (TriggerbotActive)
+                Triggerbot();
+        }
+        private void AimToggleOrHold(bool aimToggle, bool aimHold, WinAPI.VirtualKeyShort aimKey)
+        {
+            if (aimToggle)
+            {
+                if (Program.KeyUtils.KeyWentUp(aimKey))
+                    AimbotActive = !AimbotActive;
+            }
+            else if (aimHold)
+            {
+                AimbotActive = Program.KeyUtils.KeyIsDown(aimKey);
+            }
+            if (AimbotActive)
+                ControlAim();
         }
 
         #region Aimbot
