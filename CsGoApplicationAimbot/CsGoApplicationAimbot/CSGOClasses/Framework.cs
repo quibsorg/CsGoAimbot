@@ -59,7 +59,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private int TriggerBurstCount { get; set; }
         private bool TriggerShooting { get; set; }
         private Weapon LocalPlayerWeapon { get; set; }
-
         #endregion
 
         public void Update()
@@ -109,7 +108,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
-                Console.WriteLine(WeaponSection);
             }
             //Localplayer does not exist, set it to null.
             else
@@ -135,7 +133,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
 
             //Won't aim if we do not have any ammo in the clip.
-            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0))
+            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0 && LocalPlayer.ShotsFired > 1))
             {
                 if (aimScoped)
                 {

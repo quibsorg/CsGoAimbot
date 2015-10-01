@@ -120,7 +120,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public virtual bool IsValid()
         {
-            return Address != 0 /* && this.m_iDormant != 1*/&& MiId > 0 && MiClassId > 0;
+            return Address != 0 && MiId > 0 && MiClassId > 0;
         }
 
         private bool SeenBy(int entityIndex)

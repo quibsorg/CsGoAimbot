@@ -19,7 +19,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public Vector3 VecPunch => ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecPunch");
         public int ShotsFired => ReadFieldProxy<int>("CSLocalPlayer.m_iShotsFired");
         public int CrosshairIdx => ReadFieldProxy<int>("CSLocalPlayer.m_iCrosshairIdx");
-
         #endregion
 
         #region CONSTRUCTORS
