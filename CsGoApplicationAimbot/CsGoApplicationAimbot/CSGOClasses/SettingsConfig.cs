@@ -57,7 +57,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             var weaponList = new List<string>
             {
-                //Pistols
                 //"CZ75",
                 "DEagle",
                 "Elite",
@@ -75,7 +74,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 "Mag-7",
 
                 //SMG
-                "Mac-10",
+                "MAC10",
                 "MP9",
                 "MP7",
                 "Ump-45",
@@ -135,6 +134,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
                 builder.AppendLine("Aim When Scoped = False");
+                builder.AppendLine("Aim Start After = 1");
                 builder.AppendLine("Aim Fov = 2");
                 builder.AppendLine("Aim Bone = 5");
                 builder.AppendLine("Aim Smooth Enabled = True");
