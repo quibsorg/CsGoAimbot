@@ -184,8 +184,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
             }
 
+            //We set Trigger shooting to true later down the line.
             if (TriggerShooting)
             {
+                //If our LocalPlayer weapon is null, do not shoot it will crash.
                 if (LocalPlayerWeapon == null)
                 {
                     TriggerShooting = false;
@@ -214,6 +216,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     else
                     {
                         Shoot();
+                        //We shoot a shoot, we set trigger shooting to false.
                         TriggerShooting = false;
                     }
                 }
@@ -356,12 +359,20 @@ namespace CsGoApplicationAimbot.CSGOClasses
             float delayShot = _settings.GetFloat(WeaponSection, "Trigger Delay Shots");
             float burstShots = _settings.GetFloat(WeaponSection, "Trigger Burst Shots");
 
+            //If our player is null, or if trigger is shooting we return.
             if (LocalPlayer == null || TriggerShooting)
                 return;
-            if (Players.Count(x => x.Item2.MiId == LocalPlayer.CrosshairIdx) <= 0) return;
+            //If no one is in hour crosshair we turn.(Not aiming at someone)
+            if (Players.Count(x => x.Item2.MiId == LocalPlayer.CrosshairIdx) <= 0)
+                return;
+
+            //We get the player that is in our crosshair.
             var player = Players.First(x => x.Item2.MiId == LocalPlayer.CrosshairIdx).Item2;
+
+            //We check the players teamnum, if it matches ours teammate, if not enemy.
             if ((triggerEnemies && player.TeamNum != LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == LocalPlayer.TeamNum))
             {
+                //If we got this far, we have a target in our crosshair.
                 if (!TriggerOnTarget)
                 {
                     TriggerOnTarget = true;
@@ -369,9 +380,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 }
                 else
                 {
-                    if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastTarget).TotalMilliseconds >= firstShot)) return;
-                    if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= delayShot)) return;
+                    if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastTarget).TotalMilliseconds >= firstShot))
+                        return;
+                    if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= delayShot))
+                        return;
+                    //Get the tick from our last shoot.
                     TriggerLastShot = DateTime.Now.Ticks;
+
+                    //If we are not shooting.
                     if (!TriggerShooting)
                     {
                         if (burstRandomize)
@@ -384,6 +400,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             else
             {
+                //No one is in our crosshair.
                 TriggerOnTarget = false;
             }
         }
