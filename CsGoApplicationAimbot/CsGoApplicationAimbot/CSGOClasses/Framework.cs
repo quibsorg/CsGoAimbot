@@ -274,7 +274,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (LocalPlayer == null)
                 return;
-            var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.MiHealth != 0 && x.Item2.MiDormant != 1);
+            var valid = Players.Where(x => x.Item2.IsValid() && x.Item2.Health != 0 && x.Item2.Dormant != 1);
             if (aimSpotted)
                 valid = valid.Where(x => x.Item2.SeenBy(LocalPlayer));
             if (aimSpottedBy)
@@ -284,13 +284,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (aimAllies)
                 valid = valid.Where(x => x.Item2.TeamNum == LocalPlayer.TeamNum);
 
-            valid = valid.OrderBy(x => (x.Item2.MVecOrigin - LocalPlayer.MVecOrigin).Length());
+            valid = valid.OrderBy(x => (x.Item2.VecOrigin - LocalPlayer.VecOrigin).Length());
             var closest = Vector3.Zero;
             var closestFov = float.MaxValue;
             foreach (var tpl in valid)
             {
                 var plr = tpl.Item2;
-                var newAngles = (LocalPlayer.MVecOrigin + LocalPlayer.VecViewOffset).CalcAngle(plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
+                var newAngles = (LocalPlayer.VecOrigin + LocalPlayer.VecViewOffset).CalcAngle(plr.Bones.GetBoneByIndex(aimBone)) - NewViewAngles;
                 newAngles = newAngles.ClampAngle();
                 var fov = newAngles.Length() % 360f;
                 if (!(fov < closestFov) || !(fov < aimFov)) continue;
@@ -363,11 +363,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer == null || TriggerShooting)
                 return;
             //If no one is in hour crosshair we turn.(Not aiming at someone)
-            if (Players.Count(x => x.Item2.MiId == LocalPlayer.CrosshairIdx) <= 0)
+            if (Players.Count(x => x.Item2.Id == LocalPlayer.CrosshairIdx) <= 0)
                 return;
 
             //We get the player that is in our crosshair.
-            var player = Players.First(x => x.Item2.MiId == LocalPlayer.CrosshairIdx).Item2;
+            var player = Players.First(x => x.Item2.Id == LocalPlayer.CrosshairIdx).Item2;
 
             //We check the players teamnum, if it matches ours teammate, if not enemy.
             if ((triggerEnemies && player.TeamNum != LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == LocalPlayer.TeamNum))

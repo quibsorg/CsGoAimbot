@@ -9,88 +9,86 @@ namespace CsGoApplicationAimbot.CSGOClasses
     {
         #region VARIABLES
 
-        private uint _iClientClass, _iClassId;
-        public string _szClassName;
+        private uint _clientClass, _classId;
+        public string _className;
 
         #endregion
 
         #region PROPERTIES
 
-        private uint MiClientClass
+        private uint ClientClass
         {
             get
             {
-                if (_iClientClass == 0)
-                    _iClientClass = GetClientClass();
-                return _iClientClass;
+                if (_clientClass == 0)
+                    _clientClass = GetClientClass();
+                return _clientClass;
             }
-            set { _iClientClass = value; }
+            set { _clientClass = value; }
         }
 
-        private uint MiClassId
+        private uint ClassId
         {
             get
             {
-                if (_iClassId == 0)
-                    _iClassId = GetClassId();
-                return _iClassId;
+                if (_classId == 0)
+                    _classId = GetClassId();
+                return _classId;
             }
-            set { _iClassId = value; }
+            set { _classId = value; }
         }
 
-        public string MSzClassName
+        public string ClassName
         {
             get
             {
-                if (_szClassName == "<none>")
-                    _szClassName = GetClassName();
-                return _szClassName;
+                if (_className == "<none>")
+                    _className = GetClassName();
+                return _className;
             }
-            set { _szClassName = value; }
+            set { _className = value; }
         }
 
         #endregion
 
         #region FIELDS
 
-        public int MiHealth => ReadFieldProxy<int>("CSPlayer.m_iHealth");
+        public int Health => ReadFieldProxy<int>("CSPlayer.m_iHealth");
 
-        private int MiVirtualTable => ReadFieldProxy<int>("Entity.m_iVirtualTable");
+        private int VirtualTable => ReadFieldProxy<int>("Entity.m_iVirtualTable");
 
-        public int MiId => ReadFieldProxy<int>("Entity.m_iID");
+        public int Id => ReadFieldProxy<int>("Entity.m_iID");
 
-        public byte MiDormant => ReadFieldProxy<byte>("Entity.m_iDormant");
+        public byte Dormant => ReadFieldProxy<byte>("Entity.m_iDormant");
 
         protected int OwnerEntity => ReadFieldProxy<int>("Entity.m_hOwnerEntity");
         public int TeamNum => ReadFieldProxy<int>("Entity.m_iTeamNum");
 
-        public int MbSpotted => ReadFieldProxy<int>("Entity.m_bSpotted");
-        private long MbSpottedByMask => ReadFieldProxy<long>("Entity.m_bSpottedByMask");
+        public int Spotted => ReadFieldProxy<int>("Entity.m_bSpotted");
+        private long SpottedByMask => ReadFieldProxy<long>("Entity.m_bSpottedByMask");
 
-        public Vector3 MVecOrigin => ReadFieldProxy<Vector3>("Entity.m_vecOrigin");
+        public Vector3 VecOrigin => ReadFieldProxy<Vector3>("Entity.m_vecOrigin");
 
-        public Vector3 MAngRotation => ReadFieldProxy<Vector3>("Entity.m_angRotation");
+        public Vector3 AngRotation => ReadFieldProxy<Vector3>("Entity.m_angRotation");
 
         #endregion
 
         #region CONSTRUCTOR
 
-        public BaseEntity(int address)
-            : base(address)
+        public BaseEntity(int address) : base(address)
         {
-            _iClassId = 0;
-            _iClientClass = 0;
-            _szClassName = "<none>";
+            _classId = 0;
+            _clientClass = 0;
+            _className = "<none>";
         }
 
-        public BaseEntity(BaseEntity copyFrom)
-            : base(copyFrom.Address)
+        public BaseEntity(BaseEntity copyFrom) : base(copyFrom.Address)
         {
             Address = copyFrom.Address;
             CopyFieldsFrom(copyFrom);
-            _iClassId = copyFrom.MiClassId;
-            _iClientClass = copyFrom.MiClientClass;
-            _szClassName = copyFrom.MSzClassName;
+            _classId = copyFrom.ClassId;
+            _clientClass = copyFrom.ClientClass;
+            _className = copyFrom.ClassName;
         }
 
         #endregion
@@ -114,32 +112,32 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public override string ToString()
         {
-            return string.Format("[BaseEntity m_iID={0}, m_iClassID={3}, m_szClassName={4}, m_vecOrigin={1}]\n{2}", MiId,
-                MVecOrigin, base.ToString(), MiClassId, MSzClassName);
+            return string.Format("[BaseEntity m_iID={0}, m_iClassID={3}, m_szClassName={4}, m_vecOrigin={1}]\n{2}", Id,
+                VecOrigin, base.ToString(), ClassId, ClassName);
         }
 
         public virtual bool IsValid()
         {
-            return Address != 0 && MiId > 0 && MiClassId > 0;
+            return Address != 0 && Id > 0 && ClassId > 0;
         }
 
         private bool SeenBy(int entityIndex)
         {
-            return (MbSpottedByMask & (0x1 << entityIndex)) != 0;
+            return (SpottedByMask & (0x1 << entityIndex)) != 0;
         }
 
         public bool SeenBy(BaseEntity ent)
         {
-            return SeenBy(ent.MiId - 1);
+            return SeenBy(ent.Id - 1);
         }
 
         private uint GetClientClass()
         {
             try
             {
-                if (MiVirtualTable == 0)
+                if (VirtualTable == 0)
                     return 0;
-                var function = Program.MemUtils.Read<uint>((IntPtr)(MiVirtualTable + 2 * 0x04));
+                var function = Program.MemUtils.Read<uint>((IntPtr)(VirtualTable + 2 * 0x04));
                 if (function != 0xFFFFFFFF)
                     return Program.MemUtils.Read<uint>((IntPtr)(function + 0x01));
                 return 0;
@@ -186,67 +184,67 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public bool IsPlayer()
         {
             return
-                MiClassId == (int)ClassId.CsPlayer;
+                ClassId == (int)Enums.ClassId.CsPlayer;
         }
 
         public bool IsWeapon()
         {
             return
-                MiClassId == (int) ClassId.Ak47 ||
-                MiClassId == (int) ClassId.DEagle ||
-                MiClassId == (int) ClassId.Aug ||
-                MiClassId == (int) ClassId.Awp ||
-                MiClassId == (int) ClassId.G3Sg1 ||
-                MiClassId == (int) ClassId.Scar20 ||
-                MiClassId == (int) ClassId.DualBerettas ||
-                MiClassId == (int) ClassId.Elite ||
-                MiClassId == (int) ClassId.FiveSeven ||
-                MiClassId == (int) ClassId.Glock ||
-                MiClassId == (int) ClassId.Hkp2000 ||
-                MiClassId == (int) ClassId.M4A1 ||
-                MiClassId == (int) ClassId.Mp7 ||
-                MiClassId == (int) ClassId.Mp9 ||
-                MiClassId == (int) ClassId.P250 ||
-                MiClassId == (int) ClassId.P90 ||
-                MiClassId == (int) ClassId.Sg556 ||
-                MiClassId == (int) ClassId.Ssg08 ||
-                MiClassId == (int) ClassId.Taser ||
-                MiClassId == (int) ClassId.Tec9 ||
-                MiClassId == (int) ClassId.Ump45 ||
-                MiClassId == (int) ClassId.DynamicProp ||
-                MiClassId == (int) ClassId.PhysicsProp ||
-                MiClassId == (int) ClassId.PhysicsPropMultiplayer ||
-                MiClassId == (int) ClassId.Awp ||
-                MiClassId == (int) ClassId.Ssg08 ||
-                MiClassId == (int) ClassId.G3Sg1 ||
-                MiClassId == (int) ClassId.Scar20 ||
-                MiClassId == (int) ClassId.Knife ||
-                MiClassId == (int) ClassId.DecoyGrenade ||
-                MiClassId == (int) ClassId.HeGrenade ||
-                MiClassId == (int) ClassId.IncendiaryGrenade ||
-                MiClassId == (int) ClassId.MolotovGrenade ||
-                MiClassId == (int) ClassId.SmokeGrenade ||
-                MiClassId == (int) ClassId.Flashbang ||
-                MiClassId == (int) ClassId.Famas ||
-                MiClassId == (int) ClassId.Mac10 ||
-                MiClassId == (int) ClassId.GalilAr ||
-                MiClassId == (int) ClassId.M249 ||
-                MiClassId == (int) ClassId.M249X ||
-                MiClassId == (int) ClassId.Mag7 ||
-                MiClassId == (int) ClassId.NOVA ||
-                MiClassId == (int) ClassId.Negev ||
-                MiClassId == (int) ClassId.Ump45X ||
-                MiClassId == (int) ClassId.Xm1014 ||
-                MiClassId == (int) ClassId.Xm1014X ||
-                MiClassId == (int) ClassId.M4 ||
-                MiClassId == (int) ClassId.Nova ||
-                MiClassId == (int) ClassId.Mag ||
-                MiClassId == (int) ClassId.G3Sg1 ||
-                MiClassId == (int) ClassId.G3Sg1X ||
-                MiClassId == (int) ClassId.Tec9X ||
-                MiClassId == (int) ClassId.PpBizon ||
-                MiClassId == (int) ClassId.P90X ||
-                MiClassId == (int) ClassId.Scar20X;
+                ClassId == (int) Enums.ClassId.Ak47 ||
+                ClassId == (int) Enums.ClassId.DEagle ||
+                ClassId == (int) Enums.ClassId.Aug ||
+                ClassId == (int) Enums.ClassId.Awp ||
+                ClassId == (int) Enums.ClassId.G3Sg1 ||
+                ClassId == (int) Enums.ClassId.Scar20 ||
+                ClassId == (int) Enums.ClassId.DualBerettas ||
+                ClassId == (int) Enums.ClassId.Elite ||
+                ClassId == (int) Enums.ClassId.FiveSeven ||
+                ClassId == (int) Enums.ClassId.Glock ||
+                ClassId == (int) Enums.ClassId.Hkp2000 ||
+                ClassId == (int) Enums.ClassId.M4A1 ||
+                ClassId == (int) Enums.ClassId.Mp7 ||
+                ClassId == (int) Enums.ClassId.Mp9 ||
+                ClassId == (int) Enums.ClassId.P250 ||
+                ClassId == (int) Enums.ClassId.P90 ||
+                ClassId == (int) Enums.ClassId.Sg556 ||
+                ClassId == (int) Enums.ClassId.Ssg08 ||
+                ClassId == (int) Enums.ClassId.Taser ||
+                ClassId == (int) Enums.ClassId.Tec9 ||
+                ClassId == (int) Enums.ClassId.Ump45 ||
+                ClassId == (int) Enums.ClassId.DynamicProp ||
+                ClassId == (int) Enums.ClassId.PhysicsProp ||
+                ClassId == (int) Enums.ClassId.PhysicsPropMultiplayer ||
+                ClassId == (int) Enums.ClassId.Awp ||
+                ClassId == (int) Enums.ClassId.Ssg08 ||
+                ClassId == (int) Enums.ClassId.G3Sg1 ||
+                ClassId == (int) Enums.ClassId.Scar20 ||
+                ClassId == (int) Enums.ClassId.Knife ||
+                ClassId == (int) Enums.ClassId.DecoyGrenade ||
+                ClassId == (int) Enums.ClassId.HeGrenade ||
+                ClassId == (int) Enums.ClassId.IncendiaryGrenade ||
+                ClassId == (int) Enums.ClassId.MolotovGrenade ||
+                ClassId == (int) Enums.ClassId.SmokeGrenade ||
+                ClassId == (int) Enums.ClassId.Flashbang ||
+                ClassId == (int) Enums.ClassId.Famas ||
+                ClassId == (int) Enums.ClassId.Mac10 ||
+                ClassId == (int) Enums.ClassId.GalilAr ||
+                ClassId == (int) Enums.ClassId.M249 ||
+                ClassId == (int) Enums.ClassId.M249X ||
+                ClassId == (int) Enums.ClassId.Mag7 ||
+                ClassId == (int) Enums.ClassId.NOVA ||
+                ClassId == (int) Enums.ClassId.Negev ||
+                ClassId == (int) Enums.ClassId.Ump45X ||
+                ClassId == (int) Enums.ClassId.Xm1014 ||
+                ClassId == (int) Enums.ClassId.Xm1014X ||
+                ClassId == (int) Enums.ClassId.M4 ||
+                ClassId == (int) Enums.ClassId.Nova ||
+                ClassId == (int) Enums.ClassId.Mag ||
+                ClassId == (int) Enums.ClassId.G3Sg1 ||
+                ClassId == (int) Enums.ClassId.G3Sg1X ||
+                ClassId == (int) Enums.ClassId.Tec9X ||
+                ClassId == (int) Enums.ClassId.PpBizon ||
+                ClassId == (int) Enums.ClassId.P90X ||
+                ClassId == (int) Enums.ClassId.Scar20X;
 
         }
         #endregion

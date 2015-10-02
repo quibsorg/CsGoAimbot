@@ -163,7 +163,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public override string ToString()
         {
-            return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", MiHealth,
+            return string.Format("[CSPlayer m_iHealth={0}, m_iTeamNum={3}, m_iFlags={1}]\n{2}", Health,
                 Convert.ToString(Flags, 2).PadLeft(32, '0'), base.ToString(), TeamNum);
         }
 
@@ -188,7 +188,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
             {
                 Weapon weapon = Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
-                string weaponName = weapon.MSzClassName;
+                string weaponName = weapon.ClassName;
                 weaponName = weaponName.Remove(0, 1);
                 if (weaponName.Contains("Weapon"))
                 {
