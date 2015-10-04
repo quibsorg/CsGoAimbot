@@ -119,11 +119,15 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer == null)
                 return;
 
+            //If our health is equal to 0 or less we are dead, no reason to update.
+            if (LocalPlayer.Health <= 0)
+                return;
+
             //Check the player in our crosshair
-            if (entities.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1))
-                Target = entities.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2;
+            //if (entities.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1))
+            //    Target = entities.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2;
             //Curret target in our crosshair
-            Target = players.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2 : null;
+            //Target = players.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2 : null;   
 
             #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
@@ -216,7 +220,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     else
                     {
                         Shoot();
-                        //We shoot a shoot, we set trigger shooting to false.
                         TriggerShooting = false;
                     }
                 }
@@ -313,18 +316,29 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region Rcs
         private void ControlRecoil(bool aimbot = false)
         {
+
             var rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
             var rcsForceMax = _settings.GetFloat(WeaponSection, "Rcs Force Max");
             var rcsForceMin = _settings.GetFloat(WeaponSection, "Rcs Force Min");
             var rcsStart = _settings.GetInt(WeaponSection, "Rcs Start");
-
             var random = new Random();
+
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
 
-            if (!rcsEnabled) return;
-
-            if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0 || RcsHandled || LocalPlayer.ShotsFired <= rcsStart)
+            if (!rcsEnabled)
                 return;
+
+            if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0)
+             return;
+
+            if (RcsHandled)
+                return;
+
+            if (!TriggerbotActive)
+            {
+                if (LocalPlayer.ShotsFired <= rcsStart)
+                    return;
+            }
 
             if (aimbot)
             {
@@ -410,7 +424,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
-            Thread.Sleep(1);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
         #endregion
@@ -428,6 +441,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                     Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump),
                         LocalPlayer.Flags == 256 ? 4 : 5);
                 }
+
             }
         }
         #endregion

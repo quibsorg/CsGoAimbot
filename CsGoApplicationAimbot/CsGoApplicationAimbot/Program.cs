@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses;
-using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.SharpDXRenderer;
 using ExternalUtilsCSharp.UI;
@@ -30,14 +25,12 @@ namespace CsGoApplicationAimbot
         #endregion
 
         #region VARIABLES
-
-        public static KeyUtils KeyUtils;
         private static IntPtr _hWnd;
-        public static Framework Framework;
+        private static SettingsConfig _settings;
         private static ProcUtils _procUtils;
+        public static Framework Framework;
         public static MemUtils MemUtils;
-        public static SettingsConfig Settings;
-
+        public static KeyUtils KeyUtils;
         #endregion
 
         #region Method
@@ -45,7 +38,7 @@ namespace CsGoApplicationAimbot
         {
             PrintSuccess("Smurf bot");
             //We make the config if it dosen't exist.
-            Settings = new SettingsConfig();
+            _settings = new SettingsConfig();
             KeyUtils = new KeyUtils();
 
             PrintInfo("> Waiting for CSGO to start up...");
