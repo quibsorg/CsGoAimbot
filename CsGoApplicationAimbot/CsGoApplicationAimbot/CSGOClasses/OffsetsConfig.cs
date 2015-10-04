@@ -9,6 +9,5 @@ namespace CsGoApplicationAimbot.CSGOClasses
     class OffsetsConfig
     {
         StringBuilder builder = new StringBuilder();
-
     }
 }

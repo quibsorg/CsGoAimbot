@@ -62,6 +62,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public void Update()
         {
+            //If the game processes is not running, close the cheat.
+            if (!ProcUtils.ProcessIsRunning(Program.GameProcess))
+                Environment.Exit(0);
+
             var players = new List<Tuple<int, CsPlayer>>();
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
@@ -318,7 +322,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var random = new Random();
 
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
-
             if (!rcsEnabled)
                 return;
 

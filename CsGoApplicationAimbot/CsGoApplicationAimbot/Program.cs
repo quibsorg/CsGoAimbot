@@ -12,12 +12,12 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region CONTROLS
-        static Timer _timer = new Timer(10);
+        static Timer _timer = new Timer(0.01);
         #endregion
 
         #region CONSTANTS
 
-        private const string GameProcess = "csgo";
+        public const string GameProcess = "csgo";
         private const string GameTitle = "Counter-Strike: Global Offensive";
 
         #endregion
