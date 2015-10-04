@@ -75,7 +75,7 @@
                 public static int State = 0x15ac;
                 public static int Clip1 = 0x15b8;
                 public static int NextPrimaryAttack = 0x1590;
-                public static int WeaponId = 0x1684; // Search for weaponid
+                public static int WeaponId = 0x168C; // Search for weaponid
                 public static int CanReload = 0x15ed;
                 public static int WeaponTableIndex = 0x1624;
                 public static int AccuracyPenalty = 0x1668;

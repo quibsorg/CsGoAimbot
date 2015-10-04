@@ -12,7 +12,7 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region CONTROLS
-        static Timer _timer = new Timer(4);
+        static Timer _timer = new Timer(10);
         #endregion
 
         #region CONSTANTS
@@ -43,13 +43,8 @@ namespace CsGoApplicationAimbot
             while (!ProcUtils.ProcessIsRunning(GameProcess))
                 Thread.Sleep(250);
 
-            _procUtils = new ProcUtils(GameProcess,
-                WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite |
-                WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
-            MemUtils = new MemUtils
-            {
-                Handle = _procUtils.Handle
-            };
+            _procUtils = new ProcUtils(GameProcess, WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite | WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
+            MemUtils = new MemUtils { Handle = _procUtils.Handle };
 
             PrintInfo("> Waiting for CSGOs window to show up...");
             while ((_hWnd = WinAPI.FindWindowByCaption(_hWnd, GameTitle)) == IntPtr.Zero)
@@ -67,6 +62,7 @@ namespace CsGoApplicationAimbot
 
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
+            
             PrintSuccess("Cheat is now running.");
             Application.Run();
         }

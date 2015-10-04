@@ -75,10 +75,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 "Mag-7",
 
                 //SMG
-                "Mac-10",
+                "MAC10",
                 "MP9",
                 "MP7",
-                "Ump-45",
+                "UMP45",
                 "PP-Bizon",
                 "P90",
 

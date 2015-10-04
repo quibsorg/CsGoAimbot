@@ -99,9 +99,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region FIELDS
-        public int BoneMatrix => ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix");
+
+        private int BoneMatrix => ReadFieldProxy<int>("CSPlayer.m_hBoneMatrix");
         public int Flags => ReadFieldProxy<int>("CSPlayer.m_iFlags");
-        public uint ActiveWeapon => ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon");
+        private uint ActiveWeapon => ReadFieldProxy<uint>("CSPlayer.m_hActiveWeapon");
         public Vector3 VecVelocity => ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity");
         public int ObserverTarget => ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF;
         public int ObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");

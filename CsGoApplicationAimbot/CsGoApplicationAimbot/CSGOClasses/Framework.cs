@@ -38,7 +38,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region Properties
         private CsLocalPlayer LocalPlayer { get; set; }
         private string WeaponSection { get; set; }
-        private BaseEntity Target { get; set; }
         private Tuple<int, CsPlayer>[] Players { get; set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
@@ -123,12 +122,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer.Health <= 0)
                 return;
 
-            //Check the player in our crosshair
-            //if (entities.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1))
-            //    Target = entities.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2;
-            //Curret target in our crosshair
-            //Target = players.Exists(x => x.Item1 == LocalPlayer.CrosshairIdx - 1) ? players.First(x => x.Item1 == LocalPlayer.CrosshairIdx - 1).Item2 : null;   
-
             #region Aimbot
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
             bool aimScoped = _settings.GetBool(WeaponSection, "Aim When Scoped");
@@ -191,6 +184,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //We set Trigger shooting to true later down the line.
             if (TriggerShooting)
             {
+                ControlRecoil();
                 //If our LocalPlayer weapon is null, do not shoot it will crash.
                 if (LocalPlayerWeapon == null)
                 {
@@ -334,6 +328,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (RcsHandled)
                 return;
 
+            //If we are shooting with the trigger bot, over ride rcsStart.
             if (!TriggerbotActive)
             {
                 if (LocalPlayer.ShotsFired <= rcsStart)
@@ -346,9 +341,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * aimbotForce);
             }
             else
-            {
+            {  
                 var punch = LocalPlayer.VecPunch - LastPunch;
-                NewViewAngles -= punch * (2f / 100f * randomRcsForce);
+                var newPunch = punch*(2f/100f*randomRcsForce);
+                NewViewAngles -= newPunch;
             }
             RcsHandled = true;
         }
@@ -376,6 +372,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //If our player is null, or if trigger is shooting we return.
             if (LocalPlayer == null || TriggerShooting)
                 return;
+
             //If no one is in hour crosshair we turn.(Not aiming at someone)
             if (Players.Count(x => x.Item2.Id == LocalPlayer.CrosshairIdx) <= 0)
                 return;
@@ -386,6 +383,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //We check the players teamnum, if it matches ours teammate, if not enemy.
             if ((triggerEnemies && player.TeamNum != LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == LocalPlayer.TeamNum))
             {
+                ControlRecoil();
                 //If we got this far, we have a target in our crosshair.
                 if (!TriggerOnTarget)
                 {
@@ -445,6 +443,5 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
         #endregion
-
     }
 }
