@@ -5,7 +5,6 @@ using System.Threading;
 using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
-using ExternalUtilsCSharp.SharpDXRenderer;
 using Timer = System.Timers.Timer;
 
 namespace CsGoApplicationAimbot
@@ -13,7 +12,6 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region CONTROLS
-        private static SharpDXOverlay _shdxOverlay;
         static Timer _timer = new Timer(4);
         #endregion
 
@@ -67,11 +65,8 @@ namespace CsGoApplicationAimbot
 
             Framework = new Framework(engineDll, clientDll);
 
-            _shdxOverlay = new SharpDXOverlay();
-            _shdxOverlay.Attach(_hWnd);
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
-            //_shdxOverlay.TickEvent += ProOverlayTickEvent;
             PrintSuccess("Cheat is now running.");
             Application.Run();
         }
@@ -81,13 +76,6 @@ namespace CsGoApplicationAimbot
             KeyUtils.Update();
             Framework.Update();
         }
-
-        //private static void ProOverlayTickEvent(object sender, Overlay<SharpDXRenderer, Color, Vector2, TextFormat>.DeltaEventArgs e)
-        //{
-        //    KeyUtils.Update();
-        //    Framework.Update();
-        //    _shdxOverlay.UpdateControls(e.SecondsElapsed, KeyUtils);
-        //}
         #endregion
 
         #region HELPERS
