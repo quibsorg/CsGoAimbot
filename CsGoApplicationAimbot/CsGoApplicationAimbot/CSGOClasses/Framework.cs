@@ -342,7 +342,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (aimbot)
             {
-                var aimbotForce = randomRcsForce / 1.7;
+                var aimbotForce = randomRcsForce / 3;
                 NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * aimbotForce);
             }
             else
