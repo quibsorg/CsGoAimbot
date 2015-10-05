@@ -116,6 +116,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //Misc
             builder.AppendLine("[Bunny Jump]");
             builder.AppendLine("Bunny Jump Enabled = True");
+            builder.AppendLine("Bunny Jump Strafe = True");
             builder.AppendLine("Bunny Jump Jumps = 5");
             builder.AppendLine("Bunny Jump Key = 32").AppendLine();
 
