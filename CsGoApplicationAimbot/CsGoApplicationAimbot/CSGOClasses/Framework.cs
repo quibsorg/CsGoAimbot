@@ -60,7 +60,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private Weapon LocalPlayerWeapon { get; set; }
         public float LastPercent { get; private set; }
         public bool SoundEspActive { get; set; }
-        public int currentJump { get; set; }
+        public int CurrentJump { get; set; }
         #endregion
 
         public void Update()
@@ -447,7 +447,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
             {
-                if (successfulJumps < currentJump)
+                if (successfulJumps < CurrentJump)
                     return;
 
                 if (LocalPlayer.Flags == 256)
@@ -456,13 +456,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 {
                     Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 5);
                     //We +1 for each time we jump
-                    currentJump++;
+                    CurrentJump++;
                 }
             }
             else
             {
                 //If we are not holding space we set currentJump to 0.
-                currentJump = 0;
+                CurrentJump = 0;
             }
         }
         #endregion
