@@ -122,7 +122,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             //Sound ESP
             builder.AppendLine("[Sound Esp]");
-            builder.AppendLine("Sound Enabled = false");
+            builder.AppendLine("Sound Enabled = False");
             builder.AppendLine("Sound Key = 0");
             builder.AppendLine("Sound Range = 0");
             builder.AppendLine("Sound Intverval = 0");
@@ -132,12 +132,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 builder.AppendLine("[" + weapon + "]");
                 builder.AppendLine("Aim Enabled = True");
+                builder.AppendLine("Aim Start = 1");
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
                 builder.AppendLine("Aim When Scoped = False");
                 builder.AppendLine("Aim Fov = 2");
-                builder.AppendLine("Aim Bone = 5");
+                builder.AppendLine("Aim Bone = 4");
                 builder.AppendLine("Aim Smooth Enabled = True");
                 builder.AppendLine("Aim Smooth Value = 0,35");
                 builder.AppendLine("Aim Spotted = True");
