@@ -120,12 +120,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Bunny Jump Key = 32").AppendLine();
 
             //Sound ESP
-            builder.AppendLine("[Sound Esp]");
-            builder.AppendLine("Sound Enabled = False");
-            builder.AppendLine("Sound Key = 0");
-            builder.AppendLine("Sound Range = 0");
-            builder.AppendLine("Sound Intverval = 0");
-            builder.AppendLine("Sound Voulme = 0").AppendLine();
+            builder.AppendLine("[Sonar]");
+            builder.AppendLine("Sonnar Enabled = False");
+            builder.AppendLine("Sonnar Range = 0");
+            builder.AppendLine("Sonnar interval = 0");
+            builder.AppendLine("Sonnar Volumeint = 0").AppendLine();
 
             foreach (var weapon in weaponList)
             {
