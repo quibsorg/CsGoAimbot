@@ -129,14 +129,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return;
 
             #region Aimbot
-            WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
             bool aimEnaled = _settings.GetBool(WeaponSection, "Aim Enabled");
             bool aimScoped = _settings.GetBool(WeaponSection, "Aim When Scoped");
             bool aimToggle = _settings.GetBool(WeaponSection, "Aim Toggle");
             bool aimHold = _settings.GetBool(WeaponSection, "Aim Hold");
-            int aimStart = _settings.GetInt(WeaponSection, "Aim Start");
+            WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
+
             //Won't aim if we do not have any ammo in the clip.
-            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0 && LocalPlayer.ShotsFired > aimStart))
+            if (LocalPlayerWeapon != null && (aimEnaled && LocalPlayerWeapon.Clip1 > 0 && LocalPlayer.ShotsFired > 1))
             {
                 if (aimScoped)
                 {
