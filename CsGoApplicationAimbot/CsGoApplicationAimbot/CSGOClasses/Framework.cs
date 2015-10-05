@@ -322,6 +322,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var rcsForceMax = _settings.GetFloat(WeaponSection, "Rcs Force Max");
             var rcsForceMin = _settings.GetFloat(WeaponSection, "Rcs Force Min");
             var rcsStart = _settings.GetInt(WeaponSection, "Rcs Start");
+            var aimbotRcs = _settings.GetInt(WeaponSection, "Aim Rcs Force");
             var random = new Random();
 
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
@@ -344,7 +345,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (aimbot)
             {
                 var aimbotForce = randomRcsForce / 2.8;
-                NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * aimbotForce);
+                NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * randomRcsForce);
             }
             else
             {

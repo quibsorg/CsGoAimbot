@@ -20,6 +20,8 @@ namespace CsGoApplicationAimbot
 
         public const string GameProcess = "csgo";
         private const string GameTitle = "Counter-Strike: Global Offensive";
+        private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
+
 
         #endregion
 
@@ -37,16 +39,15 @@ namespace CsGoApplicationAimbot
         {
             PrintSuccess("Smurf bot");
             //Sets a random title to our Console Window.. Almost useless.
-            Console.Title = RandomTitle(15);
+            Console.Title = RandomTitle();
             //Starts the main core of our cheat.
             StartCheat();
         }
 
-        public static string RandomTitle(int length)
+        private static string RandomTitle()
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
+            return new string(Enumerable.Repeat(Chars, 20)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
