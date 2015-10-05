@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CsGoApplicationAimbot.CSGOClasses.Enums
+namespace CsGoApplicationAimbot.CSGOClasses
 {
-    public enum Zoom
+    class OffsetsConfig
     {
-        NoZoom = 0,
-        Zoom1 = 1,
-        Zoom2 = 2
+        StringBuilder builder = new StringBuilder();
     }
 }
