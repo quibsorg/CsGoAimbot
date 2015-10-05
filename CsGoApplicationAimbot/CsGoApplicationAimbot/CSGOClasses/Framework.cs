@@ -60,7 +60,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private Weapon LocalPlayerWeapon { get; set; }
         public float LastPercent { get; private set; }
         public bool SoundEspActive { get; set; }
-        public int currentJump { get; set; }
         #endregion
 
         public void Update()
@@ -332,7 +331,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return;
 
             if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0)
-                return;
+             return;
 
             if (RcsHandled)
                 return;
@@ -350,9 +349,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * aimbotForce);
             }
             else
-            {
+            {  
                 var punch = LocalPlayer.VecPunch - LastPunch;
-                var newPunch = punch * (2f / 100f * randomRcsForce);
+                var newPunch = punch*(2f/100f*randomRcsForce);
                 NewViewAngles -= newPunch;
             }
             RcsHandled = true;
@@ -438,31 +437,17 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region Bunny Hop
         private void BunnyHop()
         {
-            WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
             bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
-            int successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
+            WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
 
-            if (!bunnyJump)
-                return;
-
-            if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
+            if (bunnyJump)
             {
-                if (successfulJumps < currentJump)
-                    return;
-
-                if (LocalPlayer.Flags == 256)
-                    Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 4);
-                else
+                if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
                 {
-                    Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 5);
-                    //We +1 for each time we jump
-                    currentJump++;
+                    Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump),
+                        LocalPlayer.Flags == 256 ? 4 : 5);
                 }
-            }
-            else
-            {
-                //If we are not holding space we set currentJump to 0.
-                currentJump = 0;
+
             }
         }
         #endregion
