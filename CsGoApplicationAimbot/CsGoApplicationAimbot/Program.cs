@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Timers;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses;
@@ -36,22 +35,6 @@ namespace CsGoApplicationAimbot
         public static void Main(string[] args)
         {
             PrintSuccess("Smurf bot");
-            //Sets a random title to our Console Window.. Almost useless.
-            Console.Title = RandomTitle(15);
-            //Starts the main core of our cheat.
-            StartCheat();
-        }
-
-        public static string RandomTitle(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        private static void StartCheat()
-        {
             //We make the config if it dosen't exist.
             _settings = new SettingsConfig();
             KeyUtils = new KeyUtils();
@@ -79,7 +62,7 @@ namespace CsGoApplicationAimbot
 
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
-
+            
             PrintSuccess("Cheat is now running.");
             Application.Run();
         }
