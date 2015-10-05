@@ -58,6 +58,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private int TriggerBurstCount { get; set; }
         private bool TriggerShooting { get; set; }
         private Weapon LocalPlayerWeapon { get; set; }
+        public float LastPercent { get; private set; }
+        public bool SoundEspActive { get; set; }
         #endregion
 
         public void Update()
@@ -231,6 +233,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             BunnyHop();
             #endregion
 
+            #region Sound ESP
+            SoundEsp();
+            #endregion
         }
         private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
         {
@@ -446,5 +451,27 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
         #endregion
+
+        #region Sound ESP
+        private void SoundEsp()
+        {
+            //Settings
+            bool soundEspEnabled = _settings.GetBool("Sound Esp", "Sound Enabled");
+            //Will be used if we want to toggle soundESP mid game.
+            WinAPI.VirtualKeyShort soundEspToggle = _settings.GetKey("Sound Esp", "Sound Key");
+            float soundRange = _settings.GetFloat("Sound Esp", "Sound Range");
+            float soundInterval = _settings.GetFloat("Sound Esp", "Sound Intverval");
+            float soundVolume = _settings.GetFloat("Sound Esp", "Sound Voulme");
+
+            //Variables
+            long lastBeep = DateTime.Now.Ticks;
+
+            if (soundEspEnabled)
+            {
+
+            }
+        }
+        #endregion
+
     }
 }

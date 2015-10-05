@@ -59,6 +59,8 @@
                 public static int ObserverTarget = 0x173C;
                 public static int ObserverMode = 0x1728;
                 public static int VecVelocity = 0x110;
+                public static int FlashDuriation = 0x00008688;
+                public static int FlashMaxAlpha = 0x00008684;
             }
 
             public class LocalPlayer
