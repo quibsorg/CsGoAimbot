@@ -241,7 +241,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 {
                     weaponName = weaponName.Replace("Weapon", "");
                 }
-                if (weaponName.Contains("Knife"))
+                if (weaponName.Contains("Knife") || weaponName.Contains("Taser"))
                 {
                     return "Default";
                 }

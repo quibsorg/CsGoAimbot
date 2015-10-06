@@ -127,6 +127,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine("Sonar Sound = 1");
             builder.AppendLine("Sonar Volume = 0").AppendLine();
 
+            //Misc
+            builder.AppendLine("[Misc]");
+            builder.AppendLine("Auto Knife = True");
+            builder.AppendLine("Trigger Taser = False").AppendLine();
+
             foreach (var weapon in weaponList)
             {
                 builder.AppendLine("[" + weapon + "]");

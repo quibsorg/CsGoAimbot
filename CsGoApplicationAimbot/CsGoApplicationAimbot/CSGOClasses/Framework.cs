@@ -118,7 +118,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             //If we are not focus on csgo no reason to update.
             if (activeWindow != Program.GameTitle)
-                return;                                       
+                return;
 
             //Check if our player exists
             if (players.Exists(x => x.Item2.Address == _dwLocalPlayer))
@@ -127,7 +127,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
-                Console.WriteLine(WeaponSection);
             }
             //Localplayer does not exist, set it to null.
             else
@@ -395,6 +394,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region Trigger
         private void Triggerbot()
         {
+            bool triggerTazer = _settings.GetBool("Misc", "Trigger Taser");
+            bool autoKnife = _settings.GetBool("Misc", "Auto Knife");
             bool triggerEnemies = _settings.GetBool(WeaponSection, "Trigger Enemies");
             bool triggerAllies = _settings.GetBool(WeaponSection, "Trigger Allies");
             bool burstRandomize = _settings.GetBool(WeaponSection, "Trigger Burst Randomize");
@@ -412,11 +413,34 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             //We get the player that is in our crosshair.
             var player = Players.First(x => x.Item2.Id == LocalPlayer.CrosshairIdx).Item2;
+            var distanece = LocalPlayer.DistanceToOtherEntityInMetres(player);
+
+            if (triggerTazer)
+            {
+                if (LocalPlayerWeapon.ClassName == "CWeaponTaser" && LocalPlayer.DistanceToOtherEntityInMetres(player) <= 4)
+                {
+                    Shoot();
+                    return;
+                }
+            }
+            if (autoKnife)
+            {
+                if (LocalPlayerWeapon.ClassName == "CKnife" && distanece <= 1.3f)
+                {
+                    RightKnife();
+                    return;
+                }
+            }
 
             //We check the players teamnum, if it matches ours teammate, if not enemy.
             if ((triggerEnemies && player.TeamNum != LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == LocalPlayer.TeamNum))
             {
-                ControlRecoil();
+                if (LocalPlayerWeapon.ClassName == "CWeaponTaser")
+                    return;
+
+                if (LocalPlayerWeapon.ClassName == "CKnife")
+                      return;
+
                 //If we got this far, we have a target in our crosshair.
                 if (!TriggerOnTarget)
                 {
@@ -456,6 +480,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
+        }
+        private void RightKnife()
+        {
+            WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTDOWN, 0, 0, 0, 0);
+            WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
         }
         #endregion
 

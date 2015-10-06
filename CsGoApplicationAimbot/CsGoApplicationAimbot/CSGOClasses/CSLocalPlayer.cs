@@ -49,6 +49,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             return Geometry.GetDistanceToPoint(VecOrigin, player.Item2.VecOrigin) * 0.01905f;
         }
+
+        public float DistanceToOtherEntityInMetres(CsPlayer player)
+        {
+            return Geometry.GetDistanceToPoint(VecOrigin, player.VecOrigin) * 0.01905f;
+        }
     }
 
     public class Geometry
