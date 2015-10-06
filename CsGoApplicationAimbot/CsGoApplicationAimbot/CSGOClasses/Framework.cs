@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
@@ -12,6 +14,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 {
     public class Framework
     {
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
         #region Constructor
         public Framework(ProcessModule engineDll, ProcessModule clientDll)
         {
@@ -107,6 +113,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Players = players.ToArray();
             Entities = entities.ToArray();
             Weapons = weapons.ToArray();
+
+            var activeWindow = GetActiveWindowTitle();
+
+            //If we are not focus on csgo no reason to update.
+            if (activeWindow != Program.GameTitle)
+                return;                                       
 
             //Check if our player exists
             if (players.Exists(x => x.Item2.Address == _dwLocalPlayer))
@@ -239,65 +251,18 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Sonar();
             #endregion
         }
-
-        private void Sonar()
+        private static string GetActiveWindowTitle()
         {
-            bool sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
-            int sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
-            float sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
-            float sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
-            float sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
 
-            if(sonarEnabled)
+            if (GetWindowText(handle, Buff, nChars) > 0)
             {
-                //Set's our sound volume
-                Program.SoundManager.SetVolume(sonarVolume / 100f);
-
-                TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
-
-                if (span.TotalMilliseconds > sonarInterval)
-                {
-                    _lastBeep = DateTime.Now.Ticks;
-                    //return;
-                }
-
-                float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
-                LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
-
-                float leastDist = float.MaxValue;
-
-                foreach (var player in Players)
-                {
-                    //If the ID does match it's our player
-                    if (player.Item2.Id == LocalPlayer.Id)
-                        continue;
-
-                    //If the player is dead.
-                    if (player.Item2.Health == 0)
-                        continue;
-
-                    //if the player is in the same team as us.
-                    if (player.Item2.TeamNum == LocalPlayer.TeamNum)
-                        continue;
-
-                    float dist = LocalPlayer.DistanceToOtherEntityInMetres(player);
-                    Console.WriteLine(dist);
-                    if (dist <= minRange)
-                    {
-                        leastDist = dist;
-                        break;
-                    }
-                }
-            
-                if (leastDist != float.MaxValue)
-                {
-                    Program.SoundManager.Play(sonarSound - 1);
-                    Thread.Sleep(50);
-                    _lastBeep = DateTime.Now.Ticks;
-                }
+                return Buff.ToString();
             }
+            return null;
         }
-
         private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
         {
             if (triggerToggle)
@@ -380,7 +345,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region Rcs
         private void ControlRecoil(bool aimbot = false)
         {
-
             var rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
             var rcsForceMax = _settings.GetFloat(WeaponSection, "Rcs Force Max");
             var rcsForceMin = _settings.GetFloat(WeaponSection, "Rcs Force Min");
@@ -412,7 +376,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             else
             {
                 var punch = LocalPlayer.VecPunch - LastPunch;
-                var newPunch = punch * (2f / 100f * randomRcsForce);
+                var newPunch = punch * (2f / 100 * randomRcsForce);
                 NewViewAngles -= newPunch;
             }
             RcsHandled = true;
@@ -526,5 +490,65 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
         }
         #endregion
+
+        #region Sonar
+        private void Sonar()
+        {
+            bool sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
+            int sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
+            float sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
+            float sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
+            float sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
+
+            if (sonarEnabled)
+            {
+                //Set's our sound volume
+                Program.SoundManager.SetVolume(sonarVolume / 100f);
+
+                TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
+
+                if (span.TotalMilliseconds > sonarInterval)
+                {
+                    _lastBeep = DateTime.Now.Ticks;
+                    return;
+                }
+
+                float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
+                LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
+
+                float leastDist = float.MaxValue;
+
+                foreach (var player in Players)
+                {
+                    //If the ID does match it's our player
+                    if (player.Item2.Id == LocalPlayer.Id)
+                        continue;
+
+                    //If the player is dead.
+                    if (player.Item2.Health == 0)
+                        continue;
+
+                    //if the player is in the same team as us.
+                    if (player.Item2.TeamNum == LocalPlayer.TeamNum)
+                        continue;
+
+                    float dist = LocalPlayer.DistanceToOtherEntityInMetres(player);
+                    if (dist <= minRange)
+                    {
+                        leastDist = dist;
+                        break;
+                    }
+                }
+
+                if (leastDist != float.MaxValue)
+                {
+                    Program.SoundManager.Play(sonarSound - 1);
+                    Thread.Sleep(50);
+                    _lastBeep = DateTime.Now.Ticks;
+                }
+            }
+        }
+        #endregion
+
     }
 }

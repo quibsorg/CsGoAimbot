@@ -6,6 +6,8 @@ using System.Threading;
 using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
+using System.Runtime.InteropServices;
+using System.Text;
 using Timer = System.Timers.Timer;
 
 namespace CsGoApplicationAimbot
@@ -19,7 +21,7 @@ namespace CsGoApplicationAimbot
 
         #region Constants
         public const string GameProcess = "csgo";
-        private const string GameTitle = "Counter-Strike: Global Offensive";
+        public const string GameTitle = "Counter-Strike: Global Offensive";
         private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
         #endregion
 
