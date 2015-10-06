@@ -12,20 +12,18 @@ namespace CsGoApplicationAimbot
 {
     public static class Program
     {
-        #region CONTROLS
+        #region Fields
         static Timer _timer = new Timer(0.01);
+        private static SoundManager _soundManager;
         #endregion
 
-        #region CONSTANTS
-
+        #region Constants
         public const string GameProcess = "csgo";
         private const string GameTitle = "Counter-Strike: Global Offensive";
         private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
-
-
         #endregion
 
-        #region VARIABLES
+        #region Variables
         private static IntPtr _hWnd;
         private static SettingsConfig _settings;
         private static ProcUtils _procUtils;
@@ -34,14 +32,30 @@ namespace CsGoApplicationAimbot
         public static KeyUtils KeyUtils;
         #endregion
 
+        #region Properties
+        public static SoundManager SoundManager => _soundManager;
+
+        #endregion
+
         #region Method
         public static void Main(string[] args)
         {
             PrintSuccess("Smurf bot");
             //Sets a random title to our Console Window.. Almost useless.
             Console.Title = RandomTitle();
+
+            //Set's up our SoundManager
+            ManageAudio();
+
             //Starts the main core of our cheat.
             StartCheat();
+        }
+
+        private static void ManageAudio()
+        {
+            _soundManager = new SoundManager(2);
+            _soundManager.Add(0, Properties.Resources.heartbeatloop);
+            _soundManager.Add(1, Properties.Resources.beep);
         }
 
         private static string RandomTitle()
