@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -33,6 +34,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private readonly int _clientDllBase;
         private readonly int _engineDllBase;
         private int _dwLocalPlayer;
+        private long _lastBeep;
         #endregion
 
         #region Properties
@@ -59,7 +61,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private bool TriggerShooting { get; set; }
         private Weapon LocalPlayerWeapon { get; set; }
         public float LastPercent { get; private set; }
-        public bool SoundEspActive { get; set; }
         public int CurrentJump { get; set; }
         #endregion
 
@@ -234,7 +235,69 @@ namespace CsGoApplicationAimbot.CSGOClasses
             BunnyHop();
             #endregion
 
+            #region Sonar
+            Sonar();
+            #endregion
         }
+
+        private void Sonar()
+        {
+            bool sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
+            int sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
+            float sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
+            float sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
+            float sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
+
+            if(sonarEnabled)
+            {
+                //Set's our sound volume
+                Program.SoundManager.SetVolume(sonarVolume / 100f);
+
+                TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
+
+                if (span.TotalMilliseconds > sonarInterval)
+                {
+                    _lastBeep = DateTime.Now.Ticks;
+                    //return;
+                }
+
+                float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
+                LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
+
+                float leastDist = float.MaxValue;
+
+                foreach (var player in Players)
+                {
+                    //If the ID does match it's our player
+                    if (player.Item2.Id == LocalPlayer.Id)
+                        continue;
+
+                    //If the player is dead.
+                    if (player.Item2.Health == 0)
+                        continue;
+
+                    //if the player is in the same team as us.
+                    if (player.Item2.TeamNum == LocalPlayer.TeamNum)
+                        continue;
+
+                    float dist = LocalPlayer.DistanceToOtherEntityInMetres(player);
+                    Console.WriteLine(dist);
+                    if (dist <= minRange)
+                    {
+                        leastDist = dist;
+                        break;
+                    }
+                }
+            
+                if (leastDist != float.MaxValue)
+                {
+                    Program.SoundManager.Play(sonarSound - 1);
+                    Thread.Sleep(50);
+                    _lastBeep = DateTime.Now.Ticks;
+                }
+            }
+        }
+
         private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
         {
             if (triggerToggle)

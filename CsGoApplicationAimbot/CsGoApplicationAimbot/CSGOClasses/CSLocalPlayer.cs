@@ -1,4 +1,5 @@
-﻿using ExternalUtilsCSharp.MathObjects;
+﻿using System;
+using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {
@@ -43,5 +44,18 @@ namespace CsGoApplicationAimbot.CSGOClasses
         }
 
         #endregion
+
+        public float DistanceToOtherEntityInMetres(Tuple<int, CsPlayer> player)
+        {
+            return Geometry.GetDistanceToPoint(VecOrigin, player.Item2.VecOrigin) * 0.01905f;
+        }
+    }
+
+    public class Geometry
+    {
+        public static float GetDistanceToPoint(Vector3 pointA, Vector3 pointB)
+        {
+            return (float)Math.Abs((pointA - pointB).Length());
+        }
     }
 }

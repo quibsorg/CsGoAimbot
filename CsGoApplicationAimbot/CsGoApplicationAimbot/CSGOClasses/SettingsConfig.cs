@@ -121,10 +121,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             //Sound ESP
             builder.AppendLine("[Sonar]");
-            builder.AppendLine("Sonnar Enabled = False");
-            builder.AppendLine("Sonnar Range = 0");
-            builder.AppendLine("Sonnar interval = 0");
-            builder.AppendLine("Sonnar Volumeint = 0").AppendLine();
+            builder.AppendLine("Sonar Enabled = False");
+            builder.AppendLine("Sonar Range = 0");
+            builder.AppendLine("Sonar Interval = 0");
+            builder.AppendLine("Sonar Sound = 1");
+            builder.AppendLine("Sonar Volume = 0").AppendLine();
 
             foreach (var weapon in weaponList)
             {
