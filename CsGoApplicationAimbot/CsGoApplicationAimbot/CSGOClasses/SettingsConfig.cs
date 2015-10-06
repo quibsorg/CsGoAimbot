@@ -69,21 +69,21 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 "Tec9",
 
                 //Heavy
-                "Nova",
+                "NOVA",
                 "XM1014",
-                "Sawed-Off",
-                "Mag-7",
+                "Sawedoff",
+                "Mag7",
 
                 //SMG
                 "MAC10",
                 "MP9",
                 "MP7",
                 "UMP45",
-                "PP-Bizon",
+                "Bizon",
                 "P90",
 
                 //Rifles
-                "Galil AR",
+                "GalilAR",
                 "AK47",
                 "SG556",
                 "Famas",
@@ -93,7 +93,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 //Snipers
                 "AWP",
                 "SSG08",
-                "Scar-20",
+                "SCAR20",
                 "G3SG1",
 
                 //Machine Guins

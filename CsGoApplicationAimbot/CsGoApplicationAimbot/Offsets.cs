@@ -9,7 +9,7 @@
             public static int Jump = 0x04AC69B8;
             public static int GlowManager = 0x00008698;
             public static int SignOnState = 0xE8;
-            public static int WeaponTable = 0x04A5DC4C;
+            public static int WeaponTable = 0x04A7CABC;
             public static int ViewMatrix = 0x04a2af54;
             public static int MouseEnable = 0xA7A4C0;
         }

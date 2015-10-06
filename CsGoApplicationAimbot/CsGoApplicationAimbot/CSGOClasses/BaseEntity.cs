@@ -194,6 +194,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 ClassId == (int) Enums.ClassId.DEagle ||
                 ClassId == (int) Enums.ClassId.Aug ||
                 ClassId == (int) Enums.ClassId.Awp ||
+                ClassId == (int) Enums.ClassId.Sawedoff ||
                 ClassId == (int) Enums.ClassId.G3Sg1 ||
                 ClassId == (int) Enums.ClassId.Scar20 ||
                 ClassId == (int) Enums.ClassId.DualBerettas ||
@@ -214,7 +215,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 ClassId == (int) Enums.ClassId.DynamicProp ||
                 ClassId == (int) Enums.ClassId.PhysicsProp ||
                 ClassId == (int) Enums.ClassId.PhysicsPropMultiplayer ||
-                ClassId == (int) Enums.ClassId.Awp ||
                 ClassId == (int) Enums.ClassId.Ssg08 ||
                 ClassId == (int) Enums.ClassId.G3Sg1 ||
                 ClassId == (int) Enums.ClassId.Scar20 ||
@@ -227,24 +227,24 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 ClassId == (int) Enums.ClassId.Flashbang ||
                 ClassId == (int) Enums.ClassId.Famas ||
                 ClassId == (int) Enums.ClassId.Mac10 ||
-                ClassId == (int) Enums.ClassId.GalilAr ||
+                ClassId == (int) Enums.ClassId.Galil ||
                 ClassId == (int) Enums.ClassId.M249 ||
                 ClassId == (int) Enums.ClassId.M249X ||
                 ClassId == (int) Enums.ClassId.Mag7 ||
-                ClassId == (int) Enums.ClassId.NOVA ||
+                ClassId == (int) Enums.ClassId.Nova ||
                 ClassId == (int) Enums.ClassId.Negev ||
                 ClassId == (int) Enums.ClassId.Ump45X ||
                 ClassId == (int) Enums.ClassId.Xm1014 ||
                 ClassId == (int) Enums.ClassId.Xm1014X ||
                 ClassId == (int) Enums.ClassId.M4 ||
-                ClassId == (int) Enums.ClassId.Nova ||
                 ClassId == (int) Enums.ClassId.Mag ||
                 ClassId == (int) Enums.ClassId.G3Sg1 ||
                 ClassId == (int) Enums.ClassId.G3Sg1X ||
                 ClassId == (int) Enums.ClassId.Tec9X ||
-                ClassId == (int) Enums.ClassId.PpBizon ||
+                ClassId == (int) Enums.ClassId.Bizon ||
                 ClassId == (int) Enums.ClassId.P90X ||
-                ClassId == (int) Enums.ClassId.Scar20X;
+                ClassId == (int) Enums.ClassId.Usp ||
+                ClassId == (int) Enums.ClassId.Scar20;
 
         }
         #endregion

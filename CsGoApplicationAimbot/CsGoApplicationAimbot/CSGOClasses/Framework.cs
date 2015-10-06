@@ -127,6 +127,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
+                Console.WriteLine(WeaponSection);
             }
             //Localplayer does not exist, set it to null.
             else
@@ -345,11 +346,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #region Rcs
         private void ControlRecoil(bool aimbot = false)
         {
-            var rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
-            var rcsForceMax = _settings.GetFloat(WeaponSection, "Rcs Force Max");
-            var rcsForceMin = _settings.GetFloat(WeaponSection, "Rcs Force Min");
-            var rcsStart = _settings.GetInt(WeaponSection, "Rcs Start");
-            var random = new Random();
+            bool rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
+            float rcsForceMax = _settings.GetFloat(WeaponSection, "Rcs Force Max");
+            float rcsForceMin = _settings.GetFloat(WeaponSection, "Rcs Force Min");
+            int rcsStart = _settings.GetInt(WeaponSection, "Rcs Start");
+            Random random = new Random();
 
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
             if (!rcsEnabled)
@@ -370,8 +371,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (aimbot)
             {
-                var aimbotForce = randomRcsForce / 2.8;
-                NewViewAngles -= LocalPlayer.VecPunch * (float)(2f / 100f * randomRcsForce);
+                NewViewAngles -= LocalPlayer.VecPunch * (2f / 100f * randomRcsForce);
             }
             else
             {
