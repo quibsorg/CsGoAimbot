@@ -28,6 +28,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
             int setting = int.Parse(keyValue);
             return setting;
         }
+        public string GetString(string section, string key)
+        {
+            string keyValue = _data[section][key];
+            string setting = keyValue;
+            return setting;
+        }
+
         public uint GetUInt(string section, string key)
         {
             string keyValue = _data[section][key];
@@ -112,6 +119,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
             builder.AppendLine(";Just remove the 0x part. 0x01 > 01");
             builder.AppendLine(";Trigger When Scoped is only good on weapons with scopes.");
             builder.AppendLine(";Bone Id's can be seen here: http://i.imgur.com/Xdxgbrf.jpg");
+
+            builder.AppendLine("[User]");
+            builder.AppendLine("Username = " + Program._username);
+            builder.AppendLine("Password = " + Program._password).AppendLine();
 
             //Misc
             builder.AppendLine("[Bunny Jump]");

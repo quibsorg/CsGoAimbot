@@ -7,7 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
-using System.Runtime.InteropServices;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -39,8 +39,8 @@ namespace CsGoApplicationAimbot
         private static bool _authorized = false;
         private static bool _hwidMatch = false;
         private static int _userGroup;
-        private static string _username = string.Empty;
-        private static string _password = string.Empty;
+        public static string _username = string.Empty;
+        public static string _password = string.Empty;
         private static string _hwid = string.Empty;
         private static bool _loggedIn = false;
         private static MySqlConnection _connection;
@@ -56,16 +56,25 @@ namespace CsGoApplicationAimbot
         #region Method
         public static void Main(string[] args)
         {
-            Console.Write("Enter your username: ");
-            _username = Console.ReadLine();
-            Console.Clear();
-
-            Console.Write("Enter your password: ");
-            using (MD5 md5Hash = MD5.Create())
+            if (!File.Exists("Config.ini"))
             {
-                _password = Encrypt(md5Hash, _password = Console.ReadLine());
+                Console.Write("Enter your username: ");
+                _username = Console.ReadLine();
+                Console.Clear();
+
+                Console.Write("Enter your password: ");
+                using (MD5 md5Hash = MD5.Create())
+                {
+                    _password = Encrypt(md5Hash, _password = Console.ReadLine());
+                }
+                Console.Clear();
             }
-            Console.Clear();
+            else
+            {
+                _settings = new SettingsConfig();
+                _username = _settings.GetString("User", "Username");
+                _password = _settings.GetString("User", "Password");
+            }
 
             _loggedIn = Login();
 
@@ -182,9 +191,11 @@ namespace CsGoApplicationAimbot
                             }
                         }
                     }
+                    Console.WriteLine("Username or password is incorrect.");
+                    Console.ReadLine();
+                    return false;
                 }
             }
-            return true;
         }
 
         private static bool CheckHwid()
@@ -214,6 +225,7 @@ namespace CsGoApplicationAimbot
                                 return true;
                             }
                             Console.WriteLine("Hwid dosen't match, ask for a reset.");
+                            Console.ReadLine();
                             return false;
                         }
                     }
@@ -235,6 +247,7 @@ namespace CsGoApplicationAimbot
                         _cmd.Parameters.AddWithValue("@hwid", _hwid);
                         _cmd.Parameters.AddWithValue("@user", _username);
                         _cmd.ExecuteNonQuery();
+                        _loggedIn = true;
                     }
                     catch (Exception e)
                     {
@@ -269,6 +282,8 @@ namespace CsGoApplicationAimbot
                             {
                                 return true;
                             }
+                            Console.WriteLine("You do not have permssion to use this product");
+                            Console.ReadLine();
                         }
                     }
                     catch (Exception e)
