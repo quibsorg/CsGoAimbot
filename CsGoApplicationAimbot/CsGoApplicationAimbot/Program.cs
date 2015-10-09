@@ -277,8 +277,8 @@ namespace CsGoApplicationAimbot
                                 _userGroup = _reader.GetInt16("usergroup");
                             }
 
-                            //3 = Super Moderator, 4 == Admin, 6 == Moderator
-                            if (_userGroup == 3 || _userGroup == 4 || _userGroup == 6)
+                            //3 = Super Moderator, 4 == Admin, 6 == Moderator, 8 == CsgoVIP
+                            if (_userGroup == 3 || _userGroup == 4 || _userGroup == 6 || _userGroup == 8)
                             {
                                 return true;
                             }
