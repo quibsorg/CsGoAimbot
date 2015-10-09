@@ -108,18 +108,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 "Negev",
 
                 //Default for unkown weapons
-                "Default"
+                "Default",
 
             };
 
             StringBuilder builder = new StringBuilder();
-            //Comments
-            builder.AppendLine(";Smurf Bot Config.");
-            builder.AppendLine(";Key codes can be found here: http://pastebin.com/kr8PT0Hh");
-            builder.AppendLine(";Just remove the 0x part. 0x01 > 01");
-            builder.AppendLine(";Trigger When Scoped is only good on weapons with scopes.");
-            builder.AppendLine(";Bone Id's can be seen here: http://i.imgur.com/Xdxgbrf.jpg");
-
             builder.AppendLine("[User]");
             builder.AppendLine("Username = " + Program._username);
             builder.AppendLine("Password = " + Program._password).AppendLine();
@@ -148,6 +141,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("[" + weapon + "]");
                 builder.AppendLine("Aim Enabled = True");
                 builder.AppendLine("Aim Start = 1");
+                builder.AppendLine("Aim Jump = True");
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
