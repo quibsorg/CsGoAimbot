@@ -166,7 +166,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("Trigger Hold = True");
                 builder.AppendLine("Trigger When Scoped = False");
                 builder.AppendLine("Trigger Enemies = True");
-                builder.AppendLine("Trigger Allies = True");
+                builder.AppendLine("Trigger Allies = False");
                 builder.AppendLine("Trigger Burst Enabled = False");
                 builder.AppendLine("Trigger Burst Shots = 0");
                 builder.AppendLine("Trigger Burst Randomize = False");
