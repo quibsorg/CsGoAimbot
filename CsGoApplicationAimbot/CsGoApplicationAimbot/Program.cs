@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Timers;
 using System.Diagnostics;
 using System.Linq;
@@ -7,7 +8,9 @@ using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
+using MySql.Data.MySqlClient;
 using Timer = System.Timers.Timer;
 
 namespace CsGoApplicationAimbot
@@ -32,6 +35,17 @@ namespace CsGoApplicationAimbot
         public static Framework Framework;
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
+        private static readonly string _connectionString = "Server=MYSQL5011.myWindowsHosting.com;Database=db_9b8e03_smurf;Uid=9b8e03_smurf;Pwd=Phanta123!;";
+        private static bool _authorized = false;
+        private static bool _hwidMatch = false;
+        private static int _userGroup;
+        private static string _username = string.Empty;
+        private static string _password = string.Empty;
+        private static string _hwid = string.Empty;
+        private static bool _loggedIn = false;
+        private static MySqlConnection _connection;
+        private static MySqlCommand _cmd;
+        private static MySqlDataReader _reader;
         #endregion
 
         #region Properties
@@ -42,15 +56,32 @@ namespace CsGoApplicationAimbot
         #region Method
         public static void Main(string[] args)
         {
-            PrintSuccess("Smurf bot");
-            //Sets a random title to our Console Window.. Almost useless.
-            Console.Title = RandomTitle();
+            Console.Write("Enter your username: ");
+            _username = Console.ReadLine();
+            Console.Clear();
 
-            //Set's up our SoundManager
-            ManageAudio();
+            Console.Write("Enter your password: ");
+            using (MD5 md5Hash = MD5.Create())
+            {
+                _password = Encrypt(md5Hash, _password = Console.ReadLine());
+            }
+            Console.Clear();
 
-            //Starts the main core of our cheat.
-            StartCheat();
+            _loggedIn = Login();
+
+            if (_loggedIn)
+            {
+                PrintSuccess("Smurf bot");
+                //Sets a random title to our Console Window.. Almost useless.
+                Console.Title = RandomTitle();
+
+                //Set's up our SoundManager
+                ManageAudio();
+
+                //Starts the main core of our cheat.
+                StartCheat();
+            }
+
         }
 
         private static void ManageAudio()
@@ -107,6 +138,155 @@ namespace CsGoApplicationAimbot
             Framework.Update();
         }
         #endregion
+        static string Encrypt(MD5 md5Hash, string password)
+        {
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+            StringBuilder sBuilder = new StringBuilder();
+            foreach (byte t in data)
+            {
+                sBuilder.Append(t.ToString("x2"));
+            }
+            return sBuilder.ToString();
+        }
+
+        private static bool Login()
+        {
+            using (_connection = new MySqlConnection(_connectionString))
+            {
+                using (_cmd = _connection.CreateCommand())
+                {
+                    //Opens our connection to the db
+                    _connection.Open();
+                    _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
+                    _cmd.Parameters.AddWithValue("@username", _username);
+                    using (_reader = _cmd.ExecuteReader())
+                    {
+                        while (_reader.Read())
+                        {
+                            if (_reader.HasRows)
+                            {
+                                //If we get this far we have a user with a matching password
+                                if (_password == _reader.GetString("password"))
+                                {
+                                    //We check the user permssion.
+                                    _authorized = CheckPermission();
+                                    //We check their hwid, if they have none we insert it.
+                                    if (_authorized)
+                                    {
+                                        _hwidMatch = CheckHwid();
+                                        if (_hwidMatch)
+                                            return true;
+                                    }
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static bool CheckHwid()
+        {
+            _hwid = Hwid.GetHwid();
+            using (_connection = new MySqlConnection(_connectionString))
+            {
+                using (_cmd = _connection.CreateCommand())
+                {
+                    _connection.Open();
+                    _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
+                    _cmd.Parameters.AddWithValue("@username", _username);
+
+                    using (_reader = _cmd.ExecuteReader())
+                    {
+                        while (_reader.Read())
+                        {
+                            var hwid = _reader.GetOrdinal("hwid");
+
+                            if (_reader.IsDBNull(hwid))
+                            {
+                                InsertHwid();
+                                return true;
+                            }
+                            if (_hwid == _reader.GetString("hwid"))
+                            {
+                                return true;
+                            }
+                            Console.WriteLine("Hwid dosen't match, ask for a reset.");
+                            return false;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
+        private static void InsertHwid()
+        {
+            using (_connection = new MySqlConnection(_connectionString))
+            {
+                using (_cmd = _connection.CreateCommand())
+                {
+                    _connection.Open();
+                    try
+                    {
+                        _cmd.CommandText = "UPDATE users SET hwid= @hwid WHERE username = @user;";
+                        _cmd.Parameters.AddWithValue("@hwid", _hwid);
+                        _cmd.Parameters.AddWithValue("@user", _username);
+                        _cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+        }
+
+        private static bool CheckPermission()
+        {
+            using (_connection = new MySqlConnection(_connectionString))
+            {
+                using (_cmd = _connection.CreateCommand())
+                {
+                    try
+                    {
+                        _connection.Open();
+                        _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
+                        //get's the row that matches our username.
+                        _cmd.Parameters.AddWithValue("@username", _username);
+
+                        using (_reader = _cmd.ExecuteReader())
+                        {
+                            while (_reader.Read())
+                            {
+                                _userGroup = _reader.GetInt16("usergroup");
+                            }
+
+                            //3 = Super Moderator, 4 == Admin, 6 == Moderator
+                            if (_userGroup == 3 || _userGroup == 4 || _userGroup == 6)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    finally
+                    {
+                        if (_connection.State == ConnectionState.Open)
+                        {
+                            _connection.Close();
+                            _reader.Close();
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
         #region HELPERS
 
