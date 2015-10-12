@@ -3,7 +3,7 @@ using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {
-    public class CsLocalPlayer : CsPlayer
+    public class LocalPlayer : Player
     {
         #region METHODS
 
@@ -24,7 +24,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #region CONSTRUCTORS
 
-        public CsLocalPlayer(int address)
+        public LocalPlayer(int address)
             : base(address)
         {
             AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", Offsets.NetVars.LocalPlayer.VecViewOffset);
@@ -33,7 +33,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             AddField<int>("CSLocalPlayer.m_iCrosshairIdx", Offsets.NetVars.LocalPlayer.CrosshairIdx);
         }
 
-        public CsLocalPlayer(CsPlayer player)
+        public LocalPlayer(Player player)
             : base(player)
         {
             CopyFieldsFrom(player);
@@ -45,12 +45,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #endregion
 
-        public float DistanceToOtherEntityInMetres(Tuple<int, CsPlayer> player)
+        public float DistanceToOtherEntityInMetres(Tuple<int, Player> player)
         {
             return Geometry.GetDistanceToPoint(VecOrigin, player.Item2.VecOrigin) * 0.01905f;
         }
 
-        public float DistanceToOtherEntityInMetres(CsPlayer player)
+        public float DistanceToOtherEntityInMetres(Player player)
         {
             return Geometry.GetDistanceToPoint(VecOrigin, player.VecOrigin) * 0.01905f;
         }

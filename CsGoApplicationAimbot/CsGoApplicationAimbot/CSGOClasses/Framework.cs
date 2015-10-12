@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,9 +23,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Scanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
             _clientDllBase = (int)clientDll.BaseAddress;
             _engineDllBase = (int)engineDll.BaseAddress;
-            _dwEntityList = _clientDllBase + Offsets.Misc.EntityList;
-            _dwViewMatrix = _clientDllBase + Offsets.Misc.ViewMatrix;
-            _dwClientState = Program.MemUtils.Read<int>((IntPtr)(_engineDllBase + Offsets.ClientState.Base));
+            _entityList = _clientDllBase + Offsets.Misc.EntityList;
+            _viewMatrix = _clientDllBase + Offsets.Misc.ViewMatrix;
+            _clientState = Program.MemUtils.Read<int>((IntPtr)(_engineDllBase + Offsets.ClientState.Base));
             AimbotActive = false;
             TriggerbotActive = false;
         }
@@ -34,19 +33,19 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #region Variables
         readonly SettingsConfig _settings = new SettingsConfig();
-        private readonly int _dwEntityList;
-        private readonly int _dwViewMatrix;
-        private readonly int _dwClientState;
+        private readonly int _entityList;
+        private readonly int _viewMatrix;
+        private readonly int _clientState;
         private readonly int _clientDllBase;
         private readonly int _engineDllBase;
-        private int _dwLocalPlayer;
+        private int _localPlayer;
         private long _lastBeep;
         #endregion
 
         #region Properties
-        private CsLocalPlayer LocalPlayer { get; set; }
+        private LocalPlayer LocalPlayer { get; set; }
         private string WeaponSection { get; set; }
-        private Tuple<int, CsPlayer>[] Players { get; set; }
+        private Tuple<int, Player>[] Players { get; set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
         private Matrix ViewMatrix { get; set; }
@@ -55,7 +54,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private SignOnState State { get; set; }
         private bool AimbotActive { get; set; }
         private bool TriggerbotActive { get; set; }
-        private bool RcsHandled { get; set; }
         private int LastShotsFired { get; set; }
         private int LastClip { get; set; }
         private Vector3 LastPunch { get; set; }
@@ -66,8 +64,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
         private int TriggerBurstCount { get; set; }
         private bool TriggerShooting { get; set; }
         private Weapon LocalPlayerWeapon { get; set; }
-        public float LastPercent { get; private set; }
-        public int CurrentJump { get; set; }
+        private float LastPercent { get; set; }
+        private int CurrentJump { get; set; }
         #endregion
 
         public void Update()
@@ -75,55 +73,52 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //If the game processes is not running, close the cheat.
             if (!ProcUtils.ProcessIsRunning(Program.GameProcess))
                 Environment.Exit(0);
+            
+            //If we are not focus on csgo no reason to update.
+            var activeWindow = GetActiveWindowTitle();
+            if (activeWindow != Program.GameTitle)
+                return;
 
-            var players = new List<Tuple<int, CsPlayer>>();
+            var players = new List<Tuple<int, Player>>();
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
 
-            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_dwClientState + Offsets.ClientState.InGame));
-            _dwLocalPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.Misc.LocalPlayer));
-            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_dwViewMatrix, 4, 4);
-            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles));
+            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(_clientState + Offsets.ClientState.InGame));
+            _localPlayer = Program.MemUtils.Read<int>((IntPtr)(_clientDllBase + Offsets.Misc.LocalPlayer));
+            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_viewMatrix, 4, 4);
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(_clientState + Offsets.ClientState.ViewAngles));
 
-            //If we are not ingame do not update
+            //If we are not ingame do not update  
             if (State != SignOnState.SignonstateFull)
                 return;
 
-            NewViewAngles = ViewAngles;
-            RcsHandled = false;
 
             var data = new byte[16 * 8192];
-            Program.MemUtils.Read((IntPtr)(_dwEntityList), out data, data.Length);
+            Program.MemUtils.Read((IntPtr)(_entityList), out data, data.Length);
 
             for (var i = 0; i < data.Length / 16; i++)
             {
                 var address = BitConverter.ToInt32(data, 16 * i);
                 if (address == 0) continue;
-                var ent = new BaseEntity(address);
-                if (!ent.IsValid())
+                var entity = new BaseEntity(address);
+                if (!entity.IsValid())
                     continue;
-                if (ent.IsPlayer())
-                    players.Add(new Tuple<int, CsPlayer>(i, new CsPlayer(ent)));
-                else if (ent.IsWeapon())
-                    weapons.Add(new Tuple<int, Weapon>(i, new Weapon(ent)));
+                if (entity.IsPlayer())
+                    players.Add(new Tuple<int, Player>(i, new Player(entity)));
+                else if (entity.IsWeapon())
+                    weapons.Add(new Tuple<int, Weapon>(i, new Weapon(entity)));
                 else
-                    entities.Add(new Tuple<int, BaseEntity>(i, ent));
+                    entities.Add(new Tuple<int, BaseEntity>(i, entity));
             }
 
             Players = players.ToArray();
             Entities = entities.ToArray();
             Weapons = weapons.ToArray();
 
-            var activeWindow = GetActiveWindowTitle();
-
-            //If we are not focus on csgo no reason to update.
-            if (activeWindow != Program.GameTitle)
-                return;
-
             //Check if our player exists
-            if (players.Exists(x => x.Item2.Address == _dwLocalPlayer))
+            if (players.Exists(x => x.Item2.Address == _localPlayer))
             {
-                LocalPlayer = new CsLocalPlayer(players.First(x => x.Item2.Address == _dwLocalPlayer).Item2);
+                LocalPlayer = new LocalPlayer(players.First(x => x.Item2.Address == _localPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
@@ -141,6 +136,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //If our health is equal to 0 or less we are dead, no reason to update.
             if (LocalPlayer.Health <= 0)
                 return;
+
+            NewViewAngles = NewViewAngles.SmoothAngle(ViewAngles, 1f);
 
             #region Aimbot
             WinAPI.VirtualKeyShort aimKey = _settings.GetKey(WeaponSection, "Aim Key");
@@ -204,7 +201,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             //We set Trigger shooting to true later down the line.
             if (TriggerShooting)
             {
-                ControlRecoil();
                 //If our LocalPlayer weapon is null, do not shoot it will crash.
                 if (LocalPlayerWeapon == null)
                 {
@@ -352,13 +348,11 @@ namespace CsGoApplicationAimbot.CSGOClasses
             Random random = new Random();
 
             float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
+
             if (!rcsEnabled)
                 return;
 
             if (LocalPlayerWeapon == null || LocalPlayerWeapon.Clip1 <= 0)
-                return;
-
-            if (RcsHandled)
                 return;
 
             //If we are shooting with the trigger bot, over ride rcsStart.
@@ -370,15 +364,13 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             if (aimbot)
             {
-                NewViewAngles -= LocalPlayer.VecPunch * (2f / 100f * randomRcsForce);
+                NewViewAngles -= LocalPlayer.VecPunch * (2f / 100f * 105 / 2);
             }
             else
             {
                 var punch = LocalPlayer.VecPunch - LastPunch;
-                var newPunch = punch * (2f / 100 * randomRcsForce);
-                NewViewAngles -= newPunch;
+                NewViewAngles -= punch * (2f / 100 * randomRcsForce);
             }
-            RcsHandled = true;
         }
         #endregion
 
@@ -387,8 +379,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr)(_dwClientState + Offsets.ClientState.ViewAngles), viewAngles);
-        }
+                Program.MemUtils.Write((IntPtr)(_clientState + Offsets.ClientState.ViewAngles), viewAngles);
+        }                  
         #endregion
 
         #region Trigger
@@ -407,17 +399,16 @@ namespace CsGoApplicationAimbot.CSGOClasses
             if (LocalPlayer == null || TriggerShooting)
                 return;
 
-            //If no one is in hour crosshair we turn.(Not aiming at someone)
+            //If no one is in hour crosshair we return.(Not aiming at someone)
             if (Players.Count(x => x.Item2.Id == LocalPlayer.CrosshairIdx) <= 0)
                 return;
 
             //We get the player that is in our crosshair.
             var player = Players.First(x => x.Item2.Id == LocalPlayer.CrosshairIdx).Item2;
-            var distanece = LocalPlayer.DistanceToOtherEntityInMetres(player);
 
             if (triggerTazer)
             {
-                if (LocalPlayerWeapon.ClassName == "CWeaponTaser" && LocalPlayer.DistanceToOtherEntityInMetres(player) <= 4)
+                if (LocalPlayerWeapon.ClassName == "CWeaponTaser" && LocalPlayer.DistanceToOtherEntityInMetres(player) <= 3)
                 {
                     Shoot();
                     return;
@@ -425,7 +416,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
             if (autoKnife)
             {
-                if (LocalPlayerWeapon.ClassName == "CKnife" && distanece <= 1.3f)
+                if (LocalPlayerWeapon.ClassName == "CKnife" && LocalPlayer.DistanceToOtherEntityInMetres(player) <= 1.4f)
                 {
                     RightKnife();
                     return;
@@ -476,12 +467,12 @@ namespace CsGoApplicationAimbot.CSGOClasses
         #endregion
 
         #region Shoot
-        private void Shoot()
+        private static void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
-        private void RightKnife()
+        private static void RightKnife()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTDOWN, 0, 0, 0, 0);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
@@ -529,55 +520,53 @@ namespace CsGoApplicationAimbot.CSGOClasses
             float sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
             float sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
 
-            if (sonarEnabled)
+            if (!sonarEnabled)
+                return;
+            //Set's our sound volume
+            Program.SoundManager.SetVolume(sonarVolume / 100f);
+
+            TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
+
+            if (span.TotalMilliseconds > sonarInterval)
             {
-                //Set's our sound volume
-                Program.SoundManager.SetVolume(sonarVolume / 100f);
+                _lastBeep = DateTime.Now.Ticks;
+                return;
+            }
 
-                TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
+            float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
+            LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
 
-                if (span.TotalMilliseconds > sonarInterval)
+            float leastDist = float.MaxValue;
+
+            foreach (var player in Players)
+            {
+                //If the ID does match it's our player
+                if (player.Item2.Id == LocalPlayer.Id)
+                    continue;
+
+                //If the player is dead.
+                if (player.Item2.Health == 0)
+                    continue;
+
+                //if the player is in the same team as us.
+                if (player.Item2.TeamNum == LocalPlayer.TeamNum)
+                    continue;
+
+                float dist = LocalPlayer.DistanceToOtherEntityInMetres(player);
+                if (dist <= minRange)
                 {
-                    _lastBeep = DateTime.Now.Ticks;
-                    return;
+                    leastDist = dist;
+                    break;
                 }
+            }
 
-                float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
-                LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
-
-                float leastDist = float.MaxValue;
-
-                foreach (var player in Players)
-                {
-                    //If the ID does match it's our player
-                    if (player.Item2.Id == LocalPlayer.Id)
-                        continue;
-
-                    //If the player is dead.
-                    if (player.Item2.Health == 0)
-                        continue;
-
-                    //if the player is in the same team as us.
-                    if (player.Item2.TeamNum == LocalPlayer.TeamNum)
-                        continue;
-
-                    float dist = LocalPlayer.DistanceToOtherEntityInMetres(player);
-                    if (dist <= minRange)
-                    {
-                        leastDist = dist;
-                        break;
-                    }
-                }
-
-                if (leastDist != float.MaxValue)
-                {
-                    Program.SoundManager.Play(sonarSound - 1);
-                    Thread.Sleep(50);
-                    _lastBeep = DateTime.Now.Ticks;
-                }
+            if (leastDist != float.MaxValue)
+            {
+                Program.SoundManager.Play(sonarSound - 1);
+                Thread.Sleep(50);
+                _lastBeep = DateTime.Now.Ticks;
             }
         }
         #endregion
-
     }
 }

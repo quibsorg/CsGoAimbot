@@ -110,8 +110,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSGOClasses\BaseEntity.cs" />
-    <Compile Include="CSGOClasses\CSLocalPlayer.cs" />
-    <Compile Include="CSGOClasses\CSPlayer.cs" />
+    <Compile Include="CSGOClasses\LocalPlayer.cs" />
+    <Compile Include="CSGOClasses\Player.cs" />
     <Compile Include="CSGOClasses\Entity.cs" />
     <Compile Include="CSGOClasses\Fields\BonesField.cs" />
     <Compile Include="CSGOClasses\Fields\Field.cs" />

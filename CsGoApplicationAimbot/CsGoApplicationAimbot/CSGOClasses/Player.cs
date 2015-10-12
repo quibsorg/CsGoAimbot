@@ -5,7 +5,7 @@ using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {
-    public class CsPlayer : BaseEntity
+    public class Player : BaseEntity
     {
         #region VARIABLES
 
@@ -167,19 +167,19 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #region CONSTRUCTORS
 
-        public CsPlayer(int address) : base(address)
+        public Player(int address) : base(address)
         {
             _iWeaponIndex = 0;
             Bones = new Skeleton(BoneMatrix);
         }
 
-        public CsPlayer(BaseEntity baseEntity) : base(baseEntity)
+        public Player(BaseEntity baseEntity) : base(baseEntity)
         {
             _iWeaponIndex = 0;
             Bones = new Skeleton(BoneMatrix);
         }
 
-        public CsPlayer(CsPlayer copyFrom) : base(copyFrom)
+        public Player(Player copyFrom) : base(copyFrom)
         {
             CopyFieldsFrom(copyFrom);
             _iWeaponIndex = 0;
