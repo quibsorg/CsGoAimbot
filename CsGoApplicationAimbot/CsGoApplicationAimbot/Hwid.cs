@@ -15,7 +15,7 @@ namespace CsGoApplicationAimbot
         {
             if (string.IsNullOrEmpty(_fingerPrint))
             {
-                _fingerPrint = GetHash("CPU >> " + CpuId() + "\nBIOS >> " + BiosId() + "\nBASE >> " + BaseId() + "\nDISK >> " + DiskId() + "\nVIDEO >> " + VideoId() + "\nMAC >> " + MacId());
+                _fingerPrint = GetHash(VideoId() + MacId());
             }
             return _fingerPrint;
         }
@@ -111,18 +111,18 @@ namespace CsGoApplicationAimbot
             retVal += Identifier("Win32_Processor", "MaxClockSpeed");
             return retVal;
         }
-        private static string BiosId()
-        {
-            return Identifier("Win32_BIOS", "Manufacturer") + Identifier("Win32_BIOS", "SMBIOSBIOSVersion") + Identifier("Win32_BIOS", "IdentificationCode") + Identifier("Win32_BIOS", "SerialNumber") + Identifier("Win32_BIOS", "ReleaseDate") + Identifier("Win32_BIOS", "Version");
-        }
-        private static string DiskId()
-        {
-            return Identifier("Win32_DiskDrive", "Model") + Identifier("Win32_DiskDrive", "Manufacturer") + Identifier("Win32_DiskDrive", "Signature") + Identifier("Win32_DiskDrive", "TotalHeads");
-        }
-        private static string BaseId()
-        {
-            return Identifier("Win32_BaseBoard", "Model") + Identifier("Win32_BaseBoard", "Manufacturer") + Identifier("Win32_BaseBoard", "Name") + Identifier("Win32_BaseBoard", "SerialNumber");
-        }
+        //private static string BiosId()
+        //{
+        //    return Identifier("Win32_BIOS", "Manufacturer") + Identifier("Win32_BIOS", "SMBIOSBIOSVersion") + Identifier("Win32_BIOS", "IdentificationCode") + Identifier("Win32_BIOS", "SerialNumber") + Identifier("Win32_BIOS", "ReleaseDate") + Identifier("Win32_BIOS", "Version");
+        //}
+        //private static string DiskId()
+        //{
+        //    return Identifier("Win32_DiskDrive", "Model") + Identifier("Win32_DiskDrive", "Manufacturer") + Identifier("Win32_DiskDrive", "Signature") + Identifier("Win32_DiskDrive", "TotalHeads");
+        //}
+        //private static string BaseId()
+        //{
+        //    return Identifier("Win32_BaseBoard", "Model") + Identifier("Win32_BaseBoard", "Manufacturer") + Identifier("Win32_BaseBoard", "Name") + Identifier("Win32_BaseBoard", "SerialNumber");
+        //}
         private static string VideoId()
         {
             return Identifier("Win32_VideoController", "DriverVersion") + Identifier("Win32_VideoController", "Name");
@@ -131,17 +131,17 @@ namespace CsGoApplicationAimbot
         {
             return Identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
         }
-        public static string PcName()
-        {
-            return Environment.MachineName;
-            //Computer computer = new Computer();
-            //return computer.Name;
-        }
-        public static string IpAdress()
-        {
-            WebClient client = new WebClient();
-            return client.DownloadString("http://icanhazip.com/");
-        }
+        //public static string PcName()
+        //{
+        //    return Environment.MachineName;
+        //    //Computer computer = new Computer();
+        //    //return computer.Name;
+        //}
+        //public static string IpAdress()
+        //{
+        //    WebClient client = new WebClient();
+        //    return client.DownloadString("http://icanhazip.com/");
+        //}
     }
 
 }
