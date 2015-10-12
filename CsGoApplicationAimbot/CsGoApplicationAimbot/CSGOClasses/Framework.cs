@@ -361,10 +361,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (LocalPlayer.ShotsFired <= rcsStart)
                     return;
             }
-
+                                                                        
             if (aimbot)
             {
-                NewViewAngles -= LocalPlayer.VecPunch * (2f / 100f * 105 / 2);
+                NewViewAngles -= LocalPlayer.VecPunch * (1f / 100 * randomRcsForce / 2);
             }
             else
             {

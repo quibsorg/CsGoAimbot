@@ -18,7 +18,7 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-        static readonly Timer _timer = new Timer(0.001);
+        static readonly Timer _timer = new Timer(5);
         private static SoundManager _soundManager;
         #endregion
 
