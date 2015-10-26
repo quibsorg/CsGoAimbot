@@ -18,7 +18,7 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-        static readonly Timer _timer = new Timer(5);
+        static readonly Timer _timer = new Timer(35);
         private static SoundManager _soundManager;
         #endregion
 
@@ -36,13 +36,13 @@ namespace CsGoApplicationAimbot
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
         private static readonly string _connectionString = "Server=MYSQL5011.myWindowsHosting.com;Database=db_9b8e03_smurf;Uid=9b8e03_smurf;Pwd=Phanta123!;";
-        private static bool _authorized = false;
-        private static bool _hwidMatch = false;
+        private static bool _authorized;
+        private static bool _hwidMatch;
         private static int _userGroup;
-        public static string _username = string.Empty;
-        public static string _password = string.Empty;
+        public static string Username = string.Empty;
+        public static string Password = string.Empty;
         private static string _hwid = string.Empty;
-        private static bool _loggedIn = false;
+        private static bool _loggedIn;
         private static MySqlConnection _connection;
         private static MySqlCommand _cmd;
         private static MySqlDataReader _reader;
@@ -59,21 +59,21 @@ namespace CsGoApplicationAimbot
             if (!File.Exists("Config.ini"))
             {
                 Console.Write("Enter your username: ");
-                _username = Console.ReadLine();
+                Username = Console.ReadLine();
                 Console.Clear();
 
                 Console.Write("Enter your password: ");
                 using (MD5 md5Hash = MD5.Create())
                 {
-                    _password = Encrypt(md5Hash, _password = Console.ReadLine());
+                    Password = Encrypt(md5Hash, Password = Console.ReadLine());
                 }
                 Console.Clear();
             }
             else
             {
                 _settings = new SettingsConfig();
-                _username = _settings.GetString("User", "Username");
-                _password = _settings.GetString("User", "Password");
+                Username = _settings.GetString("User", "Username");
+                Password = _settings.GetString("User", "Password");
             }
 
             _loggedIn = Login();
@@ -167,7 +167,7 @@ namespace CsGoApplicationAimbot
                     //Opens our connection to the db
                     _connection.Open();
                     _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
-                    _cmd.Parameters.AddWithValue("@username", _username);
+                    _cmd.Parameters.AddWithValue("@username", Username);
                     using (_reader = _cmd.ExecuteReader())
                     {
                         while (_reader.Read())
@@ -175,7 +175,7 @@ namespace CsGoApplicationAimbot
                             if (_reader.HasRows)
                             {
                                 //If we get this far we have a user with a matching password
-                                if (_password == _reader.GetString("password"))
+                                if (Password == _reader.GetString("password"))
                                 {
                                     //We check the user permssion.
                                     _authorized = CheckPermission();
@@ -207,7 +207,7 @@ namespace CsGoApplicationAimbot
                 {
                     _connection.Open();
                     _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
-                    _cmd.Parameters.AddWithValue("@username", _username);
+                    _cmd.Parameters.AddWithValue("@username", Username);
 
                     using (_reader = _cmd.ExecuteReader())
                     {
@@ -245,7 +245,7 @@ namespace CsGoApplicationAimbot
                     {
                         _cmd.CommandText = "UPDATE users SET hwid= @hwid WHERE username = @user;";
                         _cmd.Parameters.AddWithValue("@hwid", _hwid);
-                        _cmd.Parameters.AddWithValue("@user", _username);
+                        _cmd.Parameters.AddWithValue("@user", Username);
                         _cmd.ExecuteNonQuery();
                         _loggedIn = true;
                     }
@@ -268,7 +268,7 @@ namespace CsGoApplicationAimbot
                         _connection.Open();
                         _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
                         //get's the row that matches our username.
-                        _cmd.Parameters.AddWithValue("@username", _username);
+                        _cmd.Parameters.AddWithValue("@username", Username);
 
                         using (_reader = _cmd.ExecuteReader())
                         {

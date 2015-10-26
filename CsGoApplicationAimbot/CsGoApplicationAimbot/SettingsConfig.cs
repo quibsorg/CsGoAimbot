@@ -114,8 +114,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("[User]");
-            builder.AppendLine("Username = " + Program._username);
-            builder.AppendLine("Password = " + Program._password).AppendLine();
+            builder.AppendLine("Username = " + Program.Password);
+            builder.AppendLine("Password = " + Program.Password).AppendLine();
 
             //Misc
             builder.AppendLine("[Bunny Jump]");
