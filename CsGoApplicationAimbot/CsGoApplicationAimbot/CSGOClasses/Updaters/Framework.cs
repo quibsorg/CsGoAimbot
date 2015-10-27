@@ -223,24 +223,16 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             LastShotsFired = LocalPlayer.ShotsFired;
             LastPunch = LocalPlayer.VecPunch;
             #endregion
-
-            //#region Bunny Hop
-            //BunnyHop();
-            //#endregion
-
-            #region Sonar
-            Sonar();
-            #endregion
         }
         private static string GetActiveWindowTitle()
         {
             const int nChars = 256;
-            StringBuilder Buff = new StringBuilder(nChars);
+            StringBuilder builder = new StringBuilder(nChars);
             IntPtr handle = GetForegroundWindow();
 
-            if (GetWindowText(handle, Buff, nChars) > 0)
+            if (GetWindowText(handle, builder, nChars) > 0)
             {
-                return Buff.ToString();
+                return builder.ToString();
             }
             return null;
         }
@@ -455,90 +447,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTDOWN, 0, 0, 0, 0);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
-        }
-        //private void BunnyHop()
-        //{
-        //    WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
-        //    bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
-        //    int successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
-        //
-        //    if (!bunnyJump)
-        //        return;
-        //
-        //    if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
-        //    {
-        //        if (successfulJumps < CurrentJump)
-        //            return;
-        //
-        //        if (LocalPlayer.Flags == 256)
-        //            Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 4);
-        //        else
-        //        {
-        //            Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 5);
-        //            //We +1 for each time we jump
-        //            CurrentJump++;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        //If we are not holding space we set currentJump to 0.
-        //        CurrentJump = 0;
-        //    }
-        //}
-        private void Sonar()
-        {
-            bool sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
-            int sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
-            float sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
-            float sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
-            float sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
-
-            if (!sonarEnabled)
-                return;
-            //Set's our sound volume
-            Program.SoundManager.SetVolume(sonarVolume / 100f);
-
-            TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
-
-            if (span.TotalMilliseconds > sonarInterval)
-            {
-                _lastBeep = DateTime.Now.Ticks;
-                return;
-            }
-
-            float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
-            LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
-
-            float leastDist = float.MaxValue;
-
-            foreach (var player in Players)
-            {
-                //If the ID does match it's our player
-                if (player.Item2.Id == LocalPlayer.Id)
-                    continue;
-
-                //If the player is dead.
-                if (player.Item2.Health == 0)
-                    continue;
-
-                //if the player is in the same team as us.
-                if (player.Item2.TeamNum == LocalPlayer.TeamNum)
-                    continue;
-
-                float dist = LocalPlayer.DistanceToOtherEntityInMetres(player);
-                if (dist <= minRange)
-                {
-                    leastDist = dist;
-                    break;
-                }
-            }
-
-            if (leastDist != float.MaxValue)
-            {
-                Program.SoundManager.Play(sonarSound - 1);
-                Thread.Sleep(50);
-                _lastBeep = DateTime.Now.Ticks;
-            }
         }
     }
 }

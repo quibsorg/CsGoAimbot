@@ -149,7 +149,7 @@ namespace CsGoApplicationAimbot
             TriggerBot = new TriggerBot();
             Rcs = new RCS();
             BunnyJump = new BunnyJump(engineDll, clientDll);
-            Sonar = new Sonar();
+            Sonar = new Sonar(engineDll, clientDll);
 
             Timer1.Elapsed += Timer1Elapsed;
             Timer1.Start();
@@ -165,6 +165,7 @@ namespace CsGoApplicationAimbot
         {
             //Sonar, Bunny Jump.
             BunnyJump.Update();
+            Sonar.Update();
         }
 
         private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
