@@ -10,6 +10,7 @@ using ExternalUtilsCSharp;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using CsGoApplicationAimbot.CSGOClasses.Updaters;
 using MySql.Data.MySqlClient;
 using Timer = System.Timers.Timer;
 
@@ -18,7 +19,9 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-        static readonly Timer _timer = new Timer(35);
+
+        private static readonly Timer Timer1 = new Timer(35);
+        private static readonly Timer Timer2 = new Timer(10);
         private static SoundManager _soundManager;
         #endregion
 
@@ -32,7 +35,16 @@ namespace CsGoApplicationAimbot
         private static IntPtr _hWnd;
         private static SettingsConfig _settings;
         private static ProcUtils _procUtils;
+        //Obsolete
         public static Framework Framework;
+
+        //Updaters
+        public static Aimbot Aimbot;
+        public static TriggerBot TriggerBot;
+        public static RCS Rcs;
+        public static BunnyJump BunnyJump;
+        public static Sonar Sonar;
+
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
         private static readonly string _connectionString = "Server=MYSQL5011.myWindowsHosting.com;Database=db_9b8e03_smurf;Uid=9b8e03_smurf;Pwd=Phanta123!;";
@@ -87,7 +99,7 @@ namespace CsGoApplicationAimbot
                 //Set's up our SoundManager
                 ManageAudio();
 
-                //Starts the main core of our cheat.
+                //Starts our cheat.
                 StartCheat();
             }
 
@@ -133,16 +145,31 @@ namespace CsGoApplicationAimbot
                 Thread.Sleep(250);
 
             Framework = new Framework(engineDll, clientDll);
+            Aimbot = new Aimbot();
+            TriggerBot = new TriggerBot();
+            Rcs = new RCS();
+            BunnyJump = new BunnyJump();
+            Sonar = new Sonar();
 
-            _timer.Elapsed += _timer_Elapsed;
-            _timer.Start();
+            Timer1.Elapsed += Timer1Elapsed;
+            Timer1.Start();
+
+            Timer2.Elapsed += Timer2_Elapsed;
+            Timer2.Start();
 
             PrintSuccess("Cheat is now running.");
             Application.Run();
         }
 
-        private static void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
         {
+            //Sonar, Bunny Jump.
+            BunnyJump.Update();
+        }
+
+        private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //TriggerBot, Aimbot, Rcs
             KeyUtils.Update();
             Framework.Update();
         }

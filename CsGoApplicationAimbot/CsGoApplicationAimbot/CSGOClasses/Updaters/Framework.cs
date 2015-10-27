@@ -9,7 +9,7 @@ using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.MathObjects;
 
-namespace CsGoApplicationAimbot.CSGOClasses
+namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class Framework
     {
@@ -70,6 +70,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public void Update()
         {
+            Console.WriteLine("Updating Framework");
+
             //If the game processes is not running, close the cheat.
             if (!ProcUtils.ProcessIsRunning(Program.GameProcess))
                 Environment.Exit(0);
