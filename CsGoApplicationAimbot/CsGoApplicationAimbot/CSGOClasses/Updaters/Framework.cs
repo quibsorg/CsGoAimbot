@@ -224,9 +224,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             LastPunch = LocalPlayer.VecPunch;
             #endregion
 
-            #region Bunny Hop
-            BunnyHop();
-            #endregion
+            //#region Bunny Hop
+            //BunnyHop();
+            //#endregion
 
             #region Sonar
             Sonar();
@@ -272,7 +272,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (AimbotActive)
                 ControlAim();
         }
-
         private void ControlAim()
         {
             bool aimSpotted = _settings.GetBool(WeaponSection, "Aim Spotted");
@@ -332,7 +331,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             NewViewAngles = NewViewAngles;
         }
-
         private void ControlRecoil(bool aimbot = false)
         {
             bool rcsEnabled = _settings.GetBool(WeaponSection, "Rcs Enabled");
@@ -367,7 +365,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 Program.MemUtils.Write((IntPtr)(_clientState + Offsets.ClientState.ViewAngles), NewViewAngles);
             }
         }
-
         private void Triggerbot()
         {
             bool triggerTazer = _settings.GetBool("Misc", "Trigger Taser");
@@ -448,50 +445,46 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 TriggerOnTarget = false;
             }
         }
-
         private static void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             Thread.Sleep(10);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
-
         private static void RightKnife()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTDOWN, 0, 0, 0, 0);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
         }
-
-        private void BunnyHop()
-        {
-            WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
-            bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
-            int successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
-
-            if (!bunnyJump)
-                return;
-
-            if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
-            {
-                if (successfulJumps < CurrentJump)
-                    return;
-
-                if (LocalPlayer.Flags == 256)
-                    Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 4);
-                else
-                {
-                    Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 5);
-                    //We +1 for each time we jump
-                    CurrentJump++;
-                }
-            }
-            else
-            {
-                //If we are not holding space we set currentJump to 0.
-                CurrentJump = 0;
-            }
-        }
-
+        //private void BunnyHop()
+        //{
+        //    WinAPI.VirtualKeyShort bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
+        //    bool bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
+        //    int successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
+        //
+        //    if (!bunnyJump)
+        //        return;
+        //
+        //    if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
+        //    {
+        //        if (successfulJumps < CurrentJump)
+        //            return;
+        //
+        //        if (LocalPlayer.Flags == 256)
+        //            Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 4);
+        //        else
+        //        {
+        //            Program.MemUtils.Write((IntPtr)(_clientDllBase + Offsets.Misc.Jump), 5);
+        //            //We +1 for each time we jump
+        //            CurrentJump++;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //If we are not holding space we set currentJump to 0.
+        //        CurrentJump = 0;
+        //    }
+        //}
         private void Sonar()
         {
             bool sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");

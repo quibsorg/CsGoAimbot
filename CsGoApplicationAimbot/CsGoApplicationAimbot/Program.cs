@@ -148,7 +148,7 @@ namespace CsGoApplicationAimbot
             Aimbot = new Aimbot();
             TriggerBot = new TriggerBot();
             Rcs = new RCS();
-            BunnyJump = new BunnyJump();
+            BunnyJump = new BunnyJump(engineDll, clientDll);
             Sonar = new Sonar();
 
             Timer1.Elapsed += Timer1Elapsed;
