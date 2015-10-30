@@ -220,7 +220,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return null;
 
             var handle = ActiveWeapon & 0xFFF;
-            return Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
+            return Program.Memory.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Memory.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
         }
 
         public string GetActiveWeaponName()
@@ -232,9 +232,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             }
 
             var handle = ActiveWeapon & 0xFFF;
-            if (Program.Framework.Weapons.Count(x => x.Item1 == handle - 1) > 0)
+            if (Program.Memory.Weapons.Count(x => x.Item1 == handle - 1) > 0)
             {
-                Weapon weapon = Program.Framework.Weapons.First(x => x.Item1 == handle - 1).Item2;
+                Weapon weapon = Program.Memory.Weapons.First(x => x.Item1 == handle - 1).Item2;
                 string weaponName = weapon.ClassName;
                 weaponName = weaponName.Remove(0, 1);
                 if (weaponName.Contains("Weapon"))

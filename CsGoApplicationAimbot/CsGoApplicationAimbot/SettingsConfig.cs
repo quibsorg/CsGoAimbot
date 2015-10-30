@@ -6,7 +6,7 @@ using ExternalUtilsCSharp;
 using IniParser;
 using IniParser.Model;
 
-namespace CsGoApplicationAimbot.CSGOClasses
+namespace CsGoApplicationAimbot
 {
     public class SettingsConfig
     {
@@ -141,7 +141,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 builder.AppendLine("[" + weapon + "]");
                 builder.AppendLine("Aim Enabled = True");
                 builder.AppendLine("Aim Start = 1");
-                builder.AppendLine("Aim Jump = True");
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");

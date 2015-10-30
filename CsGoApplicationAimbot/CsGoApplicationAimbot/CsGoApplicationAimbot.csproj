@@ -119,6 +119,7 @@
     <Compile Include="CSGOClasses\Fields\BonesField.cs" />
     <Compile Include="CSGOClasses\Fields\Field.cs" />
     <Compile Include="CSGOClasses\Updaters\BunnyJump.cs" />
+    <Compile Include="CSGOClasses\Updaters\Memory.cs" />
     <Compile Include="CSGOClasses\Updaters\RCS.cs" />
     <Compile Include="CSGOClasses\Updaters\Sonar.cs" />
     <Compile Include="CSGOClasses\Updaters\TriggerBot.cs" />

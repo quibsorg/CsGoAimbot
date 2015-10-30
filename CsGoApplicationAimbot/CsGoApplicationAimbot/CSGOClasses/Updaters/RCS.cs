@@ -10,7 +10,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
     {
         public void Update()
         {
-            Console.WriteLine("Updating RCS");
+
         }
     }
 }

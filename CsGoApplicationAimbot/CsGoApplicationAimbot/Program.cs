@@ -19,9 +19,8 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-
-        private static readonly Timer Timer1 = new Timer(35);
-        private static readonly Timer Timer2 = new Timer(10);
+        private static readonly Timer Timer1 = new Timer(40);
+        private static readonly Timer Timer2 = new Timer(5);
         private static SoundManager _soundManager;
         #endregion
 
@@ -44,6 +43,7 @@ namespace CsGoApplicationAimbot
         public static RCS Rcs;
         public static BunnyJump BunnyJump;
         public static Sonar Sonar;
+        public static Memory Memory;
 
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
@@ -144,12 +144,15 @@ namespace CsGoApplicationAimbot
             while ((engineDll = _procUtils.GetModuleByName(@"engine.dll")) == null)
                 Thread.Sleep(250);
 
-            Framework = new Framework(engineDll, clientDll);
+            //will update everything we need.
+            Memory = new Memory(engineDll, clientDll);
+
+            Framework = new Framework();
             Aimbot = new Aimbot();
             TriggerBot = new TriggerBot();
             Rcs = new RCS();
-            BunnyJump = new BunnyJump(engineDll, clientDll);
-            Sonar = new Sonar(engineDll, clientDll);
+            BunnyJump = new BunnyJump();
+            Sonar = new Sonar();
 
             Timer1.Elapsed += Timer1Elapsed;
             Timer1.Start();
@@ -164,6 +167,7 @@ namespace CsGoApplicationAimbot
         private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
         {
             //Sonar, Bunny Jump.
+            Memory.Update();
             BunnyJump.Update();
             Sonar.Update();
         }
@@ -173,6 +177,7 @@ namespace CsGoApplicationAimbot
             //TriggerBot, Aimbot, Rcs
             KeyUtils.Update();
             Framework.Update();
+            Rcs.Update();
         }
         #endregion
         static string Encrypt(MD5 md5Hash, string password)
