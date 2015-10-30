@@ -25,7 +25,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         public static Vector3 NewViewAngles { get; set; }
         private int LastShotsFired { get; set; }
         private int LastClip { get; set; }
-        public static Vector3 LastPunch { get; set; }
         private bool TriggerOnTarget { get; set; }
         private long TriggerLastTarget { get; set; }
         private long TriggerLastShot { get; set; }
@@ -68,10 +67,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             //        AimToggleOrHold(aimToggle, aimHold, aimKey);
             //    }
             //}
-            #endregion
-
-            #region Rcs
-            ControlRecoil();
             #endregion
 
             #region Trigger
@@ -137,7 +132,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             LastClip = Memory.LocalPlayerWeapon?.Clip1 ?? 0;
             LastShotsFired = Memory.LocalPlayer.ShotsFired;
-            LastPunch = Memory.LocalPlayer.VecPunch;
             #endregion
         }
         private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
@@ -228,41 +222,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         //
         //    NewViewAngles = NewViewAngles;
         //}
-
-        private void ControlRecoil(bool aimbot = false)
-        {
-            bool rcsEnabled = _settings.GetBool(Memory.WeaponSection, "Rcs Enabled");
-            float rcsForceMax = _settings.GetFloat(Memory.WeaponSection, "Rcs Force Max");
-            float rcsForceMin = _settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
-            int rcsStart = _settings.GetInt(Memory.WeaponSection, "Rcs Start");
-            Random random = new Random();
-
-            float randomRcsForce = random.Next((int)rcsForceMin, (int)rcsForceMax);
-
-            if (!rcsEnabled)
-                return;
-
-            if (Memory.LocalPlayerWeapon == null || Memory.LocalPlayerWeapon.Clip1 <= 0)
-                return;
-
-            //If we are shooting with the trigger bot, over ride rcsStart.
-            if (!TriggerbotActive)
-            {
-                if (Memory.LocalPlayer.ShotsFired <= rcsStart)
-                    return;
-            }
-
-            if (aimbot)
-            {
-                NewViewAngles -= Memory.LocalPlayer.VecPunch * (2f / 100 * randomRcsForce);
-                Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), NewViewAngles);
-            }
-            else
-            {
-                NewViewAngles -= (Memory.LocalPlayer.VecPunch - LastPunch) * (2f / 100 * randomRcsForce);
-                Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), NewViewAngles);
-            }
-        }
 
         private void Triggerbot()
         {
