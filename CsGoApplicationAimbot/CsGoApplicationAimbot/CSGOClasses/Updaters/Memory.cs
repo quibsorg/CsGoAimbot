@@ -56,7 +56,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             //If the game processes is not running, close the cheat.
             if (!ProcUtils.ProcessIsRunning(Program.GameProcess))
                 Environment.Exit(0);
+
             WindowTitle = GetActiveWindowTitle();
+            if (WindowTitle != Program.GameTitle)
+                return;
 
             var players = new List<Tuple<int, Player>>();
             //var entities = new List<Tuple<int, BaseEntity>>();
