@@ -33,7 +33,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             LastPunch = Memory.LocalPlayer.VecPunch;
         }
-        private void ControlRecoil(bool aimbot = false)
+
+        public static void ControlRecoil(bool aimbot = false)
         {
             bool rcsEnabled = _settings.GetBool(Memory.WeaponSection, "Rcs Enabled");
             float rcsForceMax = _settings.GetFloat(Memory.WeaponSection, "Rcs Force Max");

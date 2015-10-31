@@ -22,7 +22,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private int TriggerBurstFired { get; set; }
         private int TriggerBurstCount { get; set; }
         private bool TriggerShooting { get; set; }
-        public int TriggerShotCount { get; set; }
         #endregion
 
         #region Constructor
