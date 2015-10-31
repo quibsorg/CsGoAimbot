@@ -108,7 +108,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region FIELDS
-            //New Bones
             public Vector3 Head => ReadFieldProxy<Vector3>("head_0");
             public Vector3 Neck => ReadFieldProxy<Vector3>("neck_0");
             public Vector3 Spine0 => ReadFieldProxy<Vector3>("spine_0");
