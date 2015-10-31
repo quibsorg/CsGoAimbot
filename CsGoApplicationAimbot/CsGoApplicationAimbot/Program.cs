@@ -19,7 +19,7 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-        private static readonly Timer Timer1 = new Timer(40);
+        private static readonly Timer Timer1 = new Timer(60);
         private static readonly Timer Timer2 = new Timer(5);
         private static SoundManager _soundManager;
         #endregion
@@ -36,11 +36,11 @@ namespace CsGoApplicationAimbot
         private static ProcUtils _procUtils;
 
         //Updaters
-        public static Aimbot Aimbot;
-        public static TriggerBot TriggerBot;
-        public static RCS Rcs;
-        public static BunnyJump BunnyJump;
-        public static Sonar Sonar;
+        private static Aimbot _aimbot;
+        private static TriggerBot _triggerBot;
+        private static RCS _rcs;
+        private static BunnyJump _bunnyJump;
+        private static Sonar _sonar;
         public static Memory Memory;
 
         public static MemUtils MemUtils;
@@ -145,11 +145,11 @@ namespace CsGoApplicationAimbot
             //will update everything we need.
             Memory = new Memory(engineDll, clientDll);
 
-            Aimbot = new Aimbot();
-            TriggerBot = new TriggerBot();
-            Rcs = new RCS();
-            BunnyJump = new BunnyJump();
-            Sonar = new Sonar();
+            _aimbot = new Aimbot();
+            _triggerBot = new TriggerBot();
+            _rcs = new RCS();
+            _bunnyJump = new BunnyJump();
+            _sonar = new Sonar();
 
             Timer1.Elapsed += Timer1Elapsed;
             Timer1.Start();
@@ -162,17 +162,15 @@ namespace CsGoApplicationAimbot
         }
         private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
         {
-            //TriggerBot, Aimbot, Rcs
             KeyUtils.Update();
-            Rcs.Update();
+            _rcs.Update();
         }
         private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
         {
-            //Sonar, Bunny Jump.
             Memory.Update();
-            BunnyJump.Update();
-            Sonar.Update();
-            TriggerBot.Update();
+            _bunnyJump.Update();
+            _sonar.Update();
+            _triggerBot.Update();
         }
         #endregion
         static string Encrypt(MD5 md5Hash, string password)

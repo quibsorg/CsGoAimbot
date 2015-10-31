@@ -107,14 +107,14 @@ namespace CsGoApplicationAimbot
                 "M249",
                 "Negev",
 
-                //Default for unkown weapons
+                //Default for unkown weapons Should not be any but just incase.
                 "Default",
 
             };
 
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("[User]");
-            builder.AppendLine("Username = " + Program.Password);
+            builder.AppendLine("Username = " + Program.Username);
             builder.AppendLine("Password = " + Program.Password).AppendLine();
 
             //Misc
@@ -139,7 +139,7 @@ namespace CsGoApplicationAimbot
             foreach (var weapon in weaponList)
             {
                 builder.AppendLine("[" + weapon + "]");
-                builder.AppendLine("Aim Enabled = True");
+                builder.AppendLine("Aim Enabled = False");
                 builder.AppendLine("Aim Start = 1");
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
@@ -167,7 +167,8 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Trigger Enemies = True");
                 builder.AppendLine("Trigger Allies = False");
                 builder.AppendLine("Trigger Burst Enabled = False");
-                builder.AppendLine("Trigger Burst Shots = 0");
+                builder.AppendLine("Trigger Burst Shots Min = 0");
+                builder.AppendLine("Trigger Burst Shots Max = 0");
                 builder.AppendLine("Trigger Burst Randomize = False");
                 builder.AppendLine("Trigger Delay FirstShot = 21");
                 builder.AppendLine("Trigger Delay Shots = 21").AppendLine();

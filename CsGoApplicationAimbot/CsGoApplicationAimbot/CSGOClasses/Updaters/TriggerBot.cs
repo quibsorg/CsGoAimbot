@@ -15,7 +15,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         #endregion
 
         #region Properties
-
         public static bool TriggerbotActive { get; set; }
         private int LastShotsFired { get; set; }
         private int LastClip { get; set; }
@@ -27,6 +26,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private bool TriggerShooting { get; set; }
         public int TriggerShotCount { get; set; }
         #endregion
+
         #region Constructor
         public TriggerBot()
         {
@@ -129,7 +129,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             bool burstRandomize = _settings.GetBool(Memory.WeaponSection, "Trigger Burst Randomize");
             float firstShot = _settings.GetFloat(Memory.WeaponSection, "Trigger Delay FirstShot");
             float delayShot = _settings.GetFloat(Memory.WeaponSection, "Trigger Delay Shots");
-            float burstShots = _settings.GetFloat(Memory.WeaponSection, "Trigger Burst Shots");
+            int burstShotsMin = _settings.GetInt(Memory.WeaponSection, "Trigger Burst Shots Min");
+            int burstShotsMax = _settings.GetInt(Memory.WeaponSection, "Trigger Burst Shots Max");
 
             //If our player is null, or if trigger is shooting we return.
             if (Memory.LocalPlayer == null || TriggerShooting)
@@ -187,9 +188,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     if (!TriggerShooting)
                     {
                         if (burstRandomize)
-                            TriggerBurstCount = new Random().Next(1, (int)burstShots);
+                            TriggerBurstCount = new Random().Next(burstShotsMin, burstShotsMax);
                         else
-                            TriggerBurstCount = (int)burstShots;
+                            TriggerBurstCount = burstShotsMax;
                     }
                     TriggerShooting = true;
                 }
@@ -209,6 +210,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private static void RightKnife()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTDOWN, 0, 0, 0, 0);
+            Thread.Sleep(10);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
         }
     }
