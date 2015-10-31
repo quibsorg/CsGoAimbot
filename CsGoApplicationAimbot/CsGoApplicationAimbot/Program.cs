@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using CsGoApplicationAimbot.CSGOClasses;
 using ExternalUtilsCSharp;
 using System.IO;
 using System.Security.Cryptography;
@@ -19,8 +18,8 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-        private static readonly Timer Timer1 = new Timer(60);
-        private static readonly Timer Timer2 = new Timer(5);
+        private static readonly Timer Timer1 = new Timer(1);
+        private static readonly Timer Timer2 = new Timer(0.5);
         private static SoundManager _soundManager;
         #endregion
 
@@ -163,15 +162,20 @@ namespace CsGoApplicationAimbot
         private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
         {
             KeyUtils.Update();
-            _rcs.Update();
-        }
-        private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
-        {
             Memory.Update();
             _bunnyJump.Update();
             _sonar.Update();
             _triggerBot.Update();
             _aimbot.Update();
+            _rcs.Update();
+        }
+        private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //Memory.Update();
+            //_bunnyJump.Update();
+            //_sonar.Update();
+            //_triggerBot.Update();
+            //_aimbot.Update();
         }
         #endregion
         static string Encrypt(MD5 md5Hash, string password)

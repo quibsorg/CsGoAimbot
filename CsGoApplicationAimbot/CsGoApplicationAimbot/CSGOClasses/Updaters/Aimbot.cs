@@ -60,8 +60,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     AimToggleOrHold(aimToggle, aimHold, aimKey);
                 }
             }
-
-            Console.WriteLine(AimbotActive);
             #endregion
         }
 
