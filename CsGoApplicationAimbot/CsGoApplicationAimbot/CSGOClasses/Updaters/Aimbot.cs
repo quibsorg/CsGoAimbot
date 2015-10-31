@@ -10,7 +10,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
     {
         public void Update()
         {
-            Console.WriteLine("Updating Aimbot");
+            ControlAim();
+        }
+
+        private void ControlAim()
+        {
+
         }
     }
 }

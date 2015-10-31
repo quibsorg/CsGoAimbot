@@ -171,6 +171,7 @@ namespace CsGoApplicationAimbot
             _bunnyJump.Update();
             _sonar.Update();
             _triggerBot.Update();
+            _aimbot.Update();
         }
         #endregion
         static string Encrypt(MD5 md5Hash, string password)

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
@@ -41,6 +39,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
                 return;
+
+            if (Memory.State != SignOnState.SignonstateFull)
+                return;
+
 
             WinAPI.VirtualKeyShort triggerKey = _settings.GetKey(Memory.WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Enabled");
@@ -181,6 +183,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                         return;
                     if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= delayShot))
                         return;
+
                     //Get the tick from our last shoot.
                     TriggerLastShot = DateTime.Now.Ticks;
 

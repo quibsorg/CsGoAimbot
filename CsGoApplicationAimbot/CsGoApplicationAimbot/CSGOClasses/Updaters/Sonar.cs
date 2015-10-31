@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using CsGoApplicationAimbot.CSGOClasses.Enums;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
@@ -29,6 +23,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
 
             if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
+                return;
+
+            if (Memory.State != SignOnState.SignonstateFull)
                 return;
 
             SoundEsp();

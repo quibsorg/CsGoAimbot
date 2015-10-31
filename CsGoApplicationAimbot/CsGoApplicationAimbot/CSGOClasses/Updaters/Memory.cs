@@ -24,7 +24,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         public Tuple<int, Weapon>[] Weapons { get; private set; }
         private Matrix ViewMatrix { get; set; }
         public static Vector3 ViewAngles { get; set; }
-        private SignOnState State { get; set; }
+        public static SignOnState State { get; set; }
         public static Weapon LocalPlayerWeapon { get; set; }
         public static LocalPlayer LocalPlayer { get; set; }
         public static Tuple<int, Player>[] Players { get; set; }

@@ -145,6 +145,7 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
                 builder.AppendLine("Aim When Scoped = False");
+                builder.AppendLine("Aim Jump = False");
                 builder.AppendLine("Aim Fov = 2");
                 builder.AppendLine("Aim Bone = 4");
                 builder.AppendLine("Aim Smooth Enabled = True");
@@ -167,9 +168,9 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Trigger Enemies = True");
                 builder.AppendLine("Trigger Allies = False");
                 builder.AppendLine("Trigger Burst Enabled = False");
+                builder.AppendLine("Trigger Burst Randomize = False");
                 builder.AppendLine("Trigger Burst Shots Min = 0");
                 builder.AppendLine("Trigger Burst Shots Max = 0");
-                builder.AppendLine("Trigger Burst Randomize = False");
                 builder.AppendLine("Trigger Delay FirstShot = 21");
                 builder.AppendLine("Trigger Delay Shots = 21").AppendLine();
             }
