@@ -68,6 +68,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(ClientState + Offsets.ClientState.InGame));
             _localPlayer = Program.MemUtils.Read<int>((IntPtr)(ClientDllBase + Offsets.Misc.LocalPlayer));
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_viewMatrix, 4, 4);
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(ClientState + Offsets.ClientState.ViewAngles));
 
 
             //If we are not ingame do not update  
