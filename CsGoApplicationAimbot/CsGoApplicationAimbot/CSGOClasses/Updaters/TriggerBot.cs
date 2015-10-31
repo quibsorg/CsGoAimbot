@@ -25,7 +25,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private int TriggerBurstFired { get; set; }
         private int TriggerBurstCount { get; set; }
         private bool TriggerShooting { get; set; }
-
+        public int TriggerShotCount { get; set; }
         #endregion
         #region Constructor
         public TriggerBot()
@@ -36,7 +36,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         public void Update()
         {
-            #region Trigger
+            if (Memory.WindowTitle != Program.GameTitle)
+                return;
+
+            if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
+                return;
+
             WinAPI.VirtualKeyShort triggerKey = _settings.GetKey(Memory.WeaponSection, "Trigger Key");
             bool triggerEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Enabled");
             bool triggerScoped = _settings.GetBool(Memory.WeaponSection, "Trigger When Scoped");
@@ -99,7 +104,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             LastClip = Memory.LocalPlayerWeapon?.Clip1 ?? 0;
             LastShotsFired = Memory.LocalPlayer.ShotsFired;
-            #endregion
         }
         private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
         {

@@ -24,6 +24,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (Memory.WindowTitle != Program.GameTitle)
                 return;
 
+            if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
+                return;
+
             NewViewAngles = NewViewAngles.SmoothAngle(Memory.ViewAngles, 1f);
 
             ControlRecoil();

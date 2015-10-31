@@ -160,7 +160,12 @@ namespace CsGoApplicationAimbot
             PrintSuccess("Cheat is now running.");
             Application.Run();
         }
-
+        private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //TriggerBot, Aimbot, Rcs
+            KeyUtils.Update();
+            Rcs.Update();
+        }
         private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
         {
             //Sonar, Bunny Jump.
@@ -168,13 +173,6 @@ namespace CsGoApplicationAimbot
             BunnyJump.Update();
             Sonar.Update();
             TriggerBot.Update();
-        }
-
-        private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
-        {
-            //TriggerBot, Aimbot, Rcs
-            KeyUtils.Update();
-            Rcs.Update();
         }
         #endregion
         static string Encrypt(MD5 md5Hash, string password)
@@ -187,7 +185,6 @@ namespace CsGoApplicationAimbot
             }
             return sBuilder.ToString();
         }
-
         private static bool Login()
         {
             using (_connection = new MySqlConnection(_connectionString))
