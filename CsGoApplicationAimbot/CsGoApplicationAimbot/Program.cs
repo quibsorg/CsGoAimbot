@@ -34,8 +34,6 @@ namespace CsGoApplicationAimbot
         private static IntPtr _hWnd;
         private static SettingsConfig _settings;
         private static ProcUtils _procUtils;
-        //Obsolete
-        public static Framework Framework;
 
         //Updaters
         public static Aimbot Aimbot;
@@ -147,7 +145,6 @@ namespace CsGoApplicationAimbot
             //will update everything we need.
             Memory = new Memory(engineDll, clientDll);
 
-            Framework = new Framework();
             Aimbot = new Aimbot();
             TriggerBot = new TriggerBot();
             Rcs = new RCS();
@@ -170,13 +167,13 @@ namespace CsGoApplicationAimbot
             Memory.Update();
             BunnyJump.Update();
             Sonar.Update();
+            TriggerBot.Update();
         }
 
         private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
         {
             //TriggerBot, Aimbot, Rcs
             KeyUtils.Update();
-            Framework.Update();
             Rcs.Update();
         }
         #endregion

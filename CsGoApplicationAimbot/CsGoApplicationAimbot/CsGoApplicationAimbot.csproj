@@ -112,7 +112,6 @@
     <Compile Include="CSGOClasses\BaseEntity.cs" />
     <Compile Include="CSGOClasses\Geometry.cs" />
     <Compile Include="CSGOClasses\Updaters\Aimbot.cs" />
-    <Compile Include="CSGOClasses\Updaters\Framework.cs" />
     <Compile Include="CSGOClasses\LocalPlayer.cs" />
     <Compile Include="CSGOClasses\Player.cs" />
     <Compile Include="CSGOClasses\Entity.cs" />

@@ -47,7 +47,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
 
             //If we are shooting with the trigger bot, over ride rcsStart.
-            if (!Framework.TriggerbotActive)
+            if (!TriggerBot.TriggerbotActive)
             {
                 if (Memory.LocalPlayer.ShotsFired <= rcsStart)
                     return;
