@@ -17,6 +17,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         #region Properties
         public static Vector3 LastPunch { get; set; }
         public static Vector3 NewViewAngles { get; set; }
+        public static Vector3 ViewAngles { get; set; }
+
         #endregion
 
         public void Update()
@@ -27,11 +29,14 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
                 return;
 
-            NewViewAngles = NewViewAngles.SmoothAngle(Memory.ViewAngles, 1f);
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles));
+            NewViewAngles = ViewAngles;
 
             ControlRecoil();
 
             LastPunch = Memory.LocalPlayer.VecPunch;
+
+            SetViewAngles(NewViewAngles);
         }
 
         public static void ControlRecoil(bool aimbot = false)
@@ -59,15 +64,22 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             if (aimbot)
             {
-                NewViewAngles -= Memory.LocalPlayer.VecPunch * (2f / 100 * randomRcsForce);
-                Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), NewViewAngles);
+                var punch = Memory.LocalPlayer.VecPunch - LastPunch;
+                if (punch.X != 0 || punch.Y != 0)
+                    NewViewAngles -= punch * (2f / 100 * randomRcsForce);
             }
             else
             {
-                NewViewAngles -= (Memory.LocalPlayer.VecPunch - LastPunch) * (2f / 100 * randomRcsForce);
-                Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), NewViewAngles);
+                var punch = Memory.LocalPlayer.VecPunch - LastPunch;
+                if (punch.X != 0 || punch.Y != 0)
+                    NewViewAngles -= punch * (2f / 100 * randomRcsForce);
             }
         }
-
+        private void SetViewAngles(Vector3 viewAngles, bool clamp = true)
+        {
+            if (clamp)
+                viewAngles = viewAngles.ClampAngle();
+            Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), viewAngles);
+        }
     }
 }
