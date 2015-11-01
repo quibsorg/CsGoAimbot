@@ -108,12 +108,14 @@ namespace CsGoApplicationAimbot.CSGOClasses
             #endregion
 
             #region FIELDS
+
             public Vector3 Head => ReadFieldProxy<Vector3>("head_0");
             public Vector3 Neck => ReadFieldProxy<Vector3>("neck_0");
             public Vector3 Spine0 => ReadFieldProxy<Vector3>("spine_0");
             public Vector3 Spine1 => ReadFieldProxy<Vector3>("spine_1");
             public Vector3 Spine2 => ReadFieldProxy<Vector3>("spine_2");
             public Vector3 Spine3 => ReadFieldProxy<Vector3>("spine_3");
+
             #endregion
 
             #region METHODS
@@ -150,6 +152,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public int ObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");
         public float FlashDuration => ReadFieldProxy<float>("CSPlayer.m_flFlashDuration");
         public float FlashMaxAlpha => ReadFieldProxy<float>("CSPlayer.m_flFlashMaxAlpha");
+
         public uint WeaponIndex
         {
             get
@@ -162,6 +165,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         }
 
         public Skeleton Bones { get; }
+
         #endregion
 
         #region CONSTRUCTORS
@@ -219,7 +223,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 return null;
 
             var handle = ActiveWeapon & 0xFFF;
-            return Program.Memory.Weapons.Count(x => x.Item1 == handle - 1) > 0 ? Program.Memory.Weapons.First(x => x.Item1 == handle - 1).Item2 : null;
+            return Program.Memory.Weapons.Count(x => x.Item1 == handle - 1) > 0
+                ? Program.Memory.Weapons.First(x => x.Item1 == handle - 1).Item2
+                : null;
         }
 
         public string GetActiveWeaponName()
@@ -233,8 +239,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var handle = ActiveWeapon & 0xFFF;
             if (Program.Memory.Weapons.Count(x => x.Item1 == handle - 1) > 0)
             {
-                Weapon weapon = Program.Memory.Weapons.First(x => x.Item1 == handle - 1).Item2;
-                string weaponName = weapon.ClassName;
+                var weapon = Program.Memory.Weapons.First(x => x.Item1 == handle - 1).Item2;
+                var weaponName = weapon.ClassName;
                 weaponName = weaponName.Remove(0, 1);
                 if (weaponName.Contains("Weapon"))
                 {

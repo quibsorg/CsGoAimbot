@@ -19,21 +19,21 @@
             public static int Base = 0x00;
             public static int InGame = 0xE8;
             public static int ViewAngles = 0x4ce0;
-            public static int Mapname = 0x26c;
-            public static uint MapDirectory = 0xf5010000;
+            //public static int Mapname = 0x26c;
+            //public static uint MapDirectory = 0xf5010000;
         }
 
-        public class GameResources
-        {
-            public static int Base = 0x04A38E2C;
-            public static int Names = 0x9D0;
-            public static int Kills = 0xBD8;
-            public static int Assists = 0xCDC;
-            public static int Deaths = 0xDE0;
-            public static int Armor = 0x182C;
-            public static int Score = 0x192C;
-            public static int Clantag = 0x4110;
-        }
+        //public class GameResources
+        //{
+        //    public static int Base = 0x04A38E2C;
+        //    public static int Names = 0x9D0;
+        //    public static int Kills = 0xBD8;
+        //    public static int Assists = 0xCDC;
+        //    public static int Deaths = 0xDE0;
+        //    public static int Armor = 0x182C;
+        //    public static int Score = 0x192C;
+        //    public static int Clantag = 0x4110;
+        //}
 
         public class NetVars
         {

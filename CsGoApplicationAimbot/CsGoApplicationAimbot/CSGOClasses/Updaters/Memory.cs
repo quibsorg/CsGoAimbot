@@ -12,12 +12,28 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class Memory
     {
+        #region Consturctor
+
+        public Memory(ProcessModule engineDll, ProcessModule clientDll)
+        {
+            Scanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
+            ClientDllBase = (int) clientDll.BaseAddress;
+            var engineDllBase = (int) engineDll.BaseAddress;
+            _entityList = ClientDllBase + Offsets.Misc.EntityList;
+            _viewMatrix = ClientDllBase + Offsets.Misc.ViewMatrix;
+            ClientState = Program.MemUtils.Read<int>((IntPtr) (engineDllBase + Offsets.ClientState.Base));
+        }
+
+        #endregion
+
         [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
+        private static extern IntPtr GetForegroundWindow();
+
         [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         #region Properties
+
         public static string WeaponSection { get; set; }
         public static string WindowTitle { get; set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
@@ -28,29 +44,21 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         public static Weapon LocalPlayerWeapon { get; set; }
         public static LocalPlayer LocalPlayer { get; set; }
         public static Tuple<int, Player>[] Players { get; set; }
+
         #endregion
 
         #region Variables
+
         private readonly int _entityList;
         private readonly int _viewMatrix;
         public static int ClientState;
         public static int ClientDllBase;
         private int _localPlayer;
-        #endregion
 
-        #region Consturctor
-        public Memory(ProcessModule engineDll, ProcessModule clientDll)
-        {
-            Scanner.ScanOffsets(clientDll, engineDll, Program.MemUtils);
-            ClientDllBase = (int)clientDll.BaseAddress;
-            var engineDllBase = (int)engineDll.BaseAddress;
-            _entityList = ClientDllBase + Offsets.Misc.EntityList;
-            _viewMatrix = ClientDllBase + Offsets.Misc.ViewMatrix;
-            ClientState = Program.MemUtils.Read<int>((IntPtr)(engineDllBase + Offsets.ClientState.Base));
-        }
         #endregion
 
         #region Method
+
         public void Update()
         {
             //If the game processes is not running, close the cheat.
@@ -65,21 +73,21 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             //var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
 
-            State = (SignOnState)Program.MemUtils.Read<int>((IntPtr)(ClientState + Offsets.ClientState.InGame));
-            _localPlayer = Program.MemUtils.Read<int>((IntPtr)(ClientDllBase + Offsets.Misc.LocalPlayer));
-            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr)_viewMatrix, 4, 4);
+            State = (SignOnState) Program.MemUtils.Read<int>((IntPtr) (ClientState + Offsets.ClientState.InGame));
+            _localPlayer = Program.MemUtils.Read<int>((IntPtr) (ClientDllBase + Offsets.Misc.LocalPlayer));
+            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr) _viewMatrix, 4, 4);
 
 
             //If we are not ingame do not update  
             if (State != SignOnState.SignonstateFull)
                 return;
 
-            var data = new byte[16 * 8192];
-            Program.MemUtils.Read((IntPtr)(_entityList), out data, data.Length);
+            var data = new byte[16*8192];
+            Program.MemUtils.Read((IntPtr) (_entityList), out data, data.Length);
 
-            for (var i = 0; i < data.Length / 16; i++)
+            for (var i = 0; i < data.Length/16; i++)
             {
-                var address = BitConverter.ToInt32(data, 16 * i);
+                var address = BitConverter.ToInt32(data, 16*i);
                 if (address == 0) continue;
                 var entity = new BaseEntity(address);
                 if (!entity.IsValid())
@@ -111,9 +119,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private static string GetActiveWindowTitle()
         {
             const int nChars = 256;
-            StringBuilder builder = new StringBuilder(nChars);
-            IntPtr handle = GetForegroundWindow();
-        
+            var builder = new StringBuilder(nChars);
+            var handle = GetForegroundWindow();
+
             if (GetWindowText(handle, builder, nChars) > 0)
             {
                 return builder.ToString();
@@ -122,6 +130,5 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         }
 
         #endregion
-
     }
 }

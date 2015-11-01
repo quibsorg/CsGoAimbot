@@ -13,6 +13,7 @@
         public float AccuracyPenalty => ReadFieldProxy<float>("Weapon.m_fAccuracyPenalty");
         public int WeaponId => ReadFieldProxy<int>("Weapon.m_iWeaponID");
         public int ZoomLevel => ReadFieldProxy<int>("Weapon.m_zoomLevel");
+
         #endregion
 
         #region CONSTRUCTORS

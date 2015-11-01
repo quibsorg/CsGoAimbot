@@ -10,8 +10,9 @@ namespace CsGoApplicationAimbot
 {
     public class SettingsConfig
     {
-        static readonly FileIniDataParser Parser = new FileIniDataParser();
-        readonly IniData _data;
+        private static readonly FileIniDataParser Parser = new FileIniDataParser();
+        private readonly IniData _data;
+
         public SettingsConfig()
         {
             if (!File.Exists("Config.ini"))
@@ -24,39 +25,43 @@ namespace CsGoApplicationAimbot
 
         public int GetInt(string section, string key)
         {
-            string keyValue = _data[section][key];
-            int setting = int.Parse(keyValue);
+            var keyValue = _data[section][key];
+            var setting = int.Parse(keyValue);
             return setting;
         }
+
         public string GetString(string section, string key)
         {
-            string keyValue = _data[section][key];
-            string setting = keyValue;
+            var keyValue = _data[section][key];
+            var setting = keyValue;
             return setting;
         }
 
         public uint GetUInt(string section, string key)
         {
-            string keyValue = _data[section][key];
-            uint setting = uint.Parse(keyValue);
+            var keyValue = _data[section][key];
+            var setting = uint.Parse(keyValue);
             return setting;
         }
+
         public float GetFloat(string section, string key)
         {
-            string keyValue = _data[section][key];
-            float setting = float.Parse(keyValue);
+            var keyValue = _data[section][key];
+            var setting = float.Parse(keyValue);
             return setting;
         }
+
         public bool GetBool(string section, string key)
         {
-            string keyValue = _data[section][key];
-            bool setting = bool.Parse(keyValue);
+            var keyValue = _data[section][key];
+            var setting = bool.Parse(keyValue);
             return setting;
         }
+
         public WinAPI.VirtualKeyShort GetKey(string section, string key)
         {
-            string keyValue = _data[section][key];
-            WinAPI.VirtualKeyShort button = (WinAPI.VirtualKeyShort) int.Parse(keyValue);
+            var keyValue = _data[section][key];
+            var button = (WinAPI.VirtualKeyShort) int.Parse(keyValue);
             return button;
         }
 
@@ -108,11 +113,10 @@ namespace CsGoApplicationAimbot
                 "Negev",
 
                 //Default for unkown weapons Should not be any but just incase.
-                "Default",
-
+                "Default"
             };
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine("[User]");
             builder.AppendLine("Username = " + Program.Username);
             builder.AppendLine("Password = " + Program.Password).AppendLine();
@@ -177,11 +181,10 @@ namespace CsGoApplicationAimbot
             if (!File.Exists("Config.ini"))
             {
                 Console.WriteLine("> Config does not exist. Creating..");
-                StreamWriter sr = new StreamWriter(@"Config.ini");
+                var sr = new StreamWriter(@"Config.ini");
                 sr.WriteLine(builder);
                 sr.Close();
             }
         }
     }
-
 }

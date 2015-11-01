@@ -15,11 +15,23 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #endregion
 
+        public float DistanceToOtherEntityInMetres(Tuple<int, Player> player)
+        {
+            return Geometry.GetDistanceToPoint(VecOrigin, player.Item2.VecOrigin)*0.01905f;
+        }
+
+        public float DistanceToOtherEntityInMetres(Player player)
+        {
+            return Geometry.GetDistanceToPoint(VecOrigin, player.VecOrigin)*0.01905f;
+        }
+
         #region FIELDS
+
         public Vector3 VecViewOffset => ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecViewOffset");
         public Vector3 VecPunch => ReadFieldProxy<Vector3>("CSLocalPlayer.m_vecPunch");
         public int ShotsFired => ReadFieldProxy<int>("CSLocalPlayer.m_iShotsFired");
         public int CrosshairIdx => ReadFieldProxy<int>("CSLocalPlayer.m_iCrosshairIdx");
+
         #endregion
 
         #region CONSTRUCTORS
@@ -44,15 +56,5 @@ namespace CsGoApplicationAimbot.CSGOClasses
         }
 
         #endregion
-
-        public float DistanceToOtherEntityInMetres(Tuple<int, Player> player)
-        {
-            return Geometry.GetDistanceToPoint(VecOrigin, player.Item2.VecOrigin) * 0.01905f;
-        }
-
-        public float DistanceToOtherEntityInMetres(Player player)
-        {
-            return Geometry.GetDistanceToPoint(VecOrigin, player.VecOrigin) * 0.01905f;
-        }
     }
 }

@@ -9,26 +9,18 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
     public class TriggerBot
     {
         #region Variables
-        readonly SettingsConfig _settings = new SettingsConfig();
-        #endregion
 
-        #region Properties
-        public static bool TriggerbotActive { get; set; }
-        private int LastShotsFired { get; set; }
-        private int LastClip { get; set; }
-        private bool TriggerOnTarget { get; set; }
-        private long TriggerLastTarget { get; set; }
-        private long TriggerLastShot { get; set; }
-        private int TriggerBurstFired { get; set; }
-        private int TriggerBurstCount { get; set; }
-        private bool TriggerShooting { get; set; }
+        private readonly SettingsConfig _settings = new SettingsConfig();
+
         #endregion
 
         #region Constructor
+
         public TriggerBot()
         {
             TriggerbotActive = false;
         }
+
         #endregion
 
         public void Update()
@@ -43,12 +35,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
 
 
-            WinAPI.VirtualKeyShort triggerKey = _settings.GetKey(Memory.WeaponSection, "Trigger Key");
-            bool triggerEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Enabled");
-            bool triggerScoped = _settings.GetBool(Memory.WeaponSection, "Trigger When Scoped");
-            bool triggerBurstEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Burst Enabled");
-            bool triggerToggle = _settings.GetBool(Memory.WeaponSection, "Trigger Toggle");
-            bool triggerHold = _settings.GetBool(Memory.WeaponSection, "Trigger Hold");
+            var triggerKey = _settings.GetKey(Memory.WeaponSection, "Trigger Key");
+            var triggerEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Enabled");
+            var triggerScoped = _settings.GetBool(Memory.WeaponSection, "Trigger When Scoped");
+            var triggerBurstEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Burst Enabled");
+            var triggerToggle = _settings.GetBool(Memory.WeaponSection, "Trigger Toggle");
+            var triggerHold = _settings.GetBool(Memory.WeaponSection, "Trigger Hold");
 
             if (triggerEnabled)
             {
@@ -106,6 +98,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             LastClip = Memory.LocalPlayerWeapon?.Clip1 ?? 0;
             LastShotsFired = Memory.LocalPlayer.ShotsFired;
         }
+
         private void TriggerToggleOrHold(WinAPI.VirtualKeyShort triggerKey, bool triggerToggle, bool triggerHold)
         {
             if (triggerToggle)
@@ -123,15 +116,15 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void Triggerbot()
         {
-            bool triggerTazer = _settings.GetBool("Misc", "Trigger Taser");
-            bool autoKnife = _settings.GetBool("Misc", "Auto Knife");
-            bool triggerEnemies = _settings.GetBool(Memory.WeaponSection, "Trigger Enemies");
-            bool triggerAllies = _settings.GetBool(Memory.WeaponSection, "Trigger Allies");
-            bool burstRandomize = _settings.GetBool(Memory.WeaponSection, "Trigger Burst Randomize");
-            float firstShot = _settings.GetFloat(Memory.WeaponSection, "Trigger Delay FirstShot");
-            float delayShot = _settings.GetFloat(Memory.WeaponSection, "Trigger Delay Shots");
-            int burstShotsMin = _settings.GetInt(Memory.WeaponSection, "Trigger Burst Shots Min");
-            int burstShotsMax = _settings.GetInt(Memory.WeaponSection, "Trigger Burst Shots Max");
+            var triggerTazer = _settings.GetBool("Misc", "Trigger Taser");
+            var autoKnife = _settings.GetBool("Misc", "Auto Knife");
+            var triggerEnemies = _settings.GetBool(Memory.WeaponSection, "Trigger Enemies");
+            var triggerAllies = _settings.GetBool(Memory.WeaponSection, "Trigger Allies");
+            var burstRandomize = _settings.GetBool(Memory.WeaponSection, "Trigger Burst Randomize");
+            var firstShot = _settings.GetFloat(Memory.WeaponSection, "Trigger Delay FirstShot");
+            var delayShot = _settings.GetFloat(Memory.WeaponSection, "Trigger Delay Shots");
+            var burstShotsMin = _settings.GetInt(Memory.WeaponSection, "Trigger Burst Shots Min");
+            var burstShotsMax = _settings.GetInt(Memory.WeaponSection, "Trigger Burst Shots Max");
 
             //If our player is null, or if trigger is shooting we return.
             if (Memory.LocalPlayer == null || TriggerShooting)
@@ -146,7 +139,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             if (triggerTazer)
             {
-                if (Memory.LocalPlayerWeapon.ClassName == "CWeaponTaser" && Memory.LocalPlayer.DistanceToOtherEntityInMetres(player) <= 3)
+                if (Memory.LocalPlayerWeapon.ClassName == "CWeaponTaser" &&
+                    Memory.LocalPlayer.DistanceToOtherEntityInMetres(player) <= 3)
                 {
                     Shoot();
                     return;
@@ -154,7 +148,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             if (autoKnife)
             {
-                if (Memory.LocalPlayerWeapon.ClassName == "CKnife" && Memory.LocalPlayer.DistanceToOtherEntityInMetres(player) <= 1.4f)
+                if (Memory.LocalPlayerWeapon.ClassName == "CKnife" &&
+                    Memory.LocalPlayer.DistanceToOtherEntityInMetres(player) <= 1.4f)
                 {
                     RightKnife();
                     return;
@@ -162,7 +157,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
 
             //We check the players teamnum, if it matches ours teammate, if not enemy.
-            if ((triggerEnemies && player.TeamNum != Memory.LocalPlayer.TeamNum) || (triggerAllies && player.TeamNum == Memory.LocalPlayer.TeamNum))
+            if ((triggerEnemies && player.TeamNum != Memory.LocalPlayer.TeamNum) ||
+                (triggerAllies && player.TeamNum == Memory.LocalPlayer.TeamNum))
             {
                 if (Memory.LocalPlayerWeapon.ClassName == "CWeaponTaser")
                     return;
@@ -203,17 +199,33 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 TriggerOnTarget = false;
             }
         }
+
         private static void Shoot()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             Thread.Sleep(10);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
+
         private static void RightKnife()
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTDOWN, 0, 0, 0, 0);
             Thread.Sleep(10);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
         }
+
+        #region Properties
+
+        public static bool TriggerbotActive { get; set; }
+        private int LastShotsFired { get; set; }
+        private int LastClip { get; set; }
+        private bool TriggerOnTarget { get; set; }
+        private long TriggerLastTarget { get; set; }
+        private long TriggerLastShot { get; set; }
+        private int TriggerBurstFired { get; set; }
+        private int TriggerBurstCount { get; set; }
+        private bool TriggerShooting { get; set; }
+
+        #endregion
     }
 }

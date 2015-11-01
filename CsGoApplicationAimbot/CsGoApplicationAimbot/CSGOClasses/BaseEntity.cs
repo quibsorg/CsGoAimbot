@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
@@ -137,9 +136,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 if (VirtualTable == 0)
                     return 0;
-                var function = Program.MemUtils.Read<uint>((IntPtr)(VirtualTable + 2 * 0x04));
+                var function = Program.MemUtils.Read<uint>((IntPtr) (VirtualTable + 2*0x04));
                 if (function != 0xFFFFFFFF)
-                    return Program.MemUtils.Read<uint>((IntPtr)(function + 0x01));
+                    return Program.MemUtils.Read<uint>((IntPtr) (function + 0x01));
                 return 0;
             }
             catch
@@ -154,7 +153,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             {
                 var clientClass = GetClientClass();
                 if (clientClass != 0)
-                    return Program.MemUtils.Read<uint>((IntPtr)((long)clientClass + 20));
+                    return Program.MemUtils.Read<uint>((IntPtr) ((long) clientClass + 20));
                 return clientClass;
             }
             catch
@@ -170,8 +169,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 var clientClass = GetClientClass();
                 if (clientClass != 0)
                 {
-                    var ptr = Program.MemUtils.Read<int>((IntPtr)(clientClass + 8));
-                    return Program.MemUtils.ReadString((IntPtr)(ptr), 32, Encoding.ASCII);
+                    var ptr = Program.MemUtils.Read<int>((IntPtr) (clientClass + 8));
+                    return Program.MemUtils.ReadString((IntPtr) (ptr), 32, Encoding.ASCII);
                 }
                 return "none";
             }
@@ -184,7 +183,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public bool IsPlayer()
         {
             return
-                ClassId == (int)Enums.ClassId.CsPlayer;
+                ClassId == (int) Enums.ClassId.CsPlayer;
         }
 
         public bool IsWeapon()
@@ -245,8 +244,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 ClassId == (int) Enums.ClassId.P90X ||
                 ClassId == (int) Enums.ClassId.Usp ||
                 ClassId == (int) Enums.ClassId.Scar20;
-
         }
+
         #endregion
     }
 }

@@ -23,7 +23,7 @@ namespace CsGoApplicationAimbot
             EntityOff(memUtils);
             LocalPlayer(memUtils);
             Jump(memUtils);
-            GameResources(memUtils);
+            //GameResources(memUtils);
             ClientState(memUtils);
             SetViewAngles(memUtils);
             SignOnState(memUtils);
@@ -44,46 +44,46 @@ namespace CsGoApplicationAimbot
 
         #region MISC
 
-        private static void GameResources(MemUtils memUtils)
-        {
-            _scan = memUtils.PerformSignatureScan(new byte[]
-            {
-                0x89, 0x4D, 0xF4, //mov [ebp-0C],ecx
-                0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, //mov ecx,[engine.dll+xxxx]
-                0x53, //push ebx
-                0x56, //push esi
-                0x57, //push edi
-                0x8B, 0x01
-            }, "xxxxx????xxxxx", _engineDll);
-            if (_scan.Success)
-            {
-                int address, pointer, offset;
-                pointer = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 5)) - _engineDllBase;
-
-                _scan = memUtils.PerformSignatureScan(new byte[]
-                {
-                    0xCC, //int 3
-                    0xCC, //int 3
-                    0x55, //push ebp
-                    0x8B, 0xEC, //mov ebp,esp
-                    0x8B, 0x45, 0x08, //mov eax,[ebp+08]
-                    0x8B, 0x44, 0xC1, 0x00, //mov eax,[acx+eax*8+xx]
-                    0x5D, //pop ebp
-                    0xC2, 0x00, 0x00, //ret 0004
-                    0xCC, //int 3
-                    0xCC
-                }, "xxxxxxxxxxx?xx??xx", _clientDll);
-                if (_scan.Success)
-                {
-                    offset = memUtils.Read<byte>((IntPtr) (_scan.Address.ToInt32() + 11));
-
-                    address = memUtils.Read<int>((IntPtr) (_engineDllBase + pointer));
-                    address = address + 0x46*8 + offset;
-                    address -= _clientDllBase;
-                    Offsets.GameResources.Base = address;
-                }
-            }
-        }
+        //private static void GameResources(MemUtils memUtils)
+        //{
+        //    _scan = memUtils.PerformSignatureScan(new byte[]
+        //    {
+        //        0x89, 0x4D, 0xF4, //mov [ebp-0C],ecx
+        //        0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, //mov ecx,[engine.dll+xxxx]
+        //        0x53, //push ebx
+        //        0x56, //push esi
+        //        0x57, //push edi
+        //        0x8B, 0x01
+        //    }, "xxxxx????xxxxx", _engineDll);
+        //    if (_scan.Success)
+        //    {
+        //        int address, pointer, offset;
+        //        pointer = memUtils.Read<int>((IntPtr) (_scan.Address.ToInt32() + 5)) - _engineDllBase;
+        //
+        //        _scan = memUtils.PerformSignatureScan(new byte[]
+        //        {
+        //            0xCC, //int 3
+        //            0xCC, //int 3
+        //            0x55, //push ebp
+        //            0x8B, 0xEC, //mov ebp,esp
+        //            0x8B, 0x45, 0x08, //mov eax,[ebp+08]
+        //            0x8B, 0x44, 0xC1, 0x00, //mov eax,[acx+eax*8+xx]
+        //            0x5D, //pop ebp
+        //            0xC2, 0x00, 0x00, //ret 0004
+        //            0xCC, //int 3
+        //            0xCC
+        //        }, "xxxxxxxxxxx?xx??xx", _clientDll);
+        //        if (_scan.Success)
+        //        {
+        //            offset = memUtils.Read<byte>((IntPtr) (_scan.Address.ToInt32() + 11));
+        //
+        //            address = memUtils.Read<int>((IntPtr) (_engineDllBase + pointer));
+        //            address = address + 0x46*8 + offset;
+        //            address -= _clientDllBase;
+        //            Offsets.GameResources.Base = address;
+        //        }
+        //    }
+        //}
 
         private static void VMatrix(MemUtils memUtils)
         {

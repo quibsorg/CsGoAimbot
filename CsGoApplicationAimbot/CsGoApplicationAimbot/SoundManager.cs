@@ -1,21 +1,14 @@
 ﻿using System;
 using System.IO;
-using SharpDX.XAudio2;
 using SharpDX.Multimedia;
+using SharpDX.XAudio2;
 
 namespace CsGoApplicationAimbot
 {
     public class SoundManager : IDisposable
     {
-        #region Variables
-        private XAudio2 _audio;
-        private MasteringVoice _masteringVoice;
-        private SoundStream[] _soundStreams;
-        private AudioBuffer[] _audioBuffers;
-        private SourceVoice[] _sourceVoices;
-        #endregion
-
         #region Constructor
+
         public SoundManager(int sounds)
         {
             _audio = new XAudio2();
@@ -23,11 +16,23 @@ namespace CsGoApplicationAimbot
             _masteringVoice.SetVolume(0.5f);
             _soundStreams = new SoundStream[sounds];
             _audioBuffers = new AudioBuffer[sounds];
-            _sourceVoices = new SourceVoice[sounds];   
+            _sourceVoices = new SourceVoice[sounds];
         }
+
+        #endregion
+
+        #region Variables
+
+        private XAudio2 _audio;
+        private readonly MasteringVoice _masteringVoice;
+        private readonly SoundStream[] _soundStreams;
+        private readonly AudioBuffer[] _audioBuffers;
+        private readonly SourceVoice[] _sourceVoices;
+
         #endregion
 
         #region Methods
+
         //Adds the sound we want to play
         public void Add(int index, UnmanagedMemoryStream stream)
         {
@@ -78,6 +83,7 @@ namespace CsGoApplicationAimbot
                 }
             }
         }
+
         #endregion
     }
 }

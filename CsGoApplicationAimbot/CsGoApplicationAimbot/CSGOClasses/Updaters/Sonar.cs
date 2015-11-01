@@ -7,14 +7,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
     public class Sonar
     {
         #region Properties
+
         private float LastPercent { get; set; }
 
-        #endregion
-
-        #region Variables
-        private readonly SettingsConfig _settings = new SettingsConfig();
-        private int _localPlayer;
-        private long _lastBeep;
         #endregion
 
         public void Update()
@@ -33,18 +28,18 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void SoundEsp()
         {
-            bool sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
-            int sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
-            float sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
-            float sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
-            float sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
+            var sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
+            var sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
+            var sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
+            var sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
+            var sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
 
             if (!sonarEnabled)
                 return;
             //Set's our sound volume
-            Program.SoundManager.SetVolume(sonarVolume / 100f);
+            Program.SoundManager.SetVolume(sonarVolume/100f);
 
-            TimeSpan span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
+            var span = new TimeSpan(DateTime.Now.Ticks - _lastBeep);
 
             if (span.TotalMilliseconds > sonarInterval)
             {
@@ -52,10 +47,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
             }
 
-            float minRange = sonarRange / sonarInterval * (float)span.TotalMilliseconds;
-            LastPercent = 100f / sonarInterval * (float)span.TotalMilliseconds;
+            var minRange = sonarRange/sonarInterval*(float) span.TotalMilliseconds;
+            LastPercent = 100f/sonarInterval*(float) span.TotalMilliseconds;
 
-            float leastDist = float.MaxValue;
+            var leastDist = float.MaxValue;
 
             foreach (var player in Memory.Players)
             {
@@ -71,7 +66,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 if (player.Item2.TeamNum == Memory.LocalPlayer.TeamNum)
                     continue;
 
-                float dist = Memory.LocalPlayer.DistanceToOtherEntityInMetres(player);
+                var dist = Memory.LocalPlayer.DistanceToOtherEntityInMetres(player);
                 if (dist <= minRange)
                 {
                     leastDist = dist;
@@ -86,5 +81,13 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 _lastBeep = DateTime.Now.Ticks;
             }
         }
+
+        #region Variables
+
+        private readonly SettingsConfig _settings = new SettingsConfig();
+        private int _localPlayer;
+        private long _lastBeep;
+
+        #endregion
     }
 }

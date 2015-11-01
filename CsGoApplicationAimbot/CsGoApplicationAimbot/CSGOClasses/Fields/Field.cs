@@ -16,7 +16,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Fields
         }
 
         public bool ValueRead { get; protected set; }
-        public int Offset { get; private set; }
+        public int Offset { get; }
         public T Value { get; protected set; }
 
         public virtual void ReadValue(int baseAddress)
