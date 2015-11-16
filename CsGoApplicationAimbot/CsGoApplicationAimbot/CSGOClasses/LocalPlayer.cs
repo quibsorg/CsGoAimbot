@@ -36,8 +36,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         #region CONSTRUCTORS
 
-        public LocalPlayer(int address)
-            : base(address)
+        public LocalPlayer(int address) : base(address)
         {
             AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", Offsets.NetVars.LocalPlayer.VecViewOffset);
             AddField<Vector3>("CSLocalPlayer.m_vecPunch", Offsets.NetVars.LocalPlayer.VecPunch);
@@ -45,8 +44,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
             AddField<int>("CSLocalPlayer.m_iCrosshairIdx", Offsets.NetVars.LocalPlayer.CrosshairIdx);
         }
 
-        public LocalPlayer(Player player)
-            : base(player)
+        public LocalPlayer(Player player) : base(player)
         {
             CopyFieldsFrom(player);
             AddField<Vector3>("CSLocalPlayer.m_vecViewOffset", Offsets.NetVars.LocalPlayer.VecViewOffset);

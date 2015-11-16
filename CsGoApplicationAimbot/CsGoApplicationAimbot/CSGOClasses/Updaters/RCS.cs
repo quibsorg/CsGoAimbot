@@ -46,7 +46,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (Memory.LocalPlayerWeapon == null || Memory.LocalPlayerWeapon.Clip1 <= 0)
                 return;
 
-            //If we are shooting with the trigger bot, over ride rcsStart.
+            //Ugly way to do it, we'll count the shots fired while trigger is active.
             if (!TriggerBot.TriggerbotActive)
             {
                 if (Memory.LocalPlayer.ShotsFired <= rcsStart)

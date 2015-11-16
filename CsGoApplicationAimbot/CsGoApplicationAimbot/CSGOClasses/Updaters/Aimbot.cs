@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
 using ExternalUtilsCSharp;
 using ExternalUtilsCSharp.MathObjects;
@@ -7,7 +9,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class Aimbot
     {
-        private static readonly SettingsConfig _settings = new SettingsConfig();
+        private static readonly SettingsConfig Settings = new SettingsConfig();
 
         public Aimbot()
         {
@@ -17,10 +19,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         #region Properties
 
         private bool AimbotActive { get; set; }
-
-        #endregion
-
-        #region Variables
 
         #endregion
 
@@ -39,16 +37,15 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             #region Aimbot
 
-            var aimKey = _settings.GetKey(Memory.WeaponSection, "Aim Key");
-            var aimEnaled = _settings.GetBool(Memory.WeaponSection, "Aim Enabled");
-            var aimScoped = _settings.GetBool(Memory.WeaponSection, "Aim When Scoped");
-            var aimToggle = _settings.GetBool(Memory.WeaponSection, "Aim Toggle");
-            var aimHold = _settings.GetBool(Memory.WeaponSection, "Aim Hold");
-            var aimStart = _settings.GetInt(Memory.WeaponSection, "Aim Start");
+            var aimKey = Settings.GetKey(Memory.WeaponSection, "Aim Key");
+            var aimEnaled = Settings.GetBool(Memory.WeaponSection, "Aim Enabled");
+            var aimScoped = Settings.GetBool(Memory.WeaponSection, "Aim When Scoped");
+            var aimToggle = Settings.GetBool(Memory.WeaponSection, "Aim Toggle");
+            var aimHold = Settings.GetBool(Memory.WeaponSection, "Aim Hold");
+            var aimStart = Settings.GetInt(Memory.WeaponSection, "Aim Start");
 
             //Won't aim if we do not have any ammo in the clip.
-            if (Memory.LocalPlayerWeapon != null &&
-                (aimEnaled && Memory.LocalPlayerWeapon.Clip1 > 0 && Memory.LocalPlayer.ShotsFired > aimStart))
+            if (Memory.LocalPlayerWeapon != null && (aimEnaled && Memory.LocalPlayerWeapon.Clip1 > 0 && Memory.LocalPlayer.ShotsFired > aimStart))
             {
                 if (aimScoped)
                 {
@@ -83,42 +80,49 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void ControlAim()
         {
-            var aimSpotted = _settings.GetBool(Memory.WeaponSection, "Aim Spotted");
-            var aimSpottedBy = _settings.GetBool(Memory.WeaponSection, "Aim Spotted By");
-            var aimEnemies = _settings.GetBool(Memory.WeaponSection, "Aim Enemies");
-            var aimAllies = _settings.GetBool(Memory.WeaponSection, "Aim Allies");
-            var aimSmooth = _settings.GetBool(Memory.WeaponSection, "Aim Smooth Enabled");
-            var aimBone = _settings.GetInt(Memory.WeaponSection, "Aim Bone");
-            var aimFov = _settings.GetFloat(Memory.WeaponSection, "Aim Fov");
-            var aimSmoothValue = _settings.GetFloat(Memory.WeaponSection, "Aim Smooth Value");
+            var aimSpotted = Settings.GetBool(Memory.WeaponSection, "Aim Spotted");
+            var aimSpottedBy = Settings.GetBool(Memory.WeaponSection, "Aim Spotted By");
+            var aimEnemies = Settings.GetBool(Memory.WeaponSection, "Aim Enemies");
+            var aimAllies = Settings.GetBool(Memory.WeaponSection, "Aim Allies");
+            var aimSmooth = Settings.GetBool(Memory.WeaponSection, "Aim Smooth Enabled");
+            var aimBone = Settings.GetInt(Memory.WeaponSection, "Aim Bone");
+            var aimFov = Settings.GetFloat(Memory.WeaponSection, "Aim Fov");
+            var aimSmoothValue = Settings.GetFloat(Memory.WeaponSection, "Aim Smooth Value");
 
             var valid = Memory.Players.Where(x => x.Item2.IsValid() && x.Item2.Health != 0 && x.Item2.Dormant != 1);
 
             if (aimSpotted)
+            {
                 valid = valid.Where(x => x.Item2.SeenBy(Memory.LocalPlayer));
-
+            }
             if (aimSpottedBy)
+            {
                 valid = valid.Where(x => Memory.LocalPlayer.SeenBy(x.Item2));
+            }
 
             if (aimEnemies)
+            {
                 valid = valid.Where(x => x.Item2.TeamNum != Memory.LocalPlayer.TeamNum);
+            }
 
             if (aimAllies)
+            {
                 valid = valid.Where(x => x.Item2.TeamNum == Memory.LocalPlayer.TeamNum);
+            }
 
             valid = valid.OrderBy(x => (x.Item2.VecOrigin - Memory.LocalPlayer.VecOrigin).Length());
 
             var closest = Vector3.Zero;
             var closestFov = float.MaxValue;
-            foreach (var tpl in valid)
-            {
-                var player = tpl.Item2;
 
-                var newAngles =
-                    (Memory.LocalPlayer.VecOrigin + Memory.LocalPlayer.VecViewOffset).CalcAngle(
-                        player.Bones.GetBoneByIndex(aimBone)) - RCS.NewViewAngles;
+            foreach (var tuple in valid)
+            {
+                var player = tuple.Item2;
+
+                var newAngles = (Memory.LocalPlayer.VecOrigin + Memory.LocalPlayer.VecViewOffset).CalcAngle(player.Bones.GetBoneByIndex(aimBone)) - RCS.NewViewAngles;
+
                 newAngles = newAngles.ClampAngle();
-                var fov = newAngles.Length()%360f;
+                var fov = newAngles.Length() % 360f;
 
                 if (!(fov < closestFov) || !(fov < aimFov))
                     continue;
