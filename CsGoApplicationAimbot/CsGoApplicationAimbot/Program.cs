@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,7 +10,6 @@ using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses.Updaters;
 using CsGoApplicationAimbot.Properties;
 using ExternalUtilsCSharp;
-using MySql.Data.MySqlClient;
 using Timer = System.Timers.Timer;
 
 namespace CsGoApplicationAimbot
@@ -34,152 +32,6 @@ namespace CsGoApplicationAimbot
             }
             return sBuilder.ToString();
         }
-
-        private static bool Login()
-        {
-            using (_connection = new MySqlConnection(_connectionString))
-            {
-                using (_cmd = _connection.CreateCommand())
-                {
-                    //Opens our connection to the db
-                    _connection.Open();
-                    _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
-                    _cmd.Parameters.AddWithValue("@username", Username);
-                    using (_reader = _cmd.ExecuteReader())
-                    {
-                        while (_reader.Read())
-                        {
-                            if (_reader.HasRows)
-                            {
-                                //If we get this far we have a user with a matching password
-                                if (Password == _reader.GetString("password"))
-                                {
-                                    //We check the user permssion.
-                                    _authorized = CheckPermission();
-                                    //We check their hwid, if they have none we insert it.
-                                    if (_authorized)
-                                    {
-                                        _hwidMatch = CheckHwid();
-                                        if (_hwidMatch)
-                                            return true;
-                                    }
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    Console.WriteLine("Username or password is incorrect.");
-                    Console.ReadLine();
-                    return false;
-                }
-            }
-        }
-
-        private static bool CheckHwid()
-        {
-            _hwid = Hwid.GetHwid();
-            using (_connection = new MySqlConnection(_connectionString))
-            {
-                using (_cmd = _connection.CreateCommand())
-                {
-                    _connection.Open();
-                    _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
-                    _cmd.Parameters.AddWithValue("@username", Username);
-
-                    using (_reader = _cmd.ExecuteReader())
-                    {
-                        while (_reader.Read())
-                        {
-                            var hwid = _reader.GetOrdinal("hwid");
-
-                            if (_reader.IsDBNull(hwid))
-                            {
-                                InsertHwid();
-                                return true;
-                            }
-                            if (_hwid == _reader.GetString("hwid"))
-                            {
-                                return true;
-                            }
-                            Console.WriteLine("Hwid dosen't match, ask for a reset.");
-                            Console.ReadLine();
-                            return false;
-                        }
-                    }
-                }
-                return false;
-            }
-        }
-
-        private static void InsertHwid()
-        {
-            using (_connection = new MySqlConnection(_connectionString))
-            {
-                using (_cmd = _connection.CreateCommand())
-                {
-                    _connection.Open();
-                    try
-                    {
-                        _cmd.CommandText = "UPDATE users SET hwid= @hwid WHERE username = @user;";
-                        _cmd.Parameters.AddWithValue("@hwid", _hwid);
-                        _cmd.Parameters.AddWithValue("@user", Username);
-                        _cmd.ExecuteNonQuery();
-                        _loggedIn = true;
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
-            }
-        }
-
-        private static bool CheckPermission()
-        {
-            using (_connection = new MySqlConnection(_connectionString))
-            {
-                using (_cmd = _connection.CreateCommand())
-                {
-                    try
-                    {
-                        _connection.Open();
-                        _cmd.CommandText = "SELECT * FROM `users` WHERE `username`= @username";
-                        //get's the row that matches our username.
-                        _cmd.Parameters.AddWithValue("@username", Username);
-
-                        using (_reader = _cmd.ExecuteReader())
-                        {
-                            while (_reader.Read())
-                            {
-                                _userGroup = _reader.GetInt16("usergroup");
-                            }
-
-                            //3 = Super Moderator, 4 == Admin, 6 == Moderator, 8 == CsgoVIP
-                            if (_userGroup == 3 || _userGroup == 4 || _userGroup == 6 || _userGroup == 8)
-                            {
-                                return true;
-                            }
-                            Console.WriteLine("You do not have permssion to use this product");
-                            Console.ReadLine();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    finally
-                    {
-                        if (_connection.State == ConnectionState.Open)
-                        {
-                            _connection.Close();
-                            _reader.Close();
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
         #region Fields
 
         private static readonly Timer Timer1 = new Timer(1);
@@ -214,8 +66,7 @@ namespace CsGoApplicationAimbot
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
 
-        private static readonly string _connectionString =
-            "Server=MYSQL5011.myWindowsHosting.com;Database=db_9b8e03_smurf;Uid=9b8e03_smurf;Pwd=Phanta123!;";
+        private static readonly string _connectionString = "Server=MYSQL5011.myWindowsHosting.com;Database=db_9b8e03_smurf;Uid=9b8e03_smurf;Pwd=Phanta123!;";
 
         private static bool _authorized;
         private static bool _hwidMatch;
@@ -224,10 +75,6 @@ namespace CsGoApplicationAimbot
         public static string Password = string.Empty;
         private static string _hwid = string.Empty;
         private static bool _loggedIn;
-        private static MySqlConnection _connection;
-        private static MySqlCommand _cmd;
-        private static MySqlDataReader _reader;
-
         #endregion
 
         #region Method
@@ -254,10 +101,6 @@ namespace CsGoApplicationAimbot
                 Password = _settings.GetString("User", "Password");
             }
 
-            _loggedIn = Login();
-
-            if (_loggedIn)
-            {
                 PrintSuccess("Smurf bot");
                 //Sets a random title to our Console Window.. Almost useless.
                 Console.Title = RandomTitle();
@@ -267,7 +110,6 @@ namespace CsGoApplicationAimbot
 
                 //Starts our cheat.
                 StartCheat();
-            }
         }
 
         private static void ManageAudio()
