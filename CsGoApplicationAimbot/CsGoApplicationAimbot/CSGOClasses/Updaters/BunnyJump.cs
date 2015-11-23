@@ -28,6 +28,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (Memory.State != SignOnState.SignonstateFull)
                 return;
 
+            if (!Memory.LocalPlayer.IsMoving())
+                return;
+
             BunnyHop();
         }
 
@@ -46,10 +49,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     return;
 
                 if (Memory.LocalPlayer.Flags == 256)
-                    Program.MemUtils.Write((IntPtr) (Memory.ClientDllBase + Offsets.Misc.Jump), 4);
+                    Program.MemUtils.Write((IntPtr)(Memory.ClientDllBase + Offsets.Misc.Jump), 4);
                 else
                 {
-                    Program.MemUtils.Write((IntPtr) (Memory.ClientDllBase + Offsets.Misc.Jump), 5);
+                    Program.MemUtils.Write((IntPtr)(Memory.ClientDllBase + Offsets.Misc.Jump), 5);
                     //We +1 for each time we jump
                     CurrentJump++;
                 }

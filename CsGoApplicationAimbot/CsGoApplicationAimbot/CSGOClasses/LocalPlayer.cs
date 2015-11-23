@@ -1,4 +1,5 @@
 ﻿using System;
+using CsGoApplicationAimbot.CSGOClasses.Updaters;
 using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
@@ -23,6 +24,22 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public float DistanceToOtherEntityInMetres(Player player)
         {
             return Geometry.GetDistanceToPoint(VecOrigin, player.VecOrigin)*0.01905f;
+        }
+
+        public bool IsMoving()
+        {
+            Vector2 vector2 = new Vector2(Memory.LocalPlayer.VecVelocity.X, Memory.LocalPlayer.VecVelocity.Y);
+            float length = vector2.Length();
+            float speedMeters = length * 0.01905f;
+            float speedKiloMetersPerHour = speedMeters * 60f * 60f / 1000f;
+            if (speedKiloMetersPerHour > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #region FIELDS
