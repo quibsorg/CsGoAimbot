@@ -21,17 +21,6 @@ namespace CsGoApplicationAimbot
         public static SoundManager SoundManager { get; private set; }
 
         #endregion
-
-        private static string Encrypt(MD5 md5Hash, string password)
-        {
-            var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-            var sBuilder = new StringBuilder();
-            foreach (var t in data)
-            {
-                sBuilder.Append(t.ToString("x2"));
-            }
-            return sBuilder.ToString();
-        }
         #region Fields
 
         private static readonly Timer Timer1 = new Timer(1);
@@ -50,7 +39,6 @@ namespace CsGoApplicationAimbot
         #region Variables
 
         private static IntPtr _hWnd;
-        private static SettingsConfig _settings;
         private static ProcUtils _procUtils;
 
         //Updaters
@@ -63,42 +51,12 @@ namespace CsGoApplicationAimbot
 
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
-
-        private static readonly string _connectionString = "Server=MYSQL5011.myWindowsHosting.com;Database=db_9b8e03_smurf;Uid=9b8e03_smurf;Pwd=Phanta123!;";
-
-        private static bool _authorized;
-        private static bool _hwidMatch;
-        private static int _userGroup;
-        public static string Username = string.Empty;
-        public static string Password = string.Empty;
-        private static string _hwid = string.Empty;
-        private static bool _loggedIn;
         #endregion
 
         #region Method
 
         public static void Main(string[] args)
         {
-            if (!File.Exists("Config.ini"))
-            {
-                Console.Write("Enter your username: ");
-                Username = Console.ReadLine();
-                Console.Clear();
-
-                Console.Write("Enter your password: ");
-                using (var md5Hash = MD5.Create())
-                {
-                    Password = Encrypt(md5Hash, Password = Console.ReadLine());
-                }
-                Console.Clear();
-            }
-            else
-            {
-                _settings = new SettingsConfig();
-                Username = _settings.GetString("User", "Username");
-                Password = _settings.GetString("User", "Password");
-            }
-
                 PrintSuccess("Smurf bot");
                 //Sets a random title to our Console Window.. Almost useless.
                 Console.Title = RandomTitle();
@@ -127,7 +85,6 @@ namespace CsGoApplicationAimbot
         private static void StartCheat()
         {
             //We make the config if it dosen't exist.
-            _settings = new SettingsConfig();
             KeyUtils = new KeyUtils();
 
             PrintInfo("> Waiting for CSGO to start up...");

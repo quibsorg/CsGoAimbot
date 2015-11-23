@@ -117,10 +117,6 @@ namespace CsGoApplicationAimbot
             };
 
             var builder = new StringBuilder();
-            builder.AppendLine("[User]");
-            builder.AppendLine("Username = " + Program.Username);
-            builder.AppendLine("Password = " + Program.Password).AppendLine();
-
             //Misc
             builder.AppendLine("[Bunny Jump]");
             builder.AppendLine("Bunny Jump Enabled = True");
@@ -148,6 +144,7 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
+                builder.AppendLine("Aim Only When Standing Still = True");
                 builder.AppendLine("Aim When Scoped = False");
                 builder.AppendLine("Aim Jump = False");
                 builder.AppendLine("Aim Fov = 2");
@@ -168,6 +165,7 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Trigger Key = 18");
                 builder.AppendLine("Trigger Toggle = False");
                 builder.AppendLine("Trigger Hold = True");
+                builder.AppendLine("Trigger Only When Standing Still = True");
                 builder.AppendLine("Trigger When Scoped = False");
                 builder.AppendLine("Trigger Enemies = True");
                 builder.AppendLine("Trigger Allies = False");
@@ -180,7 +178,7 @@ namespace CsGoApplicationAimbot
             }
             if (!File.Exists("Config.ini"))
             {
-                Console.WriteLine("> Config does not exist. Creating..");
+                Console.WriteLine(@"> Config does not exist. Creating..");
                 var sr = new StreamWriter(@"Config.ini");
                 sr.WriteLine(builder);
                 sr.Close();
