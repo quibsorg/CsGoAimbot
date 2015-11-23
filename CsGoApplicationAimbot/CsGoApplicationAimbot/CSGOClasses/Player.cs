@@ -196,8 +196,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
         protected override void SetupFields()
         {
             base.SetupFields();
-            AddField<float>("CSPlayer.m_flFlashMaxAlpha", Offsets.NetVars.CCsPlayer.FlashMaxAlpha);
-            AddField<float>("CSPlayer.m_flFlashDuration", Offsets.NetVars.CCsPlayer.FlashDuriation);
+            //AddField<float>("CSPlayer.m_flFlashMaxAlpha", Offsets.NetVars.CCsPlayer.FlashMaxAlpha);
+            //AddField<float>("CSPlayer.m_flFlashDuration", Offsets.NetVars.CCsPlayer.FlashDuriation);
             AddField<int>("CSPlayer.m_hBoneMatrix", Offsets.NetVars.CCsPlayer.BoneMatrix);
             AddField<uint>("CSPlayer.m_hActiveWeapon", Offsets.NetVars.CCsPlayer.ActiveWeapon);
             AddField<int>("CSPlayer.m_iFlags", Offsets.NetVars.CCsPlayer.Flags);
