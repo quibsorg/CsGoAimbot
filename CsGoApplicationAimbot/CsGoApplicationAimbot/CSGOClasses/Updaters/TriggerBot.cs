@@ -41,9 +41,17 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             var triggerBurstEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Burst Enabled");
             var triggerToggle = _settings.GetBool(Memory.WeaponSection, "Trigger Toggle");
             var triggerHold = _settings.GetBool(Memory.WeaponSection, "Trigger Hold");
+            var triggerDash = _settings.GetBool(Memory.WeaponSection, "Trigger Only When Standing Still");
 
             if (triggerEnabled)
             {
+                if (triggerDash)
+                {
+                    if (Memory.LocalPlayer.IsMoving())
+                    {
+                        return;
+                    }
+                }
                 //Trigger Scoped is only good for snipers.
                 if (triggerScoped)
                 {

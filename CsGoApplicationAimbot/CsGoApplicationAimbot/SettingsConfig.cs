@@ -144,7 +144,6 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Aim Key = 01");
                 builder.AppendLine("Aim Toggle = False");
                 builder.AppendLine("Aim Hold = True");
-                builder.AppendLine("Aim Only When Standing Still = True");
                 builder.AppendLine("Aim When Scoped = False");
                 builder.AppendLine("Aim Jump = False");
                 builder.AppendLine("Aim Fov = 2");
