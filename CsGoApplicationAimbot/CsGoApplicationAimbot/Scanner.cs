@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using ExternalUtilsCSharp;
-using ExternalUtilsCSharp.MemObjects;
+using CsGoApplicationAimbot.MemObjects;
 
 namespace CsGoApplicationAimbot
 {

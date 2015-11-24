@@ -1,5 +1,5 @@
 using System;
-using ExternalUtilsCSharp.MathObjects;
+using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {

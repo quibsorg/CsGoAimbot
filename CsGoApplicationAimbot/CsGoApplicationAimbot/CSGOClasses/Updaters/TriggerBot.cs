@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
-using ExternalUtilsCSharp;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {

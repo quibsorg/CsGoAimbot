@@ -5,8 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
-using ExternalUtilsCSharp;
-using ExternalUtilsCSharp.MathObjects;
+using Matrix = CsGoApplicationAimbot.MathObjects.Matrix;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {

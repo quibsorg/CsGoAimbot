@@ -1,6 +1,5 @@
 ﻿using System;
-using ExternalUtilsCSharp;
-using ExternalUtilsCSharp.MathObjects;
+using Vector3 = CsGoApplicationAimbot.MathObjects.Vector3;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {

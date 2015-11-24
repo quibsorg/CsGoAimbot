@@ -5,8 +5,8 @@ using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 using CsGoApplicationAimbot.CSGOClasses.Updaters;
+using CsGoApplicationAimbot.InputUtils;
 using CsGoApplicationAimbot.Properties;
-using ExternalUtilsCSharp;
 using Timer = System.Timers.Timer;
 
 namespace CsGoApplicationAimbot
