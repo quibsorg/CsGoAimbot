@@ -10,7 +10,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private readonly Settings _settings = new Settings();
         private long _lastBeep;
-        bool _sonarEnabled;         
+        bool? _sonarEnabled = null;         
         int _sonarSound;
         float _sonarRange;
         float _sonarInterval;
@@ -40,13 +40,16 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void SoundEsp()
         {
-            _sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
-            _sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
-            _sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
-            _sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
-            _sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
+            if(_sonarEnabled == null)
+            {
+                _sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
+                _sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
+                _sonarRange = _settings.GetFloat("Sonar", "Sonar Range");
+                _sonarInterval = _settings.GetFloat("Sonar", "Sonar Interval");
+                _sonarVolume = _settings.GetFloat("Sonar", "Sonar Volume");
+            }
 
-            if (!_sonarEnabled)
+            if ((bool) !_sonarEnabled)
                 return;
 
             //Set's our sound volume
