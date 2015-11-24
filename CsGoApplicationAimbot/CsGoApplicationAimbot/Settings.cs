@@ -147,7 +147,7 @@ namespace CsGoApplicationAimbot
                 builder.AppendLine("Aim Fov = 2");
                 builder.AppendLine("Aim Bone = 4");
                 builder.AppendLine("Aim Smooth Enabled = True");
-                builder.AppendLine("Aim Smooth Value = 0,35");
+                builder.AppendLine("Aim Smooth Value = 50");
                 builder.AppendLine("Aim Spotted = True");
                 builder.AppendLine("Aim Spotted By = False");
                 builder.AppendLine("Aim Enemies = True");

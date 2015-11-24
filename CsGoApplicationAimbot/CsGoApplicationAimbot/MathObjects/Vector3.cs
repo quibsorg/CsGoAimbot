@@ -2,10 +2,7 @@
 
 namespace CsGoApplicationAimbot.MathObjects
 {
-    /// <summary>
-    /// Class that holds information about a 3d-coordinate and offers some basic operations
-    /// </summary>
-    public struct Vector3
+public struct Vector3
     {
         #region VARIABLES
         public float X;
@@ -14,75 +11,29 @@ namespace CsGoApplicationAimbot.MathObjects
         #endregion
 
         #region PROPERTIES
-        /// <summary>
-        /// Returns a new Vector3 at (0,0,0)
-        /// </summary>
-        public static Vector3 Zero
-        {
-            get { return new Vector3(0, 0, 0); }
-        }
-        /// <summary>
-        /// Returns a new Vector3 at (1,0,0)
-        /// </summary>
-        public static Vector3 UnitX
-        {
-            get { return new Vector3(1, 0, 0); }
-        }
-        /// <summary>
-        /// Returns a new Vector3 at (0,1,0)
-        /// </summary>
-        public static Vector3 UnitY
-        {
-            get { return new Vector3(0, 1, 0); }
-        }
-        /// <summary>
-        /// Returns a new Vector3 at (0,0,1)
-        /// </summary>
-        public static Vector3 UnitZ
-        {
-            get { return new Vector3(0, 0, 1); }
-        }
+        public static Vector3 Zero => new Vector3(0, 0, 0);
+        public static Vector3 UnitX => new Vector3(1, 0, 0);
+        public static Vector3 UnitY => new Vector3(0, 1, 0);
+        public static Vector3 UnitZ => new Vector3(0, 0, 1);
+
         #endregion
 
         #region CONSTRUCTOR
-        /// <summary>
-        /// Initializes a new Vector3 using the given values
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
         public Vector3(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
-        /// <summary>
-        /// Initializes a new Vector3 by copying the values of the given Vector3
-        /// </summary>
-        /// <param name="vec"></param>
         public Vector3(Vector3 vec) : this(vec.X, vec.Y, vec.Z) { }
-        /// <summary>
-        /// Initializes a new Vector3 using the given float-array
-        /// </summary>
-        /// <param name="values"></param>
         public Vector3(float[] values) : this(values[0], values[1], values[2]) { }
         #endregion
 
         #region METHODS
-        /// <summary>
-        /// Returns the length of this Vector3
-        /// </summary>
-        /// <returns></returns>
         public float Length()
         {
-            return (float)System.Math.Abs(System.Math.Sqrt(System.Math.Pow(X, 2) + System.Math.Pow(Y, 2) + System.Math.Pow(Z, 2)));
+            return (float)Math.Abs(Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2)));
         }
-        /// <summary>
-        /// Returns the distance from this Vector3 to the given Vector3
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
         public float DistanceTo(Vector3 other)
         {
             return (this - other).Length();
@@ -91,17 +42,17 @@ namespace CsGoApplicationAimbot.MathObjects
         public override bool Equals(object obj)
         {
             Vector3 vec = (Vector3)obj;
-            return this.GetHashCode() == vec.GetHashCode();
+            return GetHashCode() == vec.GetHashCode();
         }
 
         public override int GetHashCode()
         {
-            return this.X.GetHashCode() ^ this.Y.GetHashCode() ^ this.Z.GetHashCode();
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
 
         public override string ToString()
         {
-            return string.Format("[X={0}, Y={1}, Z={2}]", this.X.ToString(), this.Y.ToString(), this.Z.ToString());
+            return $"[X={X.ToString()}, Y={Y.ToString()}, Z={Z.ToString()}]";
         }
         #endregion
 
@@ -133,11 +84,11 @@ namespace CsGoApplicationAimbot.MathObjects
                 switch (i)
                 {
                     case 0:
-                        return this.X;
+                        return X;
                     case 1:
-                        return this.Y;
+                        return Y;
                     case 2:
-                        return this.Z;
+                        return Z;
                     default:
                         throw new IndexOutOfRangeException();
                 }
@@ -147,13 +98,13 @@ namespace CsGoApplicationAimbot.MathObjects
                 switch (i)
                 {
                     case 0:
-                        this.X = value;
+                        X = value;
                         break;
                     case 1:
-                        this.Y = value;
+                        Y = value;
                         break;
                     case 2:
-                        this.Z = value;
+                        Z = value;
                         break;
                     default:
                         throw new IndexOutOfRangeException();

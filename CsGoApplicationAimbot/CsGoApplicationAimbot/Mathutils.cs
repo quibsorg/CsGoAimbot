@@ -166,7 +166,8 @@ namespace CsGoApplicationAimbot
             Vector3 SmoothedAngle;
             SmoothedAngle = dest - src;
             SmoothedAngle = ClampAngle(SmoothedAngle);
-            SmoothedAngle = src + SmoothedAngle * (smoothAmount);
+            SmoothedAngle = src + SmoothedAngle * (1f / 100f) * (100f - smoothAmount);
+            //SmoothedAngle = src + SmoothedAngle * (smoothAmount);
             Console.WriteLine(SmoothedAngle);
             return ClampAngle(SmoothedAngle);
 
