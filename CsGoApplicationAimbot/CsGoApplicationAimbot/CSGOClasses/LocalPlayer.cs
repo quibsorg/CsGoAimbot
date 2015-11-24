@@ -32,14 +32,9 @@ namespace CsGoApplicationAimbot.CSGOClasses
             float length = vector2.Length();
             float speedMeters = length * 0.01905f;
             float speedKiloMetersPerHour = speedMeters * 60f * 60f / 1000f;
-            if (speedKiloMetersPerHour > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+
+            //If speedKiloMeters is bigger than 0 we are moving and returning true, else false.
+            return speedKiloMetersPerHour > 0;
         }
 
         #region FIELDS
