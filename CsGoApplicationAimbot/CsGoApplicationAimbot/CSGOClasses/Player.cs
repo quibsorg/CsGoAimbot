@@ -150,8 +150,8 @@ namespace CsGoApplicationAimbot.CSGOClasses
         public Vector3 VecVelocity => ReadFieldProxy<Vector3>("CSPlayer.m_vecVelocity");
         public int ObserverTarget => ReadFieldProxy<int>("CSPlayer.m_hObserverTarget") & 0xFFF;
         public int ObserverMode => ReadFieldProxy<int>("CSPlayer.m_iObserverMode");
-        public float FlashDuration => ReadFieldProxy<float>("CSPlayer.m_flFlashDuration");
-        public float FlashMaxAlpha => ReadFieldProxy<float>("CSPlayer.m_flFlashMaxAlpha");
+        //public float FlashDuration => ReadFieldProxy<float>("CSPlayer.m_flFlashDuration");
+        //public float FlashMaxAlpha => ReadFieldProxy<float>("CSPlayer.m_flFlashMaxAlpha");
 
         public uint WeaponIndex
         {

@@ -20,7 +20,7 @@ namespace CsGoApplicationAimbot
         #endregion
         #region Fields
 
-        private static readonly Timer Timer1 = new Timer(1);
+        private static readonly Timer Timer1 = new Timer(0.5);
 
         #endregion
 

@@ -16,7 +16,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         #region Properties
 
-        private bool AimbotActive { get; set; }
+        public static bool AimbotActive { get; set; }
         #endregion
 
         #region Fields
@@ -74,20 +74,23 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             Memory.ActiveWeapon = Memory.WeaponSection;
 
+            if (!_aimEnaled)
+                return;
+
             //Won't aim if we do not have any ammo in the clip.
-            if (_aimEnaled && Memory.LocalPlayerWeapon.Clip1 > 0 && Memory.LocalPlayer.ShotsFired > _aimStart)
+            if (Memory.LocalPlayerWeapon.Clip1 <= 0 || Memory.LocalPlayer.ShotsFired < _aimStart)
+                return;
+
+            if (_aimScoped)
             {
-                if (_aimScoped)
-                {
-                    if (Memory.LocalPlayerWeapon.ZoomLevel > 0)
-                    {
-                        AimToggleOrHold(_aimToggle, _aimHold, _aimKey);
-                    }
-                }
-                else
+                if (Memory.LocalPlayerWeapon.ZoomLevel > 0)
                 {
                     AimToggleOrHold(_aimToggle, _aimHold, _aimKey);
                 }
+            }
+            else
+            {
+                AimToggleOrHold(_aimToggle, _aimHold, _aimKey);
             }
 
             #endregion

@@ -55,13 +55,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (Memory.LocalPlayerWeapon == null || Memory.LocalPlayerWeapon.Clip1 <= 0)
                 return;
 
-            //Ugly way to do it, we'll count the shots fired while trigger is active.
-            if (!TriggerBot.TriggerbotActive)
-            {
-                if (Memory.LocalPlayer.ShotsFired <= _rcsStart)
-                    return;
-            }
-
             if (aimbot)
             {
                 NewViewAngles -= Memory.LocalPlayer.VecPunch*(2f/100f*randomRcsForce/3);
@@ -69,6 +62,13 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             else
             {
+                //Ugly way to do it, we'll count the shots fired while trigger is active.
+                if (!TriggerBot.TriggerbotActive)
+                {
+                    if (Memory.LocalPlayer.ShotsFired <= _rcsStart)
+                        return;
+                }
+
                 var punch = Memory.LocalPlayer.VecPunch - LastPunch;
                 if (punch.X != 0 || punch.Y != 0)
                     NewViewAngles -= punch*(2f/100*randomRcsForce);
