@@ -120,7 +120,7 @@
     <Compile Include="CSGOClasses\Updaters\RCS.cs" />
     <Compile Include="CSGOClasses\Updaters\Sonar.cs" />
     <Compile Include="CSGOClasses\Updaters\TriggerBot.cs" />
-    <Compile Include="SettingsConfig.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="CSGOClasses\Weapon.cs" />
     <Compile Include="Hwid.cs" />
     <Compile Include="Offsets.cs" />

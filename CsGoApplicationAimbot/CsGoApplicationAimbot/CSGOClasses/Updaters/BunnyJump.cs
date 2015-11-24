@@ -1,13 +1,17 @@
 ﻿using System;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
+using ExternalUtilsCSharp;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class BunnyJump
     {
-        #region Variables
+        #region Fields
 
-        private readonly SettingsConfig _settings = new SettingsConfig();
+        private readonly Settings _settings = new Settings();
+        WinAPI.VirtualKeyShort _bunnyJumpKey;
+        bool _bunnyJump;
+        int _successfulJumps;
 
         #endregion
 
@@ -31,21 +35,25 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (!Memory.LocalPlayer.IsMoving())
                 return;
 
+            //If _bunnyJumpKey is 0, settings has not been applied. 
+            if (_bunnyJumpKey == 0)
+            {
+                _bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
+                _bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
+                _successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
+            }
+
+            if (!_bunnyJump)
+                return;
+
             BunnyHop();
         }
 
         private void BunnyHop()
         {
-            var bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
-            var bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
-            var successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
-
-            if (!bunnyJump)
-                return;
-
-            if (Program.KeyUtils.KeyIsDown(bunnyJumpKey))
+            if (Program.KeyUtils.KeyIsDown(_bunnyJumpKey))
             {
-                if (successfulJumps < CurrentJump)
+                if (_successfulJumps < CurrentJump)
                     return;
 
                 if (Memory.LocalPlayer.Flags == 256)

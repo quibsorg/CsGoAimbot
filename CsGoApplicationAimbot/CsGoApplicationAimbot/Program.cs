@@ -41,7 +41,7 @@ namespace CsGoApplicationAimbot
         //Updaters
         private static Aimbot _aimbot;
         private static TriggerBot _triggerBot;
-        private static RCS _rcs;
+        private static Rcs _rcs;
         private static BunnyJump _bunnyJump;
         private static Sonar _sonar;
         public static Memory Memory;
@@ -54,15 +54,15 @@ namespace CsGoApplicationAimbot
 
         public static void Main(string[] args)
         {
-                PrintSuccess("Smurf bot");
-                //Sets a random title to our Console Window.. Almost useless.
-                Console.Title = RandomTitle();
+            PrintSuccess("Smurf bot");
+            //Sets a random title to our Console Window.. Almost useless.
+            Console.Title = RandomTitle();
 
-                //Set's up our SoundManager
-                ManageAudio();
+            //Set's up our SoundManager
+            ManageAudio();
 
-                //Starts our cheat.
-                StartCheat();
+            //Starts our cheat.
+            StartCheat();
         }
 
         private static void ManageAudio()
@@ -91,7 +91,7 @@ namespace CsGoApplicationAimbot
             _procUtils = new ProcUtils(GameProcess,
                 WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite |
                 WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
-            MemUtils = new MemUtils {Handle = _procUtils.Handle};
+            MemUtils = new MemUtils { Handle = _procUtils.Handle };
 
             PrintInfo("> Waiting for CSGOs window to show up...");
             while ((_hWnd = WinAPI.FindWindowByCaption(_hWnd, GameTitle)) == IntPtr.Zero)
@@ -110,7 +110,7 @@ namespace CsGoApplicationAimbot
 
             _aimbot = new Aimbot();
             _triggerBot = new TriggerBot();
-            _rcs = new RCS();
+            _rcs = new Rcs();
             _bunnyJump = new BunnyJump();
             _sonar = new Sonar();
 

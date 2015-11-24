@@ -22,6 +22,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             _entityList = ClientDllBase + Offsets.Misc.EntityList;
             _viewMatrix = ClientDllBase + Offsets.Misc.ViewMatrix;
             ClientState = Program.MemUtils.Read<int>((IntPtr) (engineDllBase + Offsets.ClientState.Base));
+            ActiveWeapon = "Default";
         }
 
         #endregion
@@ -33,13 +34,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         #region Properties
-
+        public static string ActiveWeapon { get; set; }
         public static string WeaponSection { get; set; }
         public static string WindowTitle { get; set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
         private Matrix ViewMatrix { get; set; }
-        public static Vector3 ViewAngles { get; set; }
         public static SignOnState State { get; set; }
         public static Weapon LocalPlayerWeapon { get; set; }
         public static LocalPlayer LocalPlayer { get; set; }
@@ -112,8 +112,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
             }
-            if (LocalPlayer == null || LocalPlayer.Health <= 0)
-                return;
         }
 
         private static string GetActiveWindowTitle()

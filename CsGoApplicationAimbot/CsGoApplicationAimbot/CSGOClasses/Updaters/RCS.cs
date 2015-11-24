@@ -4,11 +4,11 @@ using ExternalUtilsCSharp.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
-    public class RCS
+    public class Rcs
     {
         #region Fields
 
-        private static readonly SettingsConfig _settings = new SettingsConfig();
+        private static readonly Settings Settings = new Settings();
 
         #endregion
 
@@ -32,10 +32,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         public static void ControlRecoil(bool aimbot = false)
         {
-            var rcsEnabled = _settings.GetBool(Memory.WeaponSection, "Rcs Enabled");
-            var rcsForceMax = _settings.GetFloat(Memory.WeaponSection, "Rcs Force Max");
-            var rcsForceMin = _settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
-            var rcsStart = _settings.GetInt(Memory.WeaponSection, "Rcs Start");
+            var rcsEnabled = Settings.GetBool(Memory.WeaponSection, "Rcs Enabled");
+            var rcsForceMax = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Max");
+            var rcsForceMin = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
+            var rcsStart = Settings.GetInt(Memory.WeaponSection, "Rcs Start");
             var random = new Random();
 
             float randomRcsForce = random.Next((int) rcsForceMin, (int) rcsForceMax);

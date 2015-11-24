@@ -8,12 +8,12 @@ using IniParser.Model;
 
 namespace CsGoApplicationAimbot
 {
-    public class SettingsConfig
+    public class Settings
     {
         private static readonly FileIniDataParser Parser = new FileIniDataParser();
         private readonly IniData _data;
 
-        public SettingsConfig()
+        public Settings()
         {
             if (!File.Exists("Config.ini"))
             {
@@ -70,7 +70,6 @@ namespace CsGoApplicationAimbot
             var weaponList = new List<string>
             {
                 //Pistols
-                //"CZ75",
                 "DEagle",
                 "Elite",
                 "FiveSeven",
