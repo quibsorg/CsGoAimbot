@@ -21,7 +21,6 @@ namespace CsGoApplicationAimbot
         #region Fields
 
         private static readonly Timer Timer1 = new Timer(1);
-        private static readonly Timer Timer2 = new Timer(0.5);
 
         #endregion
 
@@ -117,26 +116,19 @@ namespace CsGoApplicationAimbot
             Timer1.Elapsed += Timer1Elapsed;
             Timer1.Start();
 
-            Timer2.Elapsed += Timer2_Elapsed;
-            Timer2.Start();
-
             PrintSuccess("Cheat is now running.");
             Application.Run();
         }
 
         private static void Timer1Elapsed(object sender, ElapsedEventArgs e)
         {
-            KeyUtils.Update();
-            _rcs.Update();
-        }
-
-        private static void Timer2_Elapsed(object sender, ElapsedEventArgs e)
-        {
             Memory.Update();
             _bunnyJump.Update();
             _sonar.Update();
             _triggerBot.Update();
+            _rcs.Update();
             _aimbot.Update();
+            KeyUtils.Update();
         }
 
         #endregion

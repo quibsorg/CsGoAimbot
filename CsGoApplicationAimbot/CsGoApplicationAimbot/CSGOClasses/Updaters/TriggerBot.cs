@@ -52,7 +52,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             if (Memory.ActiveWeapon != Memory.WeaponSection)
             {
-                Console.WriteLine("Trigger I changed weapon to {0}", Memory.WeaponSection);
                 _triggerKey = _settings.GetKey(Memory.WeaponSection, "Trigger Key");
                 _triggerEnabled = _settings.GetBool(Memory.WeaponSection, "Trigger Enabled");
                 _triggerScoped = _settings.GetBool(Memory.WeaponSection, "Trigger When Scoped");

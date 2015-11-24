@@ -9,7 +9,11 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         #region Fields
 
         private static readonly Settings Settings = new Settings();
-
+        static bool _rcsEnabled;
+        static float _rcsForceMax;
+        static float _rcsForceMin;
+        static int _rcsStart;
+        static Random _random = new Random();
         #endregion
 
         public void Update()
@@ -19,6 +23,14 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
                 return;
+
+            if (Memory.ActiveWeapon != Memory.WeaponSection)
+            {
+                _rcsEnabled = Settings.GetBool(Memory.WeaponSection, "Rcs Enabled");
+                _rcsForceMax = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Max");
+                _rcsForceMin = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
+                _rcsStart = Settings.GetInt(Memory.WeaponSection, "Rcs Start");
+            }
 
             ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr) (Memory.ClientState + Offsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
@@ -32,15 +44,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         public static void ControlRecoil(bool aimbot = false)
         {
-            var rcsEnabled = Settings.GetBool(Memory.WeaponSection, "Rcs Enabled");
-            var rcsForceMax = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Max");
-            var rcsForceMin = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
-            var rcsStart = Settings.GetInt(Memory.WeaponSection, "Rcs Start");
-            var random = new Random();
+            _random = new Random();
 
-            float randomRcsForce = random.Next((int) rcsForceMin, (int) rcsForceMax);
+            //Todo random RcsForce Each click, not every update.
+            float randomRcsForce = _random.Next((int) _rcsForceMin, (int) _rcsForceMax);
 
-            if (!rcsEnabled)
+            if (!_rcsEnabled)
                 return;
 
             if (Memory.LocalPlayerWeapon == null || Memory.LocalPlayerWeapon.Clip1 <= 0)
@@ -49,7 +58,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             //Ugly way to do it, we'll count the shots fired while trigger is active.
             if (!TriggerBot.TriggerbotActive)
             {
-                if (Memory.LocalPlayer.ShotsFired <= rcsStart)
+                if (Memory.LocalPlayer.ShotsFired <= _rcsStart)
                     return;
             }
 

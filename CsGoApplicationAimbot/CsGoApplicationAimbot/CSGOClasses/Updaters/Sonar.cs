@@ -40,11 +40,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void SoundEsp()
         {
-            Console.WriteLine("Loading Sound ESP settings");
-            if (_sonarEnabled)
-            {
-                
-            }
             _sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
             _sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
             _sonarRange = _settings.GetFloat("Sonar", "Sonar Range");

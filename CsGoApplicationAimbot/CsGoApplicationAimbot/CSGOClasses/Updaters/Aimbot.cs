@@ -57,7 +57,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             if (Memory.ActiveWeapon != Memory.WeaponSection)
             {
-                Console.WriteLine("Aimbot I changed weapon to {0}", Memory.WeaponSection);
                 _aimKey = Settings.GetKey(Memory.WeaponSection, "Aim Key");
                 _aimEnaled = Settings.GetBool(Memory.WeaponSection, "Aim Enabled");
                 _aimScoped = Settings.GetBool(Memory.WeaponSection, "Aim When Scoped");
