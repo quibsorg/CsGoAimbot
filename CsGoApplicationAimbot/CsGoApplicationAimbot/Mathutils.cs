@@ -138,6 +138,7 @@ namespace CsGoApplicationAimbot
             }
             return ViewAngle;
         }
+        //Todo fix calcAngle with RCS
         public static Vector3 CalcAngle(this Vector3 src, Vector3 dst)
         {
             Vector3 output = new Vector3();
@@ -166,7 +167,8 @@ namespace CsGoApplicationAimbot
             Vector3 SmoothedAngle;
             SmoothedAngle = dest - src;
             SmoothedAngle = ClampAngle(SmoothedAngle);
-            SmoothedAngle = src + SmoothedAngle * (1f / 100f) * (100f - smoothAmount);
+            //SmoothedAngle = src + SmoothedAngle * (1f / 100f) * (100f - smoothAmount);
+            SmoothedAngle = src + SmoothedAngle / 100f * (100f - smoothAmount);
             //SmoothedAngle = src + SmoothedAngle * (smoothAmount);
             Console.WriteLine(SmoothedAngle);
             return ClampAngle(SmoothedAngle);

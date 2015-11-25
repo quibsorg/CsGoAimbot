@@ -57,6 +57,10 @@ public struct Vector3
         #endregion
 
         #region OPERATORS
+        public static Vector3 operator /(Vector3 v1, float scalar)
+        {
+            return new Vector3(v1.X / scalar, v1.Y / scalar, v1.Z / scalar);
+        }
         public static Vector3 operator +(Vector3 v1, Vector3 v2)
         {
             return new Vector3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);

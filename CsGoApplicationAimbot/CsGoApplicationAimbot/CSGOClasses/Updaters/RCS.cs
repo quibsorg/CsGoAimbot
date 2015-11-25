@@ -54,6 +54,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (Memory.LocalPlayerWeapon == null || Memory.LocalPlayerWeapon.Clip1 <= 0)
                 return;
 
+
+            //TODO Control Aimbot RCS in the Aimbot class and set view angels there.
             if (aimbot)
             {
                 NewViewAngles -= Memory.LocalPlayer.VecPunch*(2f/100f*randomRcsForce/3);
@@ -83,9 +85,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         #region Properties
 
-        public static Vector3 LastPunch { get; set; }
+        private static Vector3 LastPunch { get; set; }
         public static Vector3 NewViewAngles { get; set; }
-        public static Vector3 ViewAngles { get; set; }
+        private static Vector3 ViewAngles { get; set; }
 
         #endregion
     }

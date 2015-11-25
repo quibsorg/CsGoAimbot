@@ -10,7 +10,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private readonly Settings _settings = new Settings();
         private long _lastBeep;
-        bool? _sonarEnabled = null;         
+        bool? _sonarEnabled;         
         int _sonarSound;
         float _sonarRange;
         float _sonarInterval;

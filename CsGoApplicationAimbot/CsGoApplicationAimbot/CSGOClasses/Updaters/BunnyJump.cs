@@ -9,7 +9,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private readonly Settings _settings = new Settings();
         WinAPI.VirtualKeyShort _bunnyJumpKey;
-        bool _bunnyJump;
+        bool _bunnyJumpEnabled;
         int _successfulJumps;
 
         #endregion
@@ -38,11 +38,11 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (_bunnyJumpKey == 0)
             {
                 _bunnyJumpKey = _settings.GetKey("Bunny Jump", "Bunny Jump Key");
-                _bunnyJump = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
+                _bunnyJumpEnabled = _settings.GetBool("Bunny Jump", "Bunny Jump Enabled");
                 _successfulJumps = _settings.GetInt("Bunny Jump", "Bunny Jump Jumps");
             }
 
-            if (!_bunnyJump)
+            if (!_bunnyJumpEnabled)
                 return;
 
             BunnyHop();
@@ -56,7 +56,9 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     return;
 
                 if (Memory.LocalPlayer.Flags == 256)
+                {
                     Program.MemUtils.Write((IntPtr)(Memory.ClientDllBase + Offsets.Misc.Jump), 4);
+                }
                 else
                 {
                     Program.MemUtils.Write((IntPtr)(Memory.ClientDllBase + Offsets.Misc.Jump), 5);
