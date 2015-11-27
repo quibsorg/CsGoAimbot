@@ -6,63 +6,79 @@ using System.Threading;
 namespace CsGoApplicationAimbot.InputUtils
 {
     /// <summary>
-    /// A class that handles key-input
+    ///     A class that handles key-input
     /// </summary>
     public class KeyUtils
     {
         #region VARIABLES
-        private Hashtable keys, prevKeys;
-        private short[] allKeys;
+
+        private readonly Hashtable keys;
+        private Hashtable prevKeys;
+        private readonly short[] allKeys;
+
         #endregion
+
         #region STATIC METHODS
+
         public static bool GetKeyDown(WinAPI.VirtualKeyShort key)
         {
-            return GetKeyDown((Int32)key);
+            return GetKeyDown((int) key);
         }
+
         public static void LMouseClick(int sleeptime)
         {
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTDOWN, 0, 0, 0, 0);
             Thread.Sleep(sleeptime);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.LEFTUP, 0, 0, 0, 0);
         }
-        public static bool GetKeyDown(Int32 key)
+
+        public static bool GetKeyDown(int key)
         {
             return Convert.ToBoolean(WinAPI.GetKeyState(key) & WinAPI.KEY_PRESSED);
         }
-        public static bool GetKeyDownAsync(Int32 key)
+
+        public static bool GetKeyDownAsync(int key)
         {
-            return GetKeyDownAsync((WinAPI.VirtualKeyShort)key);
+            return GetKeyDownAsync((WinAPI.VirtualKeyShort) key);
         }
+
         public static bool GetKeyDownAsync(WinAPI.VirtualKeyShort key)
         {
             return Convert.ToBoolean(WinAPI.GetAsyncKeyState(key) & WinAPI.KEY_PRESSED);
         }
+
         #endregion
+
         #region CONSTRUCTOR/DESTRUCTOR
+
         public KeyUtils()
         {
             keys = new Hashtable();
             prevKeys = new Hashtable();
-            WinAPI.VirtualKeyShort[] _keys = (WinAPI.VirtualKeyShort[])Enum.GetValues(typeof(WinAPI.VirtualKeyShort));
+            var _keys = (WinAPI.VirtualKeyShort[]) Enum.GetValues(typeof (WinAPI.VirtualKeyShort));
             allKeys = new short[_keys.Length];
-            for (int i = 0; i < allKeys.Length; i++)
-                allKeys[i] = (short)_keys[i];
+            for (var i = 0; i < allKeys.Length; i++)
+                allKeys[i] = (short) _keys[i];
 
             Init();
         }
+
         ~KeyUtils()
         {
             keys.Clear();
             prevKeys.Clear();
         }
+
         #endregion
+
         #region METHODS
+
         /// <summary>
-        /// Initializes and fills the hashtables
+        ///     Initializes and fills the hashtables
         /// </summary>
         private void Init()
         {
-            foreach (Int32 key in allKeys)
+            foreach (int key in allKeys)
             {
                 if (!prevKeys.ContainsKey(key))
                 {
@@ -71,24 +87,26 @@ namespace CsGoApplicationAimbot.InputUtils
                 }
             }
         }
+
         /// <summary>
-        /// Updates the key-states
+        ///     Updates the key-states
         /// </summary>
         public void Update()
         {
-            prevKeys = (Hashtable)keys.Clone();
-            foreach (Int32 key in allKeys)
+            prevKeys = (Hashtable) keys.Clone();
+            foreach (int key in allKeys)
             {
                 keys[key] = GetKeyDown(key);
             }
         }
+
         /// <summary>
-        /// Returns an array of all keys that went up since the last Update-call
+        ///     Returns an array of all keys that went up since the last Update-call
         /// </summary>
         /// <returns></returns>
         public WinAPI.VirtualKeyShort[] KeysThatWentUp()
         {
-            List<WinAPI.VirtualKeyShort> keys = new List<WinAPI.VirtualKeyShort>();
+            var keys = new List<WinAPI.VirtualKeyShort>();
             foreach (WinAPI.VirtualKeyShort key in allKeys)
             {
                 if (KeyWentUp(key))
@@ -96,13 +114,14 @@ namespace CsGoApplicationAimbot.InputUtils
             }
             return keys.ToArray();
         }
+
         /// <summary>
-        /// Returns an array of all keys that went down since the last Update-call
+        ///     Returns an array of all keys that went down since the last Update-call
         /// </summary>
         /// <returns></returns>
         public WinAPI.VirtualKeyShort[] KeysThatWentDown()
         {
-            List<WinAPI.VirtualKeyShort> keys = new List<WinAPI.VirtualKeyShort>();
+            var keys = new List<WinAPI.VirtualKeyShort>();
             foreach (WinAPI.VirtualKeyShort key in allKeys)
             {
                 if (KeyWentDown(key))
@@ -110,13 +129,14 @@ namespace CsGoApplicationAimbot.InputUtils
             }
             return keys.ToArray();
         }
+
         /// <summary>
-        /// Returns an array of all keys that went are down since the last Update-call
+        ///     Returns an array of all keys that went are down since the last Update-call
         /// </summary>
         /// <returns></returns>
         public WinAPI.VirtualKeyShort[] KeysThatAreDown()
         {
-            List<WinAPI.VirtualKeyShort> keys = new List<WinAPI.VirtualKeyShort>();
+            var keys = new List<WinAPI.VirtualKeyShort>();
             foreach (WinAPI.VirtualKeyShort key in allKeys)
             {
                 if (KeyIsDown(key))
@@ -124,75 +144,83 @@ namespace CsGoApplicationAimbot.InputUtils
             }
             return keys.ToArray();
         }
+
         /// <summary>
-        /// Returns whether the given key went up since the last Update-call
+        ///     Returns whether the given key went up since the last Update-call
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
         public bool KeyWentUp(WinAPI.VirtualKeyShort key)
         {
-            return KeyWentUp((Int32)key);
+            return KeyWentUp((int) key);
         }
+
         /// <summary>
-        /// Returns whether the given key went up since the last Update-call
+        ///     Returns whether the given key went up since the last Update-call
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
-        public bool KeyWentUp(Int32 key)
+        public bool KeyWentUp(int key)
         {
             if (!KeyExists(key))
                 return false;
-            return (bool)prevKeys[key] && !(bool)keys[key];
+            return (bool) prevKeys[key] && !(bool) keys[key];
         }
+
         /// <summary>
-        /// Returns whether the given key went down since the last Update-call
+        ///     Returns whether the given key went down since the last Update-call
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
         public bool KeyWentDown(WinAPI.VirtualKeyShort key)
         {
-            return KeyWentDown((Int32)key);
+            return KeyWentDown((int) key);
         }
+
         /// <summary>
-        /// Returns whether the given key went down since the last Update-call
+        ///     Returns whether the given key went down since the last Update-call
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
-        public bool KeyWentDown(Int32 key)
+        public bool KeyWentDown(int key)
         {
             if (!KeyExists(key))
                 return false;
-            return !(bool)prevKeys[key] && (bool)keys[key];
+            return !(bool) prevKeys[key] && (bool) keys[key];
         }
+
         /// <summary>
-        /// Returns whether the given key was down at time of the last Update-call
+        ///     Returns whether the given key was down at time of the last Update-call
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
         public bool KeyIsDown(WinAPI.VirtualKeyShort key)
         {
-            return KeyIsDown((Int32)key);
+            return KeyIsDown((int) key);
         }
+
         /// <summary>
-        /// Returns whether the given key was down at time of the last Update-call
+        ///     Returns whether the given key was down at time of the last Update-call
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
-        public bool KeyIsDown(Int32 key)
+        public bool KeyIsDown(int key)
         {
             if (!KeyExists(key))
                 return false;
-            return (bool)prevKeys[key] || (bool)keys[key];
+            return (bool) prevKeys[key] || (bool) keys[key];
         }
+
         /// <summary>
-        /// Returns whether the given key is contained in the used hashtables
+        ///     Returns whether the given key is contained in the used hashtables
         /// </summary>
         /// <param name="key">Key to check</param>
         /// <returns></returns>
-        private bool KeyExists(Int32 key)
+        private bool KeyExists(int key)
         {
-            return (prevKeys.ContainsKey(key) && keys.ContainsKey(key));
+            return prevKeys.ContainsKey(key) && keys.ContainsKey(key);
         }
+
         #endregion
     }
 }

@@ -7,27 +7,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class TriggerBot
     {
-        #region Fields
-
-        private readonly Settings _settings = new Settings();
-        private WinAPI.VirtualKeyShort _triggerKey;
-        private bool _triggerEnabled;
-        private bool _triggerScoped;
-        private bool _triggerBurstEnabled;
-        private bool _triggerToggle;
-        bool _triggerHold;
-        bool _triggerDash;
-        private bool _triggerTazer;
-        private bool _autoKnife;
-        private bool _triggerEnemies;
-        private bool _triggerAllies;
-        private bool _burstRandomize;
-        float _firstShot;
-        float _delayShot;
-        int _burstShotsMin;
-        int _burstShotsMax;
-        #endregion
-
         #region Constructor
 
         public TriggerBot()
@@ -150,8 +129,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void Triggerbot()
         {
-
-
             //If our player is null, or if trigger is shooting we return.
             if (Memory.LocalPlayer == null || TriggerShooting)
                 return;
@@ -239,6 +216,28 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             Thread.Sleep(10);
             WinAPI.mouse_event(WinAPI.MOUSEEVENTF.RIGHTUP, 0, 0, 0, 0);
         }
+
+        #region Fields
+
+        private readonly Settings _settings = new Settings();
+        private WinAPI.VirtualKeyShort _triggerKey;
+        private bool _triggerEnabled;
+        private bool _triggerScoped;
+        private bool _triggerBurstEnabled;
+        private bool _triggerToggle;
+        private bool _triggerHold;
+        private bool _triggerDash;
+        private bool _triggerTazer;
+        private bool _autoKnife;
+        private bool _triggerEnemies;
+        private bool _triggerAllies;
+        private bool _burstRandomize;
+        private float _firstShot;
+        private float _delayShot;
+        private int _burstShotsMin;
+        private int _burstShotsMax;
+
+        #endregion
 
         #region Properties
 

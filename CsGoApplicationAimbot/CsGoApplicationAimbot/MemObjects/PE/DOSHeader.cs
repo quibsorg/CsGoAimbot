@@ -3,12 +3,12 @@
 namespace CsGoApplicationAimbot.MemObjects.PE
 {
     /// <summary>
-    /// Source: https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#Code_Sections
+    ///     Source: https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#Code_Sections
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct DOSHeader
+    public struct DOSHeader
     {
-        public short signature;        
+        public short signature;
         public short lastsize;
         public short nblocks;
         public short nreloc;

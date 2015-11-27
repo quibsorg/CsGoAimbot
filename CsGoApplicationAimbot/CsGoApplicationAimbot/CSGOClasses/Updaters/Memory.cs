@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
-using Matrix = CsGoApplicationAimbot.MathObjects.Matrix;
+using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
@@ -33,6 +33,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         #region Properties
+
         public static string ActiveWeapon { get; set; }
         public static string WeaponSection { get; set; }
         public static string WindowTitle { get; set; }
@@ -82,7 +83,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
 
             var data = new byte[16*8192];
-            Program.MemUtils.Read((IntPtr) (_entityList), out data, data.Length);
+            Program.MemUtils.Read((IntPtr) _entityList, out data, data.Length);
 
             for (var i = 0; i < data.Length/16; i++)
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CsGoApplicationAimbot.CSGOClasses.Fields;
-using Vector3 = CsGoApplicationAimbot.MathObjects.Vector3;
+using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {

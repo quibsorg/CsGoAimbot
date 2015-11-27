@@ -5,6 +5,11 @@
         public KeyUtils Keys;
         public MouseHook Mouse;
 
+        /// <summary>
+        ///     If true mouse changed since last update
+        /// </summary>
+        public bool MouseChanged;
+
         public InputUtilities()
         {
             Init();
@@ -16,13 +21,9 @@
             Mouse = new MouseHook();
             Mouse.InstallHook();
         }
-        /// <summary>
-        /// If true mouse changed since last update
-        /// </summary>
-        public bool MouseChanged = false;
 
         /// <summary>
-        /// Updates keys and mouse
+        ///     Updates keys and mouse
         /// </summary>
         public void Update()
         {

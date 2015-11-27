@@ -1,20 +1,10 @@
 ﻿using System;
-using Vector3 = CsGoApplicationAimbot.MathObjects.Vector3;
+using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class Rcs
     {
-        #region Fields
-
-        private static readonly Settings Settings = new Settings();
-        static bool _rcsEnabled;
-        static float _rcsForceMax;
-        static float _rcsForceMin;
-        static int _rcsStart;
-        static Random _random = new Random();
-        #endregion
-
         public void Update()
         {
             if (Memory.WindowTitle != Program.GameTitle)
@@ -82,6 +72,17 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 viewAngles = viewAngles.ClampAngle();
             Program.MemUtils.Write((IntPtr) (Memory.ClientState + Offsets.ClientState.ViewAngles), viewAngles);
         }
+
+        #region Fields
+
+        private static readonly Settings Settings = new Settings();
+        private static bool _rcsEnabled;
+        private static float _rcsForceMax;
+        private static float _rcsForceMin;
+        private static int _rcsStart;
+        private static Random _random = new Random();
+
+        #endregion
 
         #region Properties
 

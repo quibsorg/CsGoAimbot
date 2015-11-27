@@ -26,8 +26,8 @@
             public static int Base = 0x00;
             public static int InGame = 0xE8;
             public static int ViewAngles = 0x4ce0;
-            //public static int Mapname = 0x26c;
             //public static uint MapDirectory = 0xf5010000;
+            //public static int Mapname = 0x26c;
         }
 
         //public class GameResources
@@ -66,8 +66,8 @@
                 public static int ObserverTarget = 0x173C;
                 public static int ObserverMode = 0x1728;
                 public static int VecVelocity = 0x00000110;
-                //public static int FlashDuriation = 0x00008688;
                 //public static int FlashMaxAlpha = 0x00008684;
+                //public static int FlashDuriation = 0x00008688;
             }
 
             public class LocalPlayer
@@ -88,7 +88,9 @@
                 public static int CanReload = 0x00003211;
                 public static int WeaponTableIndex = 0x0000323C;
                 public static int AccuracyPenalty = 0x00003280;
-                public static int MZoomLevel = 0x00003300; //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
+
+                public static int MZoomLevel = 0x00003300;
+                    //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
             }
         }
     }

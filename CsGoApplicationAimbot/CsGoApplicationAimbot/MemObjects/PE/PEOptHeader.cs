@@ -3,7 +3,7 @@
 namespace CsGoApplicationAimbot.MemObjects.PE
 {
     /// <summary>
-    /// Source: https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#Code_Sections
+    ///     Source: https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#Code_Sections
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct PEOptHeader
@@ -14,7 +14,7 @@ namespace CsGoApplicationAimbot.MemObjects.PE
         public int SizeOfCode;
         public int SizeOfInitializedData;
         public int SizeOfUninitializedData;
-        public int AddressOfEntryPoint;  //The RVA of the code entry popublic int
+        public int AddressOfEntryPoint; //The RVA of the code entry popublic int
         public int BaseOfCode;
         public int BaseOfData;
         public int ImageBase;
@@ -54,28 +54,5 @@ namespace CsGoApplicationAimbot.MemObjects.PE
         public data_directory DataDirectory14;
         public data_directory DataDirectory15;
         public data_directory DataDirectory16;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct data_directory
-    {
-        public int VirtualAddress;
-        public int Size;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct _IMAGE_EXPORT_DIRECTORY
-    {
-        public int Characteristics; //offset 0x0
-        public int TimeDateStamp; //offset 0x4
-        public short MajorVersion;  //offset 0x8
-        public short MinorVersion; //offset 0xa
-        public int Name; //offset 0xc
-        public int Base; //offset 0x10
-        public int NumberOfFunctions;  //offset 0x14
-        public int NumberOfNames;  //offset 0x18
-        public int AddressOfFunctions; //offset 0x1c
-        public int AddressOfNames; //offset 0x20
-        public int AddressOfNameOrdinals; //offset 0x24
     }
 }

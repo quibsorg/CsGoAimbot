@@ -5,15 +5,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class BunnyJump
     {
-        #region Fields
-
-        private readonly Settings _settings = new Settings();
-        WinAPI.VirtualKeyShort _bunnyJumpKey;
-        bool _bunnyJumpEnabled;
-        int _successfulJumps;
-
-        #endregion
-
         #region Properties
 
         private int CurrentJump { get; set; }
@@ -57,11 +48,11 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
                 if (Memory.LocalPlayer.Flags == 256)
                 {
-                    Program.MemUtils.Write((IntPtr)(Memory.ClientDllBase + Offsets.Misc.Jump), 4);
+                    Program.MemUtils.Write((IntPtr) (Memory.ClientDllBase + Offsets.Misc.Jump), 4);
                 }
                 else
                 {
-                    Program.MemUtils.Write((IntPtr)(Memory.ClientDllBase + Offsets.Misc.Jump), 5);
+                    Program.MemUtils.Write((IntPtr) (Memory.ClientDllBase + Offsets.Misc.Jump), 5);
                     //We +1 for each time we jump
                     CurrentJump++;
                 }
@@ -72,5 +63,14 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 CurrentJump = 0;
             }
         }
+
+        #region Fields
+
+        private readonly Settings _settings = new Settings();
+        private WinAPI.VirtualKeyShort _bunnyJumpKey;
+        private bool _bunnyJumpEnabled;
+        private int _successfulJumps;
+
+        #endregion
     }
 }

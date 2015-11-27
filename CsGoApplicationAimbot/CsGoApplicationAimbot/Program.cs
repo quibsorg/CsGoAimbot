@@ -13,14 +13,15 @@ namespace CsGoApplicationAimbot
 {
     public static class Program
     {
-        #region Properties
-
-        public static SoundManager SoundManager { get; private set; }
-
-        #endregion
         #region Fields
 
         private static readonly Timer Timer1 = new Timer(0.5);
+
+        #endregion
+
+        #region Properties
+
+        public static SoundManager SoundManager { get; private set; }
 
         #endregion
 
@@ -28,7 +29,9 @@ namespace CsGoApplicationAimbot
 
         public const string GameProcess = "csgo";
         public const string GameTitle = "Counter-Strike: Global Offensive";
-        private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
+
+        private const string Chars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
 
         #endregion
 
@@ -47,6 +50,7 @@ namespace CsGoApplicationAimbot
 
         public static MemUtils MemUtils;
         public static KeyUtils KeyUtils;
+
         #endregion
 
         #region Method
@@ -90,7 +94,7 @@ namespace CsGoApplicationAimbot
             _procUtils = new ProcUtils(GameProcess,
                 WinAPI.ProcessAccessFlags.VirtualMemoryRead | WinAPI.ProcessAccessFlags.VirtualMemoryWrite |
                 WinAPI.ProcessAccessFlags.VirtualMemoryOperation);
-            MemUtils = new MemUtils { Handle = _procUtils.Handle };
+            MemUtils = new MemUtils {Handle = _procUtils.Handle};
 
             PrintInfo("> Waiting for CSGOs window to show up...");
             while ((_hWnd = WinAPI.FindWindowByCaption(_hWnd, GameTitle)) == IntPtr.Zero)

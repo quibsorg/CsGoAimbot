@@ -170,7 +170,7 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 if (clientClass != 0)
                 {
                     var ptr = Program.MemUtils.Read<int>((IntPtr) (clientClass + 8));
-                    return Program.MemUtils.ReadString((IntPtr) (ptr), 32, Encoding.ASCII);
+                    return Program.MemUtils.ReadString((IntPtr) ptr, 32, Encoding.ASCII);
                 }
                 return "none";
             }

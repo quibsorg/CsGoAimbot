@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
-using Vector3 = CsGoApplicationAimbot.MathObjects.Vector3;
+using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class Aimbot
     {
-
         public Aimbot()
         {
             AimbotActive = false;
@@ -15,9 +14,11 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         #region Properties
 
         public static bool AimbotActive { get; set; }
+
         #endregion
 
         #region Fields
+
         private static readonly Settings Settings = new Settings();
         private WinAPI.VirtualKeyShort _aimKey;
         private bool _aimEnaled;
@@ -33,6 +34,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private int _aimBone;
         private float _aimFov;
         private float _aimSmoothValue;
+
         #endregion
 
         #region Methods
@@ -141,10 +143,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             {
                 var player = tuple.Item2;
 
-                var newAngles = (Memory.LocalPlayer.VecOrigin + Memory.LocalPlayer.VecViewOffset).CalcAngle(player.Bones.GetBoneByIndex(_aimBone)) - Rcs.NewViewAngles;
+                var newAngles =
+                    (Memory.LocalPlayer.VecOrigin + Memory.LocalPlayer.VecViewOffset).CalcAngle(
+                        player.Bones.GetBoneByIndex(_aimBone)) - Rcs.NewViewAngles;
 
                 newAngles = newAngles.ClampAngle();
-                var fov = newAngles.Length() % 360f;
+                var fov = newAngles.Length()%360f;
 
                 if (!(fov < closestFov) || !(fov < _aimFov))
                     continue;

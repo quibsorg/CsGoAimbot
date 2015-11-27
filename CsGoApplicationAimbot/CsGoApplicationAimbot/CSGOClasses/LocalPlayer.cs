@@ -1,7 +1,6 @@
 ﻿using System;
 using CsGoApplicationAimbot.CSGOClasses.Updaters;
-using Vector2 = CsGoApplicationAimbot.MathObjects.Vector2;
-using Vector3 = CsGoApplicationAimbot.MathObjects.Vector3;
+using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {
@@ -29,10 +28,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
 
         public bool IsMoving()
         {
-            Vector2 vector2 = new Vector2(Memory.LocalPlayer.VecVelocity.X, Memory.LocalPlayer.VecVelocity.Y);
-            float length = vector2.Length();
-            float speedMeters = length * 0.01905f;
-            float speedKiloMetersPerHour = speedMeters * 60f * 60f / 1000f;
+            var vector2 = new Vector2(Memory.LocalPlayer.VecVelocity.X, Memory.LocalPlayer.VecVelocity.Y);
+            var length = vector2.Length();
+            var speedMeters = length*0.01905f;
+            var speedKiloMetersPerHour = speedMeters*60f*60f/1000f;
 
             //If speedKiloMeters is bigger than 0 we are moving and returning true, else false.
             return speedKiloMetersPerHour > 0;

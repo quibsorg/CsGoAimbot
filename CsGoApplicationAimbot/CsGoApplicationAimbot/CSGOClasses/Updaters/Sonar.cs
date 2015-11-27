@@ -6,18 +6,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
     public class Sonar
     {
-        #region Variables
-
-        private readonly Settings _settings = new Settings();
-        private long _lastBeep;
-        bool? _sonarEnabled;         
-        int _sonarSound;
-        float _sonarRange;
-        float _sonarInterval;
-        private float _sonarVolume;
-
-        #endregion
-
         #region Properties
 
         private float LastPercent { get; set; }
@@ -40,7 +28,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void SoundEsp()
         {
-            if(_sonarEnabled == null)
+            if (_sonarEnabled == null)
             {
                 _sonarEnabled = _settings.GetBool("Sonar", "Sonar Enabled");
                 _sonarSound = _settings.GetInt("Sonar", "Sonar Sound");
@@ -99,6 +87,16 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
         }
 
+        #region Variables
 
+        private readonly Settings _settings = new Settings();
+        private long _lastBeep;
+        private bool? _sonarEnabled;
+        private int _sonarSound;
+        private float _sonarRange;
+        private float _sonarInterval;
+        private float _sonarVolume;
+
+        #endregion
     }
 }
