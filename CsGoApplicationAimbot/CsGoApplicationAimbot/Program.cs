@@ -58,8 +58,6 @@ namespace CsGoApplicationAimbot
         public static void Main(string[] args)
         {
             PrintSuccess("Smurf bot");
-            //Sets a random title to our Console Window.. Almost useless.
-            Console.Title = RandomTitle();
 
             //Set's up our SoundManager
             ManageAudio();
@@ -73,13 +71,6 @@ namespace CsGoApplicationAimbot
             SoundManager = new SoundManager(2);
             SoundManager.Add(0, Resources.heartbeatloop);
             SoundManager.Add(1, Resources.beep);
-        }
-
-        private static string RandomTitle()
-        {
-            var random = new Random();
-            return new string(Enumerable.Repeat(Chars, 20)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         private static void StartCheat()
