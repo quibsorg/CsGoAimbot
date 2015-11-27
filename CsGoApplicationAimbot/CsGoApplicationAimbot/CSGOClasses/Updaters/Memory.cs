@@ -70,7 +70,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
 
             var players = new List<Tuple<int, Player>>();
-            //var entities = new List<Tuple<int, BaseEntity>>();
+            var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
 
             State = (SignOnState) Program.MemUtils.Read<int>((IntPtr) (ClientState + Offsets.ClientState.InGame));
@@ -96,12 +96,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     players.Add(new Tuple<int, Player>(i, new Player(entity)));
                 else if (entity.IsWeapon())
                     weapons.Add(new Tuple<int, Weapon>(i, new Weapon(entity)));
-                //else
-                //    entities.Add(new Tuple<int, BaseEntity>(i, entity));
+                else
+                    entities.Add(new Tuple<int, BaseEntity>(i, entity));
             }
 
             Players = players.ToArray();
-            //Entities = entities.ToArray();
+            Entities = entities.ToArray();
             Weapons = weapons.ToArray();
 
             //Check if our player exists
