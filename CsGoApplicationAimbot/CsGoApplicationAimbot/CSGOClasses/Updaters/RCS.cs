@@ -28,7 +28,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             LastPunch = Memory.LocalPlayer.VecPunch;
 
-            SetViewAngles(NewViewAngles);
         }
 
         public static void ControlRecoil(bool aimbot = false)
@@ -62,7 +61,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
                 var punch = Memory.LocalPlayer.VecPunch - LastPunch;
                 if (punch.X != 0 || punch.Y != 0)
+                {
                     NewViewAngles -= punch*(2f/100*randomRcsForce);
+                    SetViewAngles(NewViewAngles);
+                }
             }
         }
 
