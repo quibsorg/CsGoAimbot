@@ -5,9 +5,9 @@
         public class Misc
         {
             //Auto Updated
-            public static int EntityList = 0x04A3B9E4;
+            public static int EntityList = 0x04A587D4;
             //Auto Updated
-            public static int LocalPlayer = 0x00A9946C;
+            public static int LocalPlayer = 0x00A6A444;
             //Auto Updated
             public static int Jump = 0x04AD01E8;
             //Auto Updated
@@ -15,7 +15,7 @@
             //Auto Updated
             public static int SignOnState = 0xE8;
             //Auto Updated
-            public static int WeaponTable = 0x04A7CABC;
+            public static int WeaponTable = 0x04A9F88C;
             //Auto Updated
             public static int ViewMatrix = 0x04A30F24;
             public static int MouseEnable = 0xA7A4C0;
@@ -24,8 +24,8 @@
         public class ClientState
         {
             public static int Base = 0x00;
-            public static int InGame = 0xE8;
-            public static int ViewAngles = 0x4ce0;
+            public static int InGame = 0x00000100;
+            public static int ViewAngles = 0x00004D0C;
             //public static uint MapDirectory = 0xf5010000;
             //public static int Mapname = 0x26c;
         }
@@ -74,23 +74,22 @@
             {
                 public static int VecViewOffset = 0x00000104;
                 public static int VecPunch = 0x00002FF8;
-                public static int ShotsFired = 0x0000A260;
-                public static int CrosshairIdx = 0x0000A904;
+                public static int ShotsFired = 0x0000A280;
+                public static int CrosshairIdx = 0xA920;
             }
 
             public class Weapon
             {
-                public static int ItemDefinitionIndex = 0x131C;
-                public static int State = 0x000031C4;
-                public static int Clip1 = 0x000031D0;
+                public static int ItemDefinitionIndex = 0x000032B4;
+                public static int State = 0x000031C8;
+                public static int Clip1 = 0x000031D4;
                 public static int NextPrimaryAttack = 0x000031A8;
-                public static int WeaponId = 0x000032A4; // Search for weaponid
-                public static int CanReload = 0x00003211;
-                public static int WeaponTableIndex = 0x0000323C;
-                public static int AccuracyPenalty = 0x00003280;
-
-                public static int MZoomLevel = 0x00003300;
-                    //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
+                public static int WeaponId = 0x000032B4; // Search for weaponid
+                public static int CanReload = 0x00003215;
+                public static int WeaponTableIndex = 0x00003240;
+                public static int AccuracyPenalty = 0x00003290;
+                public static int ZoomLevel = 0x00003310;
+                //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
             }
         }
     }

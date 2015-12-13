@@ -51,12 +51,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (_triggerEnabled)
             {
                 if (_triggerDash)
-                {
                     if (Memory.LocalPlayer.IsMoving())
-                    {
                         return;
-                    }
-                }
                 //Trigger Scoped is only good for snipers.
                 if (_triggerScoped)
                 {
@@ -139,6 +135,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             //We get the player that is in our crosshair.
             var player = Memory.Players.First(x => x.Item2.Id == Memory.LocalPlayer.CrosshairIdx).Item2;
+            Console.WriteLine(player.Health);
 
             if (_triggerTazer)
             {

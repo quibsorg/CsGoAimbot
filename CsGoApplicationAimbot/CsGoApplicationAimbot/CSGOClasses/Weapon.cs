@@ -48,7 +48,7 @@
             AddField<int>("Weapon.m_iWeaponTableIndex", Offsets.NetVars.Weapon.WeaponTableIndex);
             AddField<float>("Weapon.m_fAccuracyPenalty", Offsets.NetVars.Weapon.AccuracyPenalty);
             AddField<int>("Weapon.m_iWeaponID", Offsets.NetVars.Weapon.WeaponId);
-            AddField<int>("Weapon.m_zoomLevel", Offsets.NetVars.Weapon.MZoomLevel);
+            AddField<int>("Weapon.m_zoomLevel", Offsets.NetVars.Weapon.ZoomLevel);
         }
 
         public override bool IsValid()
