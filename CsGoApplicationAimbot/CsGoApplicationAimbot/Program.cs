@@ -30,8 +30,7 @@ namespace CsGoApplicationAimbot
         public const string GameProcess = "csgo";
         public const string GameTitle = "Counter-Strike: Global Offensive";
 
-        private const string Chars =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
+        private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
 
         #endregion
 

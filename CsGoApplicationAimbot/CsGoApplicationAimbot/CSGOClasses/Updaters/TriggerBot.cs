@@ -93,14 +93,21 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                             }
                             else
                             {
-                                Shoot();
+                                if (Memory.LocalPlayerWeapon.Clip1 > 0)
+                                {
+                                    Console.WriteLine("Test");
+                                    Shoot();
+                                }
                             }
                         }
                     }
                     else
                     {
-                        Shoot();
-                        TriggerShooting = false;
+                        if (Memory.LocalPlayerWeapon.Clip1 > 0)
+                        {
+                            Shoot();
+                            TriggerShooting = false;
+                        }
                     }
                 }
             }
@@ -125,17 +132,13 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         private void Triggerbot()
         {
-            //If our player is null, or if trigger is shooting we return.
             if (Memory.LocalPlayer == null || TriggerShooting)
                 return;
 
-            //If no one is in hour crosshair we return.(Not aiming at someone)
             if (Memory.Players.Count(x => x.Item2.Id == Memory.LocalPlayer.CrosshairIdx) <= 0)
                 return;
 
-            //We get the player that is in our crosshair.
             var player = Memory.Players.First(x => x.Item2.Id == Memory.LocalPlayer.CrosshairIdx).Item2;
-            Console.WriteLine(player.Health);
 
             if (_triggerTazer)
             {
@@ -156,9 +159,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 }
             }
 
-            //We check the players teamnum, if it matches ours teammate, if not enemy.
-            if ((_triggerEnemies && player.TeamNum != Memory.LocalPlayer.TeamNum) ||
-                (_triggerAllies && player.TeamNum == Memory.LocalPlayer.TeamNum))
+            if ((_triggerEnemies && player.TeamNum != Memory.LocalPlayer.TeamNum) || (_triggerAllies && player.TeamNum == Memory.LocalPlayer.TeamNum))
             {
                 if (Memory.LocalPlayerWeapon.ClassName == "CWeaponTaser")
                     return;
@@ -166,7 +167,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 if (Memory.LocalPlayerWeapon.ClassName == "CKnife")
                     return;
 
-                //If we got this far, we have a target in our crosshair.
                 if (!TriggerOnTarget)
                 {
                     TriggerOnTarget = true;
@@ -179,7 +179,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     if (!(new TimeSpan(DateTime.Now.Ticks - TriggerLastShot).TotalMilliseconds >= _delayShot))
                         return;
 
-                    //Get the tick from our last shoot.
                     TriggerLastShot = DateTime.Now.Ticks;
 
                     //If we are not shooting.
@@ -195,7 +194,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             else
             {
-                //No one is in our crosshair.
                 TriggerOnTarget = false;
             }
         }
