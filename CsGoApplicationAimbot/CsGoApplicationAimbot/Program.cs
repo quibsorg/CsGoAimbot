@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
@@ -14,24 +13,16 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
-
         private static readonly Timer Timer1 = new Timer(0.5);
-
         #endregion
 
         #region Properties
-
         public static SoundManager SoundManager { get; private set; }
-
         #endregion
 
         #region Constants
-
         public const string GameProcess = "csgo";
         public const string GameTitle = "Counter-Strike: Global Offensive";
-
-        private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?`+#-.,<>|²³{[]}\\~´";
-
         #endregion
 
         #region Variables
@@ -40,7 +31,6 @@ namespace CsGoApplicationAimbot
         private static ProcUtils _procUtils;
 
         //Updaters
-        private static Aimbot _aimbot;
         private static TriggerBot _triggerBot;
         private static Rcs _rcs;
         private static BunnyJump _bunnyJump;
@@ -101,7 +91,6 @@ namespace CsGoApplicationAimbot
             //will update everything we need.
             Memory = new Memory(engineDll, clientDll);
 
-            _aimbot = new Aimbot();
             _triggerBot = new TriggerBot();
             _rcs = new Rcs();
             _bunnyJump = new BunnyJump();
@@ -121,7 +110,6 @@ namespace CsGoApplicationAimbot
             _sonar.Update();
             _triggerBot.Update();
             _rcs.Update();
-            _aimbot.Update();
             KeyUtils.Update();
         }
 
