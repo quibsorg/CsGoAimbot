@@ -126,7 +126,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             return null;
         }
-
+        public static void SetViewAngles(Vector3 viewAngles, bool clamp = true)
+        {
+            if (clamp)
+                viewAngles = viewAngles.ClampAngle();
+            Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), viewAngles);
+        }
         #endregion
     }
 }

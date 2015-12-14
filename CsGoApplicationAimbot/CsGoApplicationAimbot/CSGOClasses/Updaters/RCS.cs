@@ -48,7 +48,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (aimbot)
             {
                 NewViewAngles -= Memory.LocalPlayer.VecPunch*(2f/100f*randomRcsForce/3);
-                SetViewAngles(NewViewAngles);
+                Memory.SetViewAngles(NewViewAngles);
             }
             else
             {
@@ -63,17 +63,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 if (punch.X != 0 || punch.Y != 0)
                 {
                     NewViewAngles -= punch*(2f/100*randomRcsForce);
-                    SetViewAngles(NewViewAngles);
+                    Memory.SetViewAngles(NewViewAngles);
                 }
             }
         }
 
-        private static void SetViewAngles(Vector3 viewAngles, bool clamp = true)
-        {
-            if (clamp)
-                viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr) (Memory.ClientState + Offsets.ClientState.ViewAngles), viewAngles);
-        }
+
 
         #region Fields
 
