@@ -137,26 +137,11 @@ namespace CsGoApplicationAimbot
             foreach (var weapon in weaponList)
             {
                 builder.AppendLine("[" + weapon + "]");
-                builder.AppendLine("Aim Enabled = False");
-                builder.AppendLine("Aim Start = 1");
-                builder.AppendLine("Aim Key = 01");
-                builder.AppendLine("Aim Toggle = False");
-                builder.AppendLine("Aim Hold = True");
-                builder.AppendLine("Aim When Scoped = False");
-                builder.AppendLine("Aim Jump = False");
-                builder.AppendLine("Aim Fov = 2");
-                builder.AppendLine("Aim Bone = 4");
-                builder.AppendLine("Aim Smooth Enabled = True");
-                builder.AppendLine("Aim Smooth Value = 50");
-                builder.AppendLine("Aim Spotted = True");
-                builder.AppendLine("Aim Spotted By = False");
-                builder.AppendLine("Aim Enemies = True");
-                builder.AppendLine("Aim Allies = False").AppendLine();
                 //RCS
                 builder.AppendLine("Rcs Enabled = True");
                 builder.AppendLine("Rcs Start = 1");
-                builder.AppendLine("Rcs Force Max = 100");
-                builder.AppendLine("Rcs Force Min = 83").AppendLine();
+                builder.AppendLine("Rcs Force Max = 102");
+                builder.AppendLine("Rcs Force Min = 101").AppendLine();
                 //Trigger
                 builder.AppendLine("Trigger Enabled = True");
                 builder.AppendLine("Trigger Key = 18");

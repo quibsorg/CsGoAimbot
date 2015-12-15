@@ -21,7 +21,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 _rcsStart = Settings.GetInt(Memory.WeaponSection, "Rcs Start");
             }
 
-            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr) (Memory.ClientState + Offsets.ClientState.ViewAngles));
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
 
             ControlRecoil();
@@ -35,7 +35,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             _random = new Random();
 
             //Todo random RcsForce Each click, not every update.
-            float randomRcsForce = _random.Next((int) _rcsForceMin, (int) _rcsForceMax);
+            float randomRcsForce = _random.Next((int)_rcsForceMin, (int)_rcsForceMax);
 
             if (!_rcsEnabled)
                 return;
@@ -45,26 +45,18 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
 
             //TODO Control Aimbot RCS in the Aimbot class and set view angels there.
-            if (aimbot)
+            //Ugly way to do it, we'll count the shots fired while trigger is active.
+            if (!TriggerBot.TriggerbotActive)
             {
-                NewViewAngles -= Memory.LocalPlayer.VecPunch*(2f/100f*randomRcsForce/3);
-                Memory.SetViewAngles(NewViewAngles);
+                if (Memory.LocalPlayer.ShotsFired <= _rcsStart)
+                    return;
             }
-            else
-            {
-                //Ugly way to do it, we'll count the shots fired while trigger is active.
-                if (!TriggerBot.TriggerbotActive)
-                {
-                    if (Memory.LocalPlayer.ShotsFired <= _rcsStart)
-                        return;
-                }
 
-                var punch = Memory.LocalPlayer.VecPunch - LastPunch;
-                if (punch.X != 0 || punch.Y != 0)
-                {
-                    NewViewAngles -= punch*(2f/100*randomRcsForce);
-                    Memory.SetViewAngles(NewViewAngles);
-                }
+            var punch = Memory.LocalPlayer.VecPunch - LastPunch;
+            if (punch.X != 0 || punch.Y != 0)
+            {
+                NewViewAngles -= punch * (2f / 100 * randomRcsForce);
+                Memory.SetViewAngles(NewViewAngles);
             }
         }
 
