@@ -42,6 +42,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         private Matrix ViewMatrix { get; set; }
         public static SignOnState State { get; set; }
         public static Weapon LocalPlayerWeapon { get; set; }
+        public float FlashAlpha { get; set; }
         public static LocalPlayer LocalPlayer { get; set; }
         public static Tuple<int, Player>[] Players { get; set; }
 
@@ -76,7 +77,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             State = (SignOnState) Program.MemUtils.Read<int>((IntPtr) (ClientState + Offsets.ClientState.InGame));
             _localPlayer = Program.MemUtils.Read<int>((IntPtr) (ClientDllBase + Offsets.Misc.LocalPlayer));
             ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr) _viewMatrix, 4, 4);
-
 
             //If we are not ingame do not update  
             if (State != SignOnState.SignonstateFull)
@@ -113,7 +113,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
             }
         }
-
         private static string GetActiveWindowTitle()
         {
             const int nChars = 256;
@@ -131,6 +130,19 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
             Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), viewAngles);
+        }
+        public static bool ShouldUpdate()
+        {
+            if (WindowTitle != Program.GameTitle)
+                return false;
+
+            if (LocalPlayer == null || LocalPlayer.Health <= 0)
+                return false;
+
+            if (State != SignOnState.SignonstateFull)
+                return false;
+
+            return true;
         }
         #endregion
     }

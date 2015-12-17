@@ -32,8 +32,6 @@ namespace CsGoApplicationAimbot.CSGOClasses
             var length = vector2.Length();
             var speedMeters = length*0.01905f;
             var speedKiloMetersPerHour = speedMeters*60f*60f/1000f;
-
-            //If speedKiloMeters is bigger than 0 we are moving and returning true, else false.
             return speedKiloMetersPerHour > 0;
         }
 

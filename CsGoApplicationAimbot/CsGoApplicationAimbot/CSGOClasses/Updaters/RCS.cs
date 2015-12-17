@@ -7,10 +7,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
     {
         public void Update()
         {
-            if (Memory.WindowTitle != Program.GameTitle)
-                return;
-
-            if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
+            if (!Memory.ShouldUpdate())
                 return;
 
             if (Memory.ActiveWeapon != Memory.WeaponSection)
@@ -20,7 +17,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 _rcsForceMin = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
                 _rcsStart = Settings.GetInt(Memory.WeaponSection, "Rcs Start");
             }
-
             ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
 

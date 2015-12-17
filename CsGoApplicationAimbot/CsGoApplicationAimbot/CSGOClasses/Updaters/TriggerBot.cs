@@ -18,15 +18,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         public void Update()
         {
-            if (Memory.WindowTitle != Program.GameTitle)
+            if (!Memory.ShouldUpdate())
                 return;
-
-            if (Memory.LocalPlayer == null || Memory.LocalPlayer.Health <= 0)
-                return;
-
-            if (Memory.State != SignOnState.SignonstateFull)
-                return;
-
 
             if (Memory.ActiveWeapon != Memory.WeaponSection)
             {
