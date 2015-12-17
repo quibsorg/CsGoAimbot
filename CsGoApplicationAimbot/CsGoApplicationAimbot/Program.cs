@@ -13,16 +13,22 @@ namespace CsGoApplicationAimbot
     public static class Program
     {
         #region Fields
+
         private static readonly Timer Timer1 = new Timer(0.5);
+
         #endregion
 
         #region Properties
+
         public static SoundManager SoundManager { get; private set; }
+
         #endregion
 
         #region Constants
+
         public const string GameProcess = "csgo";
         public const string GameTitle = "Counter-Strike: Global Offensive";
+
         #endregion
 
         #region Variables

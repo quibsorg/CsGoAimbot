@@ -113,6 +113,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
             }
         }
+
         private static string GetActiveWindowTitle()
         {
             const int nChars = 256;
@@ -125,12 +126,14 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             }
             return null;
         }
+
         public static void SetViewAngles(Vector3 viewAngles, bool clamp = true)
         {
             if (clamp)
                 viewAngles = viewAngles.ClampAngle();
-            Program.MemUtils.Write((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles), viewAngles);
+            Program.MemUtils.Write((IntPtr) (ClientState + Offsets.ClientState.ViewAngles), viewAngles);
         }
+
         public static bool ShouldUpdate()
         {
             if (WindowTitle != Program.GameTitle)
@@ -144,6 +147,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             return true;
         }
+
         #endregion
     }
 }

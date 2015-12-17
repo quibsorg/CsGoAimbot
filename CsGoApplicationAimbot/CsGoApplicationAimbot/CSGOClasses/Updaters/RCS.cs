@@ -17,13 +17,12 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 _rcsForceMin = Settings.GetFloat(Memory.WeaponSection, "Rcs Force Min");
                 _rcsStart = Settings.GetInt(Memory.WeaponSection, "Rcs Start");
             }
-            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr)(Memory.ClientState + Offsets.ClientState.ViewAngles));
+            ViewAngles = Program.MemUtils.Read<Vector3>((IntPtr) (Memory.ClientState + Offsets.ClientState.ViewAngles));
             NewViewAngles = ViewAngles;
 
             ControlRecoil();
 
             LastPunch = Memory.LocalPlayer.VecPunch;
-
         }
 
         public static void ControlRecoil(bool aimbot = false)
@@ -31,7 +30,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             _random = new Random();
 
             //Todo random RcsForce Each click, not every update.
-            float randomRcsForce = _random.Next((int)_rcsForceMin, (int)_rcsForceMax);
+            float randomRcsForce = _random.Next((int) _rcsForceMin, (int) _rcsForceMax);
 
             if (!_rcsEnabled)
                 return;
@@ -51,12 +50,10 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             var punch = Memory.LocalPlayer.VecPunch - LastPunch;
             if (punch.X != 0 || punch.Y != 0)
             {
-                NewViewAngles -= punch * (2f / 100 * randomRcsForce);
+                NewViewAngles -= punch*(2f/100*randomRcsForce);
                 Memory.SetViewAngles(NewViewAngles);
             }
         }
-
-
 
         #region Fields
 

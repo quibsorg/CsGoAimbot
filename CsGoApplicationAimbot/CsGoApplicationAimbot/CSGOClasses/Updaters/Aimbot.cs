@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CsGoApplicationAimbot.CSGOClasses.Updaters
+﻿namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
-    class Aimbot
+    internal class Aimbot
     {
         private void Update()
         {

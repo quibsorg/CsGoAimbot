@@ -26,8 +26,8 @@
             public static int Base = 0x00;
             public static int InGame = 0x00000100;
             public static int ViewAngles = 0x00004D0C;
-            //public static uint MapDirectory = 0xf5010000;
             //public static int Mapname = 0x26c;
+            //public static uint MapDirectory = 0xf5010000;
         }
 
         //public class GameResources

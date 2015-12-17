@@ -1,5 +1,4 @@
 ﻿using System;
-using CsGoApplicationAimbot.CSGOClasses.Enums;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
