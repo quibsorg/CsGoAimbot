@@ -39,10 +39,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         public static string WindowTitle { get; set; }
         private Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
-        private Matrix ViewMatrix { get; set; }
         public static SignOnState State { get; set; }
         public static Weapon LocalPlayerWeapon { get; set; }
-        public float FlashAlpha { get; set; }
         public static LocalPlayer LocalPlayer { get; set; }
         public static Tuple<int, Player>[] Players { get; set; }
 
@@ -76,7 +74,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
             State = (SignOnState) Program.MemUtils.Read<int>((IntPtr) (ClientState + Offsets.ClientState.InGame));
             _localPlayer = Program.MemUtils.Read<int>((IntPtr) (ClientDllBase + Offsets.Misc.LocalPlayer));
-            ViewMatrix = Program.MemUtils.ReadMatrix((IntPtr) _viewMatrix, 4, 4);
 
             //If we are not ingame do not update  
             if (State != SignOnState.SignonstateFull)

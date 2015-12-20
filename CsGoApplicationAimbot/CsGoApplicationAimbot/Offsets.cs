@@ -61,34 +61,32 @@
             {
                 public static int LifeState = 0x0000025B;
                 public static int BoneMatrix = 0x0000267C;
-                public static int ActiveWeapon = 0x00002EC8; // m_hActiveWeapon
+                public static int ActiveWeapon = 0x00004AF8; // m_hActiveWeapon
                 public static int Flags = 0x00000100;
                 public static int ObserverTarget = 0x173C;
                 public static int ObserverMode = 0x1728;
                 public static int VecVelocity = 0x00000110;
-                public static int FlashMaxAlpha = 0x0000A2C4;
-                public static int FlashDuriation = 0x0000A2C8;
             }
 
             public class LocalPlayer
             {
                 public static int VecViewOffset = 0x00000104;
-                public static int VecPunch = 0x00002FF8;
-                public static int ShotsFired = 0x0000A280;
-                public static int CrosshairIdx = 0xA920;
+                public static int VecPunch = 0x00004C28;
+                public static int ShotsFired = 0x0000BEB0;
+                public static int CrosshairIdx = 0xC550;
             }
 
             public class Weapon
             {
                 public static int ItemDefinitionIndex = 0x000032B4;
-                public static int State = 0x000031C8;
-                public static int Clip1 = 0x000031D4;
-                public static int NextPrimaryAttack = 0x000031A8;
-                public static int WeaponId = 0x000032B4; // Search for weaponid
-                public static int CanReload = 0x00003215;
-                public static int WeaponTableIndex = 0x00003240;
-                public static int AccuracyPenalty = 0x00003290;
-                public static int ZoomLevel = 0x00003310;
+                public static int State = 0x00004DF8;
+                public static int Clip1 = 0x00004E04;
+                public static int NextPrimaryAttack = 0x00004DD8;
+                public static int WeaponId = 0x00004EE4; // Search for weaponid
+                public static int CanReload = 0x00004E45;
+                public static int WeaponTableIndex = 0x00004E70;
+                public static int AccuracyPenalty = 0x00004EC0;
+                public static int ZoomLevel = 0x00004F40;
                 //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
             }
         }

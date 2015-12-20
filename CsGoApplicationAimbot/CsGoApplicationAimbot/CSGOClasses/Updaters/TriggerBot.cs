@@ -17,8 +17,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 
         public void Update()
         {
-            if (!Memory.ShouldUpdate())
-                return;
+            //if (!Memory.ShouldUpdate())
+            //    return;
 
             if (Memory.ActiveWeapon != Memory.WeaponSection)
             {

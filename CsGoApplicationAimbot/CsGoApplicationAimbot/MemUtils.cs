@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text;
-using CsGoApplicationAimbot.MathObjects;
 using CsGoApplicationAimbot.MemObjects;
 using CsGoApplicationAimbot.MemObjects.PE;
 
@@ -174,17 +173,8 @@ namespace CsGoApplicationAimbot
         /// <param name="rows">The number of rows of this matrix</param>
         /// <param name="columns">The number of columns of this matrix</param>
         /// <returns>The matrix read from memory</returns>
-        public Matrix ReadMatrix(IntPtr address, int rows, int columns)
-        {
-            var matrix = new Matrix(rows, columns);
-            byte[] data;
-            Read(address, out data, SIZE_FLOAT*rows*columns);
-            matrix.Read(data);
 
-            return matrix;
-        }
-
-        /// <summary>
+            /// <summary>
         ///     Generic function to read an array from memory using the given type and offsets.
         ///     Offsets will be added to the address. (They will not be summed up but rather applied individually)
         /// </summary>
@@ -242,17 +232,6 @@ namespace CsGoApplicationAimbot
             var data = TToBytes(value);
             Write(address, data, offset, length);
         }
-
-        /// <summary>
-        ///     Writes a matrix to memory
-        /// </summary>
-        /// <param name="address">The address to write the matrix to</param>
-        /// <param name="matrix">The matrix to write to memory</param>
-        public void WriteMatrix(IntPtr address, Matrix matrix)
-        {
-            Write(address, matrix.ToByteArray());
-        }
-
         #endregion
 
         #endregion

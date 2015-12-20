@@ -37,10 +37,12 @@ namespace CsGoApplicationAimbot
         public void Add(int index, UnmanagedMemoryStream stream)
         {
             _soundStreams[index] = new SoundStream(stream);
-            _audioBuffers[index] = new AudioBuffer();
-            _audioBuffers[index].Stream = _soundStreams[index].ToDataStream();
-            _audioBuffers[index].AudioBytes = (int) _soundStreams[index].Length;
-            _audioBuffers[index].Flags = BufferFlags.EndOfStream;
+            _audioBuffers[index] = new AudioBuffer
+            {
+                Stream = _soundStreams[index].ToDataStream(),
+                AudioBytes = (int) _soundStreams[index].Length,
+                Flags = BufferFlags.EndOfStream
+            };
             _sourceVoices[index] = new SourceVoice(_audio, _soundStreams[index].Format);
         }
 

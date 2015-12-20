@@ -111,11 +111,7 @@
     <Compile Include="CSGOClasses\Updaters\RCS.cs" />
     <Compile Include="CSGOClasses\Updaters\Sonar.cs" />
     <Compile Include="CSGOClasses\Updaters\TriggerBot.cs" />
-    <Compile Include="InputUtils\InputUtilities.cs" />
     <Compile Include="InputUtils\KeyUtils.cs" />
-    <Compile Include="InputUtils\MouseEventExtArgs.cs" />
-    <Compile Include="InputUtils\MouseHook.cs" />
-    <Compile Include="MathObjects\Matrix.cs" />
     <Compile Include="MathObjects\Vector2.cs" />
     <Compile Include="MathObjects\Vector3.cs" />
     <Compile Include="MathUtils.cs" />
