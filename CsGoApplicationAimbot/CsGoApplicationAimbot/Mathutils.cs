@@ -72,33 +72,22 @@ namespace CsGoApplicationAimbot
         /// </summary>
         /// <param name="clampAngles">Angle to clamp</param>
         /// <returns>Clamped angle</returns>
-        public static Vector3 ClampAngle(this Vector3 ViewAngle)
+        public static Vector3 ClampAngle(this Vector3 res)
         {
-            if (ViewAngle.X > 89.0f && ViewAngle.X <= 180.0f)
-            {
-                ViewAngle.X = 89.0f;
-            }
-            if (ViewAngle.X > 180f)
-            {
-                ViewAngle.X -= 360f;
-            }
-            if (ViewAngle.X < -89.0f)
-            {
-                ViewAngle.X = -89.0f;
-            }
-            if (ViewAngle.Y > 180f)
-            {
-                ViewAngle.Y -= 360f;
-            }
-            if (ViewAngle.Y < -180f)
-            {
-                ViewAngle.Y += 360f;
-            }
-            if (ViewAngle.Z != 0.0f)
-            {
-                ViewAngle.Z = 0.0f;
-            }
-            return ViewAngle;
+            while (res.Y > 180.0)
+                res.Y -= 360.0F;
+
+            while (res.Y < -180.0)
+                res.Y += 360.0f;
+
+            if (res.X > 90.0)
+                res.X = 90.0F;
+
+            if (res.X < -90.0)
+                res.X = -90.0F;
+
+            res.Z = 0;
+            return res;
         }
 
         //Todo fix calcAngle with RCS

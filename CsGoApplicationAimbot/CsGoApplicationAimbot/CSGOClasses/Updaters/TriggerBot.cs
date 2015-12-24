@@ -87,7 +87,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                             {
                                 if (Memory.LocalPlayerWeapon.Clip1 > 0)
                                 {
-                                    Console.WriteLine("Test");
                                     Shoot();
                                 }
                             }

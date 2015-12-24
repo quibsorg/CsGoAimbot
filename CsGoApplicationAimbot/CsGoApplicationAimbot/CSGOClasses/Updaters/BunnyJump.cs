@@ -29,7 +29,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         {
             if (Program.KeyUtils.KeyIsDown(_bunnyJumpKey))
             {
-                if (Memory.LocalPlayer.Flags == 256)
+                if (Memory.LocalPlayer.Flags == 256) 
                 {
                     Program.MemUtils.Write((IntPtr) (Memory.ClientDllBase + Offsets.Misc.Jump), 4);
                 }

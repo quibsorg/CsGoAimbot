@@ -39,8 +39,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 return;
 
 
-            //TODO Control Aimbot RCS in the Aimbot class and set view angels there.
-            //Ugly way to do it, we'll count the shots fired while trigger is active.
             if (!TriggerBot.TriggerbotActive)
             {
                 if (Memory.LocalPlayer.ShotsFired <= _rcsStart)

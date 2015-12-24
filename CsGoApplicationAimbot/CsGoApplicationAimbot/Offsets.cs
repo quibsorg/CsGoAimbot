@@ -24,23 +24,23 @@
         public class ClientState
         {
             public static int Base = 0x00;
-            public static int InGame = 0x00000100;
-            public static int ViewAngles = 0x00004D0C;
-            //public static int Mapname = 0x26c;
-            //public static uint MapDirectory = 0xf5010000;
+            public static int InGame = 0x100;
+            public static int ViewAngles = 0x00;
+            public static int Mapname = 0x180;
+            public static int MapDirectory = 0x00000180;
         }
 
-        //public class GameResources
-        //{
-        //    public static int Base = 0x04A38E2C;
-        //    public static int Names = 0x9D0;
-        //    public static int Kills = 0xBD8;
-        //    public static int Assists = 0xCDC;
-        //    public static int Deaths = 0xDE0;
-        //    public static int Armor = 0x182C;
-        //    public static int Score = 0x192C;
-        //    public static int Clantag = 0x4110;
-        //}
+        public class GameResources
+        {
+            public static int Base = 0x04A38E2C;
+            public static int Names = 0x9D0;
+            public static int Kills = 0x00000BE0;
+            public static int Assists = 0x00000CE4;
+            public static int Deaths = 0x00000DE8;
+            public static int Armor = 0x1834;
+            public static int Score = 0x00001938;
+            public static int Clantag = 0x00004118;
+        }
 
         public class NetVars
         {
@@ -87,7 +87,6 @@
                 public static int WeaponTableIndex = 0x00004E70;
                 public static int AccuracyPenalty = 0x00004EC0;
                 public static int ZoomLevel = 0x00004F40;
-                //Gets out soom level, 0 no zoom, 1 first zoom, 2 secound zoom.
             }
         }
     }
