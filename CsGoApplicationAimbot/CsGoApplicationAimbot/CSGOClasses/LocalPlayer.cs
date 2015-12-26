@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Numerics;
 using CsGoApplicationAimbot.CSGOClasses.Updaters;
-using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {

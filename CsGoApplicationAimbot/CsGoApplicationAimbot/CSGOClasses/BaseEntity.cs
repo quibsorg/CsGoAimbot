@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Numerics;
 using System.Text;
-using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {
@@ -245,7 +245,10 @@ namespace CsGoApplicationAimbot.CSGOClasses
                 ClassId == (int) Enums.ClassId.Usp ||
                 ClassId == (int) Enums.ClassId.Scar20;
         }
-
+        public bool IsChicken()
+        {
+            return ClassId == (int)Enums.ClassId.Chicken;
+        }
         #endregion
     }
 }

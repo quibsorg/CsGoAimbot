@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using CsGoApplicationAimbot.CSGOClasses.Enums;
-using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses.Updaters
 {
@@ -19,7 +19,6 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             ClientDllBase = (int) clientDll.BaseAddress;
             var engineDllBase = (int) engineDll.BaseAddress;
             _entityList = ClientDllBase + Offsets.Misc.EntityList;
-            _viewMatrix = ClientDllBase + Offsets.Misc.ViewMatrix;
             ClientState = Program.MemUtils.Read<int>((IntPtr) (engineDllBase + Offsets.ClientState.Base));
             ActiveWeapon = "Default";
         }
@@ -37,19 +36,19 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
         public static string ActiveWeapon { get; set; }
         public static string WeaponSection { get; set; }
         public static string WindowTitle { get; set; }
-        private Tuple<int, BaseEntity>[] Entities { get; set; }
+        public static Tuple<int, BaseEntity>[] Entities { get; set; }
         public Tuple<int, Weapon>[] Weapons { get; private set; }
         public static SignOnState State { get; set; }
         public static Weapon LocalPlayerWeapon { get; set; }
         public static LocalPlayer LocalPlayer { get; set; }
         public static Tuple<int, Player>[] Players { get; set; }
+        public static Tuple<int, BaseEntity>[] Chickens { get; set; }
 
         #endregion
 
         #region Variables
 
         private readonly int _entityList;
-        private readonly int _viewMatrix;
         public static int ClientState;
         public static int ClientDllBase;
         private int _localPlayer;
@@ -65,12 +64,13 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 Environment.Exit(0);
 
             WindowTitle = GetActiveWindowTitle();
-            if (WindowTitle != Program.GameTitle)
-                return;
+            //if (WindowTitle != Program.GameTitle)
+            //    return;
 
             var players = new List<Tuple<int, Player>>();
             var entities = new List<Tuple<int, BaseEntity>>();
             var weapons = new List<Tuple<int, Weapon>>();
+            var chickens = new List<Tuple<int, BaseEntity>>();
 
             State = (SignOnState) Program.MemUtils.Read<int>((IntPtr) (ClientState + Offsets.ClientState.InGame));
             _localPlayer = Program.MemUtils.Read<int>((IntPtr) (ClientDllBase + Offsets.Misc.LocalPlayer));
@@ -93,6 +93,8 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                     players.Add(new Tuple<int, Player>(i, new Player(entity)));
                 else if (entity.IsWeapon())
                     weapons.Add(new Tuple<int, Weapon>(i, new Weapon(entity)));
+                else if ( entity.IsChicken())
+                    chickens.Add(new Tuple<int, BaseEntity>(i, new BaseEntity(entity)));
                 else
                     entities.Add(new Tuple<int, BaseEntity>(i, entity));
             }
@@ -100,13 +102,13 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
             Players = players.ToArray();
             Entities = entities.ToArray();
             Weapons = weapons.ToArray();
+            Chickens = chickens.ToArray();
 
             //Check if our player exists
             if (players.Exists(x => x.Item2.Address == _localPlayer))
             {
                 LocalPlayer = new LocalPlayer(players.First(x => x.Item2.Address == _localPlayer).Item2);
                 LocalPlayerWeapon = LocalPlayer.GetActiveWeapon();
-                //Only gets the weapon name and formates it properly and retunrs a string. Used for Weapon Configs
                 WeaponSection = LocalPlayer.GetActiveWeaponName();
             }
         }

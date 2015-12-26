@@ -150,8 +150,7 @@ namespace CsGoApplicationAimbot.CSGOClasses.Updaters
                 }
             }
 
-            if ((_triggerEnemies && player.TeamNum != Memory.LocalPlayer.TeamNum) ||
-                (_triggerAllies && player.TeamNum == Memory.LocalPlayer.TeamNum))
+            if ((_triggerEnemies && player.TeamNum != Memory.LocalPlayer.TeamNum) || (_triggerAllies && player.TeamNum == Memory.LocalPlayer.TeamNum))
             {
                 if (Memory.LocalPlayerWeapon.ClassName == "CWeaponTaser")
                     return;

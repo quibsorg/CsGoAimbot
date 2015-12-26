@@ -1,5 +1,5 @@
 ﻿using System;
-using CsGoApplicationAimbot.MathObjects;
+using System.Numerics;
 
 namespace CsGoApplicationAimbot
 {
@@ -34,13 +34,13 @@ namespace CsGoApplicationAimbot
         /// </summary>
         /// <param name="source">Source-array to copy from</param>
         /// <returns>New array containing identical yet new Vector3s</returns>
-        public static Vector3[] CopyVectors(this Vector3[] source)
-        {
-            var ret = new Vector3[source.Length];
-            for (var i = 0; i < ret.Length; i++)
-                ret[i] = new Vector3(source[i]);
-            return ret;
-        }
+        //public static Vector3[] CopyVectors(this Vector3[] source)
+        //{
+        //    var ret = new Vector3[source.Length];
+        //    for (var i = 0; i < ret.Length; i++)
+        //        ret[i] = new Vector3(source[i]);
+        //    return ret;
+        //}
 
         /// <summary>
         ///     Rotates a given point around another point

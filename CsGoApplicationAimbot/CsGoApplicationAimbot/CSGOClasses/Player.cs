@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using CsGoApplicationAimbot.CSGOClasses.Fields;
-using CsGoApplicationAimbot.MathObjects;
 
 namespace CsGoApplicationAimbot.CSGOClasses
 {

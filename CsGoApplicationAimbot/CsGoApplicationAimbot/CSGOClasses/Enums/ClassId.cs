@@ -16,7 +16,7 @@
         CsRagdoll = 36,
         CsTeam = 38, // was 37
         CascadeLight = 30, //was 29
-        Chicken = 30,
+        Chicken = 31,
         ColorCorrection = 32, //was 31
         DEagle = 39, //was 38
         DecoyGrenade = 39,
